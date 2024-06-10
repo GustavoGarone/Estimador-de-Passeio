@@ -35,7 +35,7 @@ function main()
     dProb = prob-0.5 # Distância de p até 0.5
     estimadorErro = 1/(valorTopo-valorPiso)*(abs(prob-0.5))
 
-    print("\nYu: $valorEstimado, Sim: $valSim \n")
+    print("\nYu: $valorEstimado, Bet: $valorBet, Sim: $valSim \n")
 
     print("\nΔ: $erro, Amp: $caminho, dProb: $dProb \n")
          # "Estimativa de Erro: $estimadorErro \n")
