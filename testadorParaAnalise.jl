@@ -1,98 +1,59 @@
 using Statistics
+using DataFrames
+using Plots
 
 function main()
+  # Fixado valor piso em 0, compararemos para diversos ranges de dados fixados
+  # e simulações com p livre  os dados esperados (fórmula teorica)
+  # e obtidos pela Fórmula Estimadora.
+  
+  piso = 0
+  arrInis = [10, 100, 1000]
+  arrMultTopos = [2, 3, 5]
+  probs = 1:100
+  
 
-  i = 0
-  max = 10
-  while i < max
-
-    valorPiso = rand(0:10)
-    valorTopo = rand(valorPiso+2:100)
-    valorInicial = rand(valorPiso+1:valorTopo-1)
-    valorAcresc = rand(1:5)
-    valorDecresc = rand(-5:-1)
-
-    prob = rand(0:100)/100
-    while prob == 1 || prob == 0
-      prob = rand(0:100)/100
+  valorEstimado = zeros(size(arrInis,1), size(arrMultTopos,1), 100)
+  valorEsperado = zeros(size(arrInis,1), size(arrMultTopos,1), 100)
+  i = 1
+  for inicio in arrInis 
+    t = 1
+    for multiplicador in arrMultTopos
+      topo = inicio * multiplicador
+      for p in probs
+        valorEstimado[i,t,p], valorEsperado = 
+        calculaProb(topo, inicio, 0, p/100, 1-p/100, 1, -1)
+      end
+      t += 1
     end
-
-    q = 1 - prob
-
-    print("\nIteração $i\n")
-    print("\nPars: \nPiso: $valorPiso, Inicial: $valorInicial, Topo: $valorTopo, ",
-          "Acresc: $valorAcresc, Decresc: $valorDecresc, P: $prob\n")
-
-    valorEstimado = calculaProb(valorTopo, valorInicial, valorPiso,
-                                    prob, q, valorAcresc, valorDecresc)
-
-    valSim = simulador(valorTopo, valorInicial, valorPiso,
-                        prob, q, valorAcresc, valorDecresc)
-
-    erro = valorEstimado-valSim # Distância até o simulado
-    
-    caminho = valorTopo-valorPiso # Amplitude entre topo e baixo
-    dProb = prob-0.5 # Distância de p até 0.5
-    estimadorErro = 1/(valorTopo-valorPiso)*(abs(prob-0.5))
-
-    print("\nYu: $valorEstimado, Bet: $valorBet, Sim: $valSim \n")
-
-    print("\nΔ: $erro, Amp: $caminho, dProb: $dProb \n")
-         # "Estimativa de Erro: $estimadorErro \n")
-    print("======================================================")
-    i+= 1
+    i +=1 
   end
+  df = DataFrame (
+    x = vcat()                
+  )
+  my_plot = plot(valorEsperado[1,1])
+  display(my_plot)
 end
+
 
 function calculaProb(topo,inicial,piso,prob,q,acr,dec)
 
-  # Calculando via loucura de Formula Estimadora
+  # Calculando via Formula Estimadora
   f = (prob * acr)+(q * dec)
   valorEstimado = 0
   if f > 0
-    valorEstimado = abs(ceil((topo-inicial)/f))
+    valorEstimado = abs((topo-inicial)/f)
   else 
-    valorEstimado = abs(ceil((inicial-piso)/f))
+    valorEstimado = abs((inicial-piso)/f)
   end
 
-  return valorEstimado
+  return valorEstimado, teorico(topo, inicial, piso, prob,q)
 end
 
-#function formulete(topo,inicial,piso,p,q)
-#  r = q/p
-#  d = q-p
-#  return ceil(inicial/d-topo/d*((1-r^inicial)/(1-r^topo)))
-#end
-
-function simulador(topo,inicial,piso,p,q,acr,dec)
-  corretor = 100
-  simuls = 100000
-  somaMedias = 0
-  maxits = 10^10
-  k = 0
-  while k < corretor
-    j = 0
-    soma = 0
-    while j < simuls
-      itTopo = topo
-      itPiso = piso
-      itValor = inicial
-      i = 0
-      while itValor > itPiso && itValor < itTopo && i < maxits 
-        i+=1
-        if rand() < p
-          itValor += acr 
-        else
-          itValor += dec
-        end
-      end
-      soma += i
-      j += 1
-    end
-    k += 1
-    somaMedias+= soma/simuls
-  end
-  #print("Média de $simuls simuls: $(ceil(somaMedias/corretor))")
-  return ceil(somaMedias/corretor)
+function teorico(topo,inicial,piso,p,q)
+  r = q/p
+  d = q-p
+  return inicial/d-topo/d*((1-r^inicial)/(1-r^topo))
 end
+
 main()

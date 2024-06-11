@@ -23,7 +23,7 @@ function main()
     print("\nPars: \nPiso: $valorPiso, Inicial: $valorInicial, Topo: $valorTopo, ",
           "Acresc: $valorAcresc, Decresc: $valorDecresc, P: $prob\n")
 
-    valorEstimado = calculaProb(valorTopo, valorInicial, valorPiso,
+    valorEstimado, valBeti = calculaProb(valorTopo, valorInicial, valorPiso,
                                     prob, q, valorAcresc, valorDecresc)
 
     valSim = simulador(valorTopo, valorInicial, valorPiso,
@@ -35,7 +35,7 @@ function main()
     dProb = prob-0.5 # Distância de p até 0.5
     estimadorErro = 1/(valorTopo-valorPiso)*(abs(prob-0.5))
 
-    print("\nYu: $valorEstimado, Sim: $valSim \n")
+    print("\nYu: $valorEstimado, Beti: $valBeti Sim: $valSim \n")
 
     print("\nΔ: $erro, Amp: $caminho, dProb: $dProb \n")
          # "Estimativa de Erro: $estimadorErro \n")
@@ -50,19 +50,19 @@ function calculaProb(topo,inicial,piso,prob,q,acr,dec)
   f = (prob * acr)+(q * dec)
   valorEstimado = 0
   if f > 0
-    valorEstimado = abs(ceil((topo-inicial)/f))
+    valorEstimado = (topo-inicial)/f
   else 
-    valorEstimado = abs(ceil((inicial-piso)/f))
+    valorEstimado = (inicial-piso)/f
   end
 
-  return valorEstimado
+  return valorEstimado, formulete(topo, inicial, piso, prob, q)
 end
 
-#function formulete(topo,inicial,piso,p,q)
-#  r = q/p
-#  d = q-p
-#  return ceil(inicial/d-topo/d*((1-r^inicial)/(1-r^topo)))
-#end
+function formulete(topo,inicial,piso,p,q)
+  r = q/p
+  d = q-p
+  return inicial/d-topo/d*((1-r^inicial)/(1-r^topo))
+end
 
 function simulador(topo,inicial,piso,p,q,acr,dec)
   corretor = 100
