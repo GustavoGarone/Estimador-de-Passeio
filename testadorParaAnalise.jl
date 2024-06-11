@@ -21,7 +21,7 @@ function main()
     for multiplicador in arrMultTopos
       topo = inicio * multiplicador
       for p in probs
-        valorEstimado[i,t,p], valorEsperado = 
+        valorEstimado[i,t,p], valorEsperado[i,t,p] = 
         calculaProb(topo, inicio, 0, p/100, 1-p/100, 1, -1)
       end
       t += 1
