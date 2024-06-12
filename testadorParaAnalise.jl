@@ -28,12 +28,9 @@ function main()
     end
     i +=1 
   end
-  print(valorEstimado)
-  #df = DataFrame (
-  #  x = vcat()                
-  #)
-  #my_plot = plot(valorEsperado[1,1])
-  #display(my_plot)
+  surface(valorEstimado)
+  #scatter!(valorEstimado, valorEsperado, label="points")
+  savefig("~/xd.png")
 end
 
 
