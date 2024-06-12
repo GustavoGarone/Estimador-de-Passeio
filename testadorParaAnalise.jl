@@ -6,7 +6,7 @@ function main()
   # Fixado valor piso em 0, compararemos para diversos ranges de dados fixados
   # e simulações com p livre  os dados esperados (fórmula teorica)
   # e obtidos pela Fórmula Estimadora.
-  
+  ENV["GKSwstype"]="nul"
   piso = 0
   arrInis = [10, 100, 1000]
   arrMultTopos = [2, 3, 5]
@@ -28,11 +28,12 @@ function main()
     end
     i +=1 
   end
-  df = DataFrame (
-    x = vcat()                
-  )
-  my_plot = plot(valorEsperado[1,1])
-  display(my_plot)
+  print(valorEstimado)
+  #df = DataFrame (
+  #  x = vcat()                
+  #)
+  #my_plot = plot(valorEsperado[1,1])
+  #display(my_plot)
 end
 
 
