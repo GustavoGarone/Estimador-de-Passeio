@@ -20,7 +20,7 @@ end
 
 """
 compara_resultados(completo::Bool = false) -> diff || diff, parametros
-:
+
 Retorne a comparação de duração de um passeio aleatório e sua estimação
 
 Opcionalmente, pode retornar seus parâmetros ao fornecer o argumento (true)
