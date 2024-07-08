@@ -7,11 +7,9 @@ function main()
   # e simulações com p livre  os dados esperados (fórmula teorica)
   # e obtidos pela Fórmula Estimadora.
   pgfplotsx()
-  piso = 0
   arrInis = [10, 100, 1000]
   arrMultTopos = [2, 3, 5]
   probs = 1:100
-  
 
   valorEstimado = zeros(size(arrInis,1), size(arrMultTopos,1), 100)
   valorEsperado = zeros(size(arrInis,1), size(arrMultTopos,1), 100)
@@ -33,7 +31,6 @@ function main()
   savefig("~/grafico${item}.pdf")
 end
 
-
 function calculaProb(topo,inicial,piso,prob,q,acr,dec)
 
   # Calculando via Formula Estimadora
@@ -48,7 +45,7 @@ function calculaProb(topo,inicial,piso,prob,q,acr,dec)
   return valorEstimado, teorico(topo, inicial, piso, prob,q)
 end
 
-function teorico(topo,inicial,piso,p,q)
+function teorico(topo,inicial,p,q)
   r = q/p
   d = q-p
   return inicial/d-topo/d*((1-r^inicial)/(1-r^topo))
