@@ -6,11 +6,11 @@ function main()
   max = 10
   while i < max
 
-    valorPiso = rand(0:10)
+    valorPiso = 0
     valorTopo = rand(valorPiso+2:100)
     valorInicial = rand(valorPiso+1:valorTopo-1)
-    valorAcresc = rand(1:5)
-    valorDecresc = rand(-5:-1)
+    valorAcresc = 1
+    valorDecresc = -1
 
     prob = rand(0:100)/100
     while prob == 1 || prob == 0
@@ -65,10 +65,10 @@ function formulete(topo,inicial,piso,p,q)
 end
 
 function simulador(topo,inicial,piso,p,q,acr,dec)
-  corretor = 100
+  corretor = 1
   simuls = 100000
   somaMedias = 0
-  maxits = 10^10
+  maxits = 10^4
   k = 0
   while k < corretor
     j = 0

@@ -1,27 +1,14 @@
 function main()
   i = 0
-  max = 100
-  manual = false
-
+  max = 10
   while i < max
-    if manual 
-      valorPiso =
-      valorTopo = 
-      valorInicial = 
-      valorAcresc = 
-      vaorDecres =
-      prob = 
-    else
-      valorPiso = rand(0:10)
-      valorTopo = rand(valorPiso+2:100)
-      valorInicial = rand(valorPiso+1:valorTopo-1)
-      valorAcresc = rand(1:5)
-      valorDecresc = rand(-5:-1)
-      prob = rand(0:100)/100
-    end
-    while prob >= 1 || prob <= 0
-      prob = rand(0:100)/100
-    end
+    valorPiso = rand(0:10)
+    valorTopo = rand(valorPiso+2:100)
+    valorInicial = rand(valorPiso+1:valorTopo-1)
+    valorAcresc = rand(1:5)
+    valorDecresc = rand(-5:-1)
+
+    prob = 0.5
     
     q = 1 - prob
 
@@ -35,23 +22,16 @@ function main()
     valSim = simulador(valorTopo, valorInicial, valorPiso,
                         prob, q, valorAcresc, valorDecresc)
 
-    distProb = abs(prob - (valorDecresc/(valorDecresc-valorAcresc)))
-    fator = prob*valorAcresc + q*valorDecresc
-    if fator > 0
-      caminho = valorInicial - valorPiso
-    else
-      caminho = valorTopo - valorInicial
-    end
-    erro = valorYu - valSim
-    estimadorErro = log(10,abs(rand(122:128)/1.25*(abs(erro)+1)^2))
+    erro = valorYu-valSim # Distância até o simulado
     
-    
+    caminho = valorTopo-valorPiso # Amplitude entre topo e baixo
+    dProb = prob-0.5 # Distância de p até 0.5
+    estimadorErro = 1/(valorTopo-valorPiso)*(abs(prob-0.5))
 
     print("\nYu: $valorYu, Bet: $valorBet, Sim: $valSim \n")
 
-    print("\nΔ: $(erro), distProb: $distProb,",
-          "\ncaminho: $caminho , fator = $fator \n",
-          "Estimativa de Erro: $(estimadorErro) \n")
+    print("\nΔ: $erro, Amp: $caminho, dProb: $dProb \n",
+          "Estimativa de Erro: $estimadorErro \n")
     print("======================================================")
     i+= 1
   end
