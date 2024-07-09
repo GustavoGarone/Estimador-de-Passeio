@@ -3,6 +3,6 @@ Esse projeto almeija, dado um piso, valor inicial, teto, valor de ganho, perda e
 
 ## Metodologia
 
-Usaremos da Linguagem de Programação (Julia)[https://julialang.org/] por seu alto desempenho e funcionalidade na Estatística.
+Usaremos da Linguagem de Programação [Julia](https://julialang.org/) por seu alto desempenho e funcionalidade na Estatística.
 
 Atualmente, buscamos corrigir a denominada Fórmula Estimadora através de um previsor de erro.
