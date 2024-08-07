@@ -7,19 +7,19 @@ theme(:ggplot2, alpha=0.1)
 pgfplotsx()
 
 """
-main() --flags: toCSV fromCSV graficar
+main(toCSV = false fromCSV = false graficar = false)
 
 Construa uma análise do estimador comparando-o com simulações de passeios aleatórios
 
 Essa versão do programa compila os dados em um DataFrame para uso em outros processos.
 
-toCSV: Salvará o data frame em CSV/dados.csv
+toCSV: Salvará o data frame em ./CSV/dados.csv
 
 fromCSV: Criará o DataFrame através de CSV/dados.csv
 
 graficar: Gerará um gráfico em ./Graficos/Grafico.pdf
 """
-function main()
+function main(toCSV = false, fromCSV = false, graficar = false)
     totalcomparacoes = 10^4 # DURAÇÃO: ~ 0.15segundos * 10^i (deixe entre 4 e 5)
 
     dfpasseios = DataFrame(
@@ -32,7 +32,7 @@ function main()
         :Acrescimo => Float64[],
         :Decrescimo => Float64[]
     )
-    if "fromCSV" in ARGS
+    if fromCSV
         dfpasseios = DataFrame(CSV.File("./CSV/dados.csv"))
     else
         difftotal = 0
@@ -48,11 +48,11 @@ function main()
     media = mean(dfpasseios.:Simulada)
     print("Média dos erros: $media\n")
 
-    if "toCSV" in ARGS
+    if toCSV
         CSV.write("./CSV/dados.csv", dfpasseios)
     end
 
-    if "graficar" in ARGS
+    if graficar
         graficar(dfpasseios)
     end
 
@@ -148,6 +148,6 @@ function graficar(dfpasseios)
     #     titlelocation = :left
     # )
 
-    savefig(graficos, "~/Projetos/Estimador-de-Passeio/Graficos/Grafico.pdf")
+    savefig(graficos, "./Graficos/Grafico.pdf")
 end
-main()
+
