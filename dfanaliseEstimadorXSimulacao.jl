@@ -1,7 +1,8 @@
-using Plots
-using DataFrames
-using Statistics
 using CSV
+using DataFrames
+using Plots
+using Statistics
+theme(:ggplot2, alpha=0.1)
 
 pgfplotsx()
 """
@@ -19,7 +20,7 @@ graficar: gerará um gráfico em ./Graficos/Grafico.pdf
 """
 function main()
     totalcomparacoes = 10^4 # DURAÇÃO: ~ 0.15segundos * 10^i (deixe entre 4 e 5)
-    
+
     dfpasseios = DataFrame(
         :Estimada => Float64[],
         :Simulada => Float64[],
@@ -37,7 +38,11 @@ function main()
         for i in 1:totalcomparacoes
             push!(dfpasseios, gera_passeios())
         end
-    end 
+    end
+
+    dfpasseios.:Diferenca = dfpasseios.:Estimada - dfpasseios.:Simulada
+    transform!(dfpasseios, :Diferenca => ByRow(abs) => :Diferenca)
+    transform!(dfpasseios, :Diferenca => ByRow(ceil) => :Diferenca)
 
     media = mean(dfpasseios.:Simulada)
     print("Média dos erros: $media\n")
@@ -50,7 +55,7 @@ function main()
         graficar(dfpasseios)
     end
 
-end 
+end
 
 """
     gera_passeios() ->
@@ -91,19 +96,19 @@ function simulador(topo, inicial, piso, p, acr, decr)
     duracaototal = 0.0
 
     for i in 1:totalsims
-      duracao = 0.0  
-      valoratual = inicial
-      while valoratual > piso && valoratual < topo && duracao < maxits
-          duracao += 1.0
-          if rand() > p
-              valoratual += decr
-          else
-              valoratual += acr
-          end
-      end
-      duracaototal += duracao
+        duracao = 0.0
+        valoratual = inicial
+        while valoratual > piso && valoratual < topo && duracao < maxits
+            duracao += 1.0
+            if rand() > p
+                valoratual += decr
+            else
+                valoratual += acr
+            end
+        end
+        duracaototal += duracao
     end
-    return ceil(duracaototal/totalsims)
+    return ceil(duracaototal / totalsims)
 end
 
 """
@@ -113,8 +118,8 @@ Estima pela fórmula Yukiana a duração de um passeio aleatório qualquer
 """
 function estimatempo(topo, inicial, piso, p, acr, decr)
 
-    fator = p * acr + (1-p) * decr
-    return fator > 0 ? (topo-inicial)/fator : abs((inicial-piso)/fator)
+    fator = p * acr + (1 - p) * decr
+    return fator > 0 ? (topo - inicial) / fator : abs((inicial - piso) / fator)
 end
 
 """
@@ -126,18 +131,20 @@ function graficar(dfpasseios)
 
     x = dfpasseios.:Probabilidade
     y = dfpasseios.:Inicial
-    distancia = dfpasseios.:Estimada - dfpasseios.:Simulada
+    distancia = dfpasseios.:Diferenca
 
-    plotestimada = plot(x,y, dfpasseios.:Estimada)
-    plotsimulada = plot(x,y, dfpasseios.:Simulada)
-    plotdiff = plot(x,y, distancia)
+    graficos = scatter(x, y, marker_z=distancia)
 
-    graficos = plot(plotestimada, plotsimulada, plotdiff,
-        layout=@layout([a b; c]), title = ["Estimada" "Esperada" "Erro"],
-        titlelocation = :left
-    )
+    # plotestimada = plot(x,y, dfpasseios.:Estimada)
+    # plotsimulada = plot(x,y, dfpasseios.:Simulada)
+    # plotdiff = plot(x,y, distancia)
+    #
+    # graficos = plot(plotestimada, plotsimulada, plotdiff,
+    #     layout=@layout([a b; c]), title = ["Estimada" "Esperada" "Erro"],
+    #     titlelocation = :left
+    # )
 
-    savefig(graficos,"~/Projetos/Estimador-de-Passeio/Graficos/Grafico.pdf")
+    savefig(graficos, "~/Projetos/Estimador-de-Passeio/Graficos/Grafico.pdf")
 end
 
 main()
