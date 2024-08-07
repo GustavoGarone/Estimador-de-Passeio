@@ -5,6 +5,7 @@ using Statistics
 theme(:ggplot2, alpha=0.1)
 
 pgfplotsx()
+
 """
 main() --flags: toCSV fromCSV graficar
 
@@ -16,7 +17,7 @@ toCSV: Salvará o data frame em CSV/dados.csv
 
 fromCSV: Criará o DataFrame através de CSV/dados.csv
 
-graficar: gerará um gráfico em ./Graficos/Grafico.pdf
+graficar: Gerará um gráfico em ./Graficos/Grafico.pdf
 """
 function main()
     totalcomparacoes = 10^4 # DURAÇÃO: ~ 0.15segundos * 10^i (deixe entre 4 e 5)
@@ -108,7 +109,10 @@ function simulador(topo, inicial, piso, p, acr, decr)
         end
         duracaototal += duracao
     end
-    return ceil(duracaototal / totalsims)
+    # Com ou sem arredondamento para cima (considerando como funcionam passeios, pode-se
+    # querer um valor inteiro)
+    # return ceil(duracaototal / totalsims) 
+    return duracaototal / totalsims
 end
 
 """
@@ -147,4 +151,3 @@ function graficar(dfpasseios)
     savefig(graficos, "~/Projetos/Estimador-de-Passeio/Graficos/Grafico.pdf")
 end
 
-main()
