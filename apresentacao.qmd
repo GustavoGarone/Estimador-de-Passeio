@@ -1,3 +1,15 @@
+---
+title: "Apresentação 2"
+format:
+    pdf:
+        documentclass: report
+        geometry:
+            - top=30mm
+            - left=20mm
+---
+
+```{julia}
+#| echo: false
 using Plots
 using StatsBase
 using Random
@@ -41,19 +53,10 @@ function main()
         vals = []
         somamedias = 0
         for j in 1:10
-            somamedias += mean(dfpasseios.:Tamanho[j+10*i])
             append!(vals, dfpasseios.:Tamanho[j+10*i])
         end
-        append!(medias, mean(somamedias))
+        append!(medias, mean(vals))
         append!(variancias, var(vals))
-    end
-
-    for i in 0:4
-        szero = 10+20*i
-        println("S0 = $szero")
-        println("Esperança: $(szero*(100-szero))")
-        println("Média dos passeios: $(medias[i+1])")
-        println("Variância amostral dos passeios: $(variancias[i+1])\n")
     end
 
     chunk(arr, n) = [arr[i:min(i + n - 1, end)] for i in 1:n:length(arr)]
@@ -65,10 +68,19 @@ function main()
             plot_title = "\$S_0=$(10+(i-1)*20)\$",
             layout=l,
             normalize=:pdf,
-            bins=5,
+            bins=6,
+            legend=false
         )
         plot()
         display(histograma)
+    end
+    
+    for i in 0:4
+        szero = 10+20*i
+        println("S0 = $szero")
+        println("Esperança: $(szero*(100-szero))")
+        println("Média dos passeios: $(medias[i+1])")
+        println("Variância amostral dos passeios: $(variancias[i+1])\n")
     end
 end
 
@@ -95,3 +107,39 @@ function passeio(semente, szero, teto)
 end
 
 main()
+```
+
+```{julia}
+function muitospasseios()
+    dfvarios = DataFrame(
+        :Caminho => Array[],
+        :Tamanho => Int64[]
+    )
+    for i in 0:4
+        for j in 0:10000
+            caminhada = passeio(i*10000+j, 10+20*i, 100)
+            push!(dfvarios, (caminhada, length(caminhada)))
+        end
+    end
+
+    medias = []
+    variancias = []
+    for i in 0:4
+        vals = []
+        for j in 1:10000
+            append!(vals, dfvarios.:Tamanho[j+10000*i])
+        end
+        append!(medias, mean(vals))
+        append!(variancias, var(vals))
+    end
+
+    for i in 0:4
+        szero = 10+20*i
+        println("S0 = $szero")
+        println("Esperança: $(szero*(100-szero))")
+        println("Média dos passeios: $(medias[i+1])")
+        println("Variância amostral dos passeios: $(variancias[i+1])\n")
+    end
+end
+muitospasseios()
+```
