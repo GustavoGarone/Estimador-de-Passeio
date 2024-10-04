@@ -1,0 +1,92 @@
+# Variância de um passeio simples
+Piso = 0, Teto = N, Início = x
+
+$$
+v(x) = \frac{x(N-x)[x^2 + (N-x)^2 + 1 -6p]}{12p^2}
+$$
+
+@andel_variance_2012
+
+
+## $P = 0.5$
+
+$$
+v(x) = \frac{x(N-x)[x^2 + (N-x)^2 - 2]}{3}
+$$
+
+```{julia}
+#| echo: false
+using Plots
+N = 100
+theme(:ggplot2)
+variancia(x) = x*(N-x)*(x^2 + (N-x)^2 -2) / (3)
+variancia2(a) = (N-a)*(a*(N-a)-1) 
+
+plot(variancia, xlims=(0,N), legend=false, ylabel="Variância", xlabel = "Início", title="Gráfico da Variância com N = $N")
+
+plot(variancia2, xlims=(0,N), legend=false, ylabel="Variância 2", xlabel = "Início", title="Gráfico da Variância 2 com N = $N")
+```
+
+
+```{julia}
+#| echo: false
+using Random
+using DataFrames
+using StatsBase
+
+function passeio(semente, szero, teto, prob)
+    Random.seed!(semente)
+
+    valor = szero
+
+    passeio = []
+    contador = 0
+    maximo = 20000
+
+    while valor > 0 && valor != teto && contador != maximo 
+        if rand() > prob
+            valor += 1
+        else
+            valor -= 1
+        end
+        append!(passeio, valor)
+    end
+
+    return passeio
+end
+
+function muitospasseios()
+    dfvarios = DataFrame(
+        :Caminho => Array[],
+        :Tamanho => Int64[]
+    )
+    for i in 0:4
+        for j in 0:10000
+            caminhada = passeio(i*10000+j, 10+20*i, 100, 0.5)
+            push!(dfvarios, (caminhada, length(caminhada)))
+        end
+    end
+
+    medias = []
+    variancias = []
+    for i in 0:4
+        vals = []
+        for j in 1:10000
+            append!(vals, dfvarios.:Tamanho[j+10000*i])
+        end
+        append!(medias, mean(vals))
+        append!(variancias, var(vals))
+    end
+
+    for i in 0:4
+        szero = 10+20*i
+        println("S0 = $szero")
+        println("Esperança: $(szero*(100-szero))")
+        println("Média dos passeios: $(medias[i+1])")
+        println("Variância amostral dos passeios: $(variancias[i+1])")
+        println("Variância teórica dos passeios: $(variancia(szero))")
+        println("Variância DOIS teórica dos passeios: $(variancia2(szero))\n")
+    end
+end
+muitospasseios()
+```

@@ -32,7 +32,7 @@ function main()
     while i < 5
         j = 0
         while j < 10
-            caminhada = passeio(i*10+j, 10+i*20, 100)
+            caminhada = passeio(i*10+j, 10+i*20, 100, 0.5)
             grafico = plot(
                 caminhada,
                 title = "\$S_0=$(10+i*20)\$",
@@ -85,7 +85,7 @@ function main()
 end
 
 
-function passeio(semente, szero, teto)
+function passeio(semente, szero, teto, prob)
     Random.seed!(semente)
 
     valor = szero
@@ -95,7 +95,7 @@ function passeio(semente, szero, teto)
     maximo = 20000
 
     while valor > 0 && valor != teto && contador != maximo 
-        if rand() > 0.5
+        if rand() > prob
             valor += 1
         else
             valor -= 1
@@ -117,7 +117,7 @@ function muitospasseios()
     )
     for i in 0:4
         for j in 0:10000
-            caminhada = passeio(i*10000+j, 10+20*i, 100)
+            caminhada = passeio(i*10000+j, 10+20*i, 100, 0.5)
             push!(dfvarios, (caminhada, length(caminhada)))
         end
     end

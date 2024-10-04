@@ -1,7 +1,7 @@
 
 # Alta prioridade
-- [ ] Encontrar a variância de passeios aleatórios simples
-    - [ ] Encontrar para quaisquer valores de p
+- [ ] Encontrar a variância de passeios aleatórios para qualquer p
+    - [ x ] Encontrar para p=0.5
 - [ ] Simular e graficar sem barreiras : contar número de retornos à origem e sua média
 - [ ] Organizar a bibliografia e referências (Uso do Zotero)
 ## Média Prioridade
@@ -9,3 +9,8 @@
 - [ ] Ver se fica melhor de plotar no R (Julia gera CSV => ggplot)
 ### Baixa Prioridade
 - [ ] Iniciar escrita formal do artigo final
+
+# Livros a explorar
+
+## Equações de Diferenças
+- Goldberg Finite Differences

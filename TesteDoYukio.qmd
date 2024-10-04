@@ -1,0 +1,120 @@
+```{julia}
+#| echo: false
+using Plots
+using StatsBase
+using Random
+using DataFrames
+
+
+# Plot settings
+gr()
+theme(:solarized_light)
+
+
+function main()
+    dfpasseios = DataFrame(
+        :Caminho => Array[],
+        :SZero => Int[],
+        :Teto => Int[],
+        :Tamanho => Int[]
+    )
+    i = 0
+    while i < 5
+        j = 0
+        while j < 10
+            caminhada = passeio(i*10+j, 10+i*20, 10^10, 0.5)
+            grafico = plot(
+                caminhada,
+                title = "\$S_0=$(10+i*20)\$",
+                xticks = 0:(length(caminhada)//10):length(caminhada), #)∪(maximum(caminhada))
+                legend = false,
+            )
+            display(grafico)
+            push!(dfpasseios, [caminhada, 10+i*20, 100, length(caminhada)])
+            j+=1
+        end
+        i += 1
+    end
+    
+    medias = []
+    variancias = []
+
+    for i in 0:4
+        vals = []
+        somamedias = 0
+        for j in 1:10
+            append!(vals, dfpasseios.:Tamanho[j+10*i])
+        end
+        append!(medias, mean(vals))
+        append!(variancias, var(vals))
+    end
+    
+    for i in 0:4
+        szero = 10+20*i
+        println("S0 = $szero")
+        println("Esperança: $(szero*(100-szero))")
+        println("Média dos passeios: $(medias[i+1])")
+        println("Variância amostral dos passeios: $(variancias[i+1])\n")
+    end
+end
+
+
+function passeio(semente, szero, teto, prob)
+    Random.seed!(semente)
+
+    valor = szero
+
+    passeio = []
+    contador = 0
+    maximo = 10^6
+
+    while valor > -teto && valor != teto && contador != maximo 
+        if rand() > prob
+            valor += 1
+        else
+            valor -= 1
+        end
+        append!(passeio, valor)
+        contador += 1
+    end
+
+    return passeio
+end
+
+main()
+```
+
+```{julia}
+function muitospasseios()
+    dfvarios = DataFrame(
+        :Caminho => Array[],
+        :Tamanho => Int64[]
+    )
+    for i in 0:4
+        for j in 0:10000
+            caminhada = passeio(i*10000+j, 10+20*i, 100, 0.5)    
+            push!(dfvarios, (caminhada, length(caminhada)))
+        end
+    end
+
+    medias = []
+    variancias = []
+    for i in 0:4
+        vals = []
+        for j in 1:10000
+            append!(vals, dfvarios.:Tamanho[j+10000*i])
+        end
+        append!(medias, mean(vals))
+        append!(variancias, var(vals))
+    end
+
+    for i in 0:4
+        szero = 10+20*i
+        println("S0 = $szero")
+        println("Esperança: $(szero*(100-szero))")
+        println("Média dos passeios: $(medias[i+1])")
+        println("Variância amostral dos passeios: $(variancias[i+1])\n")
+    end
+    end
+muitospasseios()
+```

@@ -1,0 +1,10 @@
+lang: pt
+
+bibliography: references.bib
+csl: associacao-brasileira-de-normas-tecnicas.csl
+
+format:
+  pdf:
+    geometry:
+      - top=30mm
+      - left=20mm
