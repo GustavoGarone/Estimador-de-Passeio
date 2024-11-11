@@ -1,0 +1,6 @@
+# Glossário
+
+1. Valor início do passeio: $a$, $S_{0}$
+2. Piso do passeio: 0
+3. Valor teto do passeio: $N$
+4. Valor do passeio no $k-$ésimo passo: $S_{k}$

@@ -1,0 +1,213 @@
+# Mineiro Amnésico Simples
+
+```{mermaid}
+flowchart BT
+A(Início) -->|p=0.3 \n t=2| B(Saída)
+A -->|p=0.4 \n t=3| C(Volta)
+C --> A
+A -->|P=0.3 \n t = 5| D(Volta)
+D --> A
+```
+
+```{julia}
+#| echo: false
+using Random, Distributions
+
+
+Random.seed!(123)
+M = 100000
+duracoes = []
+for i in 1:M
+    tempo = 0
+    p = rand()
+    while p >= 0.3
+        if p <= 0.7
+            tempo += 3
+        else
+            tempo += 5
+        end
+        p = rand()
+    end
+    tempo += 2
+    append!(duracoes, tempo)
+end
+
+println("Média dos $M passeios: $(mean(duracoes))")
+```
+
+## Versão simplificada
+Podemos tomar a média ponderada pela probabilidade entre a duração de passos similares e somar suas probabilidades?
+
+```{mermaid}
+flowchart BT
+A(Início) -->|p=0.3 \n t=2| B(Saída)
+A -->|p=0.7 \n t=3.85714285| C(Volta)
+C --> A
+```
+
+```{julia}
+#| echo: false
+using Random, Distributions
+
+
+Random.seed!(456)
+M = 100000
+duracoes = []
+for i in 1:M
+    tempo = 0
+    p = rand()
+    while p >= 0.3
+        tempo += (0.4 * 3 + 0.3 * 5) / 0.7 # Média do tempo ponderada por p
+        p = rand()
+    end
+    tempo += 2
+    append!(duracoes, tempo)
+end
+
+println("Média dos $M passeios simplificados: $(mean(duracoes))")
+```
+
+Obtivemos uma média muito similar, o que indica que podemos simplificar os passos desse tipo de passeio.
+
+# Mineiro Amnésico Avançado
+
+```{mermaid}
+flowchart BT
+A(Início) -->|P1 = 0.2 \n t = 15| B(Salão)
+B -->|P3 = 0.4 \n t = 5| C(Saída)
+B -->|P5 = 0.4 \n t = 5| D(Volta Salão)
+D --> B
+B -->|P4 = 0.2 \n t = 10| E(Volta Início)
+E --> A
+A -->|P2 = 0.8 \n t = 10| F(Volta Início)
+F --> A
+```
+
+```{julia}
+#| echo: false
+using Random, Distributions
+
+p1 = 0.2
+p2 = 0.8
+p3 = 0.4
+p4 = 0.2
+p5 = 0.4
+t1 = 15
+t2 = 10
+t3 = 5
+t4 = 10
+t5 = 5
+
+Random.seed!()
+M = 100000
+duracoes = []
+for i in 1:M
+    t = 0
+    p = rand()
+    SALAO = false
+    while true
+        if SALAO
+            if p < p3
+                # sai
+                t += t5
+                break
+            elseif p < p3 + p5
+                # volta salao
+                t += t5
+            else
+                # volta inicio
+                SALAO = false
+                t += t4
+            end
+        elseif p < p1
+            t += t1
+            SALAO = true
+        else
+            t += t2
+        end
+        p = rand()
+    end
+    append!(duracoes, t)
+end
+
+println("Média dos $M passeios avançados: $(mean(duracoes))")
+esperanca = (p1 / (1 - p5) * ((t1 + t3) * p3 + (t1 + t4) * p4 + (t5) * p5) + p2 * t2) * 1 / (1 - p4 * p1 / (1 - p5) - p2)
+println("Esperança: $esperanca")
+```
+
+# Passeio com empate
+
+```{julia}
+using Random, Distributions, Plots, StatsPlots
+
+X = [[1, 0.3], [0, 0.5], [-1, 0.2]]
+
+p1 = X[1][2]
+p2 = X[2][2]
+p3 = X[3][2]
+TETO = 100
+INICIO = 40
+M = 10000
+duracoes = []
+
+for i in 1:M
+    duracao = 0
+    atual = INICIO
+    while atual < TETO && atual > 0
+        p = rand()
+        duracao += 1
+        if p < p1
+            atual += X[1][1]
+        elseif p < p1 + p2
+            atual += X[2][1]
+        else
+            atual += X[3][1]
+        end
+    end
+    append!(duracoes, duracao)
+end
+
+println("Média dos passeios com empate: $(mean(duracoes))")
+println("Variância (n-1) dos passeios com empate: $(var(duracoes))")
+println("1º Quartil dos passeios com empate: $(quantile(duracoes, 0.25))")
+println("2º Quartil (mediana) dos passeios com empate: $(quantile(duracoes, 0.5))")
+println("3º Quartil dos passeios com empate: $(quantile(duracoes, 0.75))")
+
+a = histogram(duracoes, legend=false)
+b = boxplot(duracoes, legend=false, orientation=:horizontal)
+c = plot(a, b, layout=(2, 1))
+display(c)
+```
+
+Isso bate com nossa expectativa do estimador
+
+```{julia}
+#| echo: false
+using Random, Distributions, Plots
+
+X = [[1, 0.1], [0, 0.8], [-1, 0.1]]
+
+p1 = X[1][2]
+p2 = X[2][2]
+p3 = X[3][2]
+TETO = 20
+INICIO = 10
+passeios = []
+
+duracao = 0
+atual = INICIO
+while atual < TETO && atual > 0
+    append!(passeios, atual)
+    p = rand()
+    duracao += 1
+    if p < p1
+        atual += X[1][1]
+    elseif p < p1 + p2
+        atual += X[2][1]
+    else
+        atual += X[3][1]
+    end
+end
+
+plot(passeios)
+```

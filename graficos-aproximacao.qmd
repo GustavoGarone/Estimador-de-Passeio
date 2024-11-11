@@ -1,0 +1,128 @@
+---
+title: "Apresentação do Aproximador"
+format:
+    pdf:
+        documentclass: report
+        geometry:
+            - top=30mm
+            - left=20mm
+---
+# Esperanaça da duração de um passeio aleatório simples
+
+## Fórmula deduzida.
+
+Sabemos que a esperança da duração de um passeio aleatório simples com início em
+$S_{0} = a$ e barreira superior em $N$ é dada por
+
+$$
+E(T_{a}) = 
+\begin{cases}
+    \begin{aligned}
+        &a(N-a), &p = q = 1/2 \\
+        &\frac{a}{q-p} - \frac{N}{q-p} \left(\frac{1-(q/p)^a}{1-(q/p)^N} \right),
+        &p \neq q
+    \end{aligned}
+\end{cases}
+$$
+
+## Fórmula da aproximação
+
+Seja $X$ a variável aleatória que representa os passos possíveis em determinado
+instante de um passeio aleatório. Para um passeio simples, tomaria a seguinte forma:
+
+$$
+X =
+\begin{cases}
+    1, \text{ Com probabilidade } p \\
+    -1, \text{ Com probabilidade } q = 1-p
+\end{cases}
+$$
+
+Então, podemos aproximar a esperança de duração de um passeio aleatório iniciado
+ em a  com teto N($E(T_{a})$) por:
+
+$$
+E(T_{a}) \approx
+\begin{cases}
+\frac{N-a}{E(X)}, E(X) > 0 \\
+\frac{a}{|E(X)|}, E(X) < 0
+\end{cases}
+$$
+
+## Simulaçoes
+Vamos gerar 10 mil passeios em inícios diferentes (10, 30, 50, 70, 90) e confirmar
+a acurácia da fórmula quando comparada à Esperança real:
+
+```{julia}
+#| echo: false
+using DataFrames, CSV, StatsBase, DataFramesMeta
+
+dfPasseios = DataFrame(CSV.File("dadosPasseio.csv"))
+gdfPasseios = @groupby dfPasseios :Inicio :Teto :Probabilidade
+dfEstatisticas = combine(gdfPasseios,
+    :Duracao => mean => :MediaDuracao,
+    # :Duracao => var => :VarDuracao,
+    [:Inicio, :Teto, :Probabilidade] => ((a, N, p) ->
+        (a ./ (1 .- 2 .* p)) .- (N ./ (1 .- 2 .* p)) .* ((1 .- (1 .- 2 .* p) .^ a) ./ (1 .- (1 .- 2 .* p) .^ N))) => :Esperanca,
+    [:Inicio, :Teto, :Probabilidade] => ((a, N, p) -> ((N .- a) ./ (2 .* p .- 1))) => :Aproximado
+)
+dfFinal = unique(dfEstatisticas)
+print(dfFinal)
+```
+
+## Justificativa
+
+Diferentemente da esperança teórica dessa duração, podemos usar a aproximação para
+estimarmos durações de passeios mais complexos, como os com os passos:
+
+$$
+X = 
+\begin{cases}
+    2, p=0.37 \\
+    -9, q=0.63
+\end{cases}
+$$
+
+Ou até com pausas e atrasos
+$$
+X = 
+\begin{cases}
+    2, p=0.2 \\
+    0, p=0.5 \\
+    -1, q=0.3
+\end{cases}
+$$
+
+O que não é possível com a fórmula da esperança original.
+
+## Gráficos dos erros
+
+```{julia}
+#| echo: false
+using Plots, LaTeXStrings
+
+
+function plotar()
+
+    N = 500
+    inicios = [10, 30, 50, 70, 90, 150, 190, 250, 490]
+    for a in inicios
+        esperanca(p) = (p == 0.5) ? a * (N - a) : (a / (1 - 2 * p)) - (N / (1 - 2 * p)) * (1 - ((1 - p) / p)^a) / (1 - ((1 - p) / p)^N)
+        aproximada(p) = (p > 0.5) ? (N - a) / (2 * p - 1) : a / abs(2 * p - 1)
+        erro(p) = ((p == 0.5) ? a * (N - a) : (a / (1 - 2 * p)) - (N / (1 - 2 * p)) * (1 - ((1 - p) / p)^a) / (1 - ((1 - p) / p)^N)) - ((p > 0.5) ? (N - a) / (2 * p - 1) : a / abs(2 * p - 1))
+        plotEsperanca = plot(esperanca, ylims=(0, 1000), title="Esperança", ylabel=L"E(T_{a})")
+        vline!([0.5])
+        plotAproximado = plot(aproximada, ylims=(0, 1000), title="Aproximado", ylabel="Aprox.")
+        vline!([0.5])
+        plotErro = plot(erro, ylims=(-10, 10), title="Erro: E(T) - Aprox.")
+        vline!([0.5])
+
+        # plotErro = plot(abs(aproximada - (p > 0.5) ? (N - a) / (2 * p - 1) : a / abs(2 * p - 1esperanca))
+        a = plot(plotEsperanca, plotAproximado, plotErro, xlims=(0, 1), xlabel="p", plot_title="a=$a, N = $N", legends=false)
+        display(a)
+    end
+end
+
+plotar()
+```
+

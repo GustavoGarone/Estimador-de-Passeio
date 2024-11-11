@@ -1,21 +1,15 @@
-using DataFrames, Random, CSV, Plots, Distributions, StatsPlots, StatsBase
+using DataFrames, Random, CSV
 
-# Parâmetros dos passeios
-# const numPasseios = 10000
-# const p = 0.6
-# const inicios = [10, 30, 50, 70, 90]
-# const barSuperior = 100
-
-
+# Pode ser legal não salvar a duração, mas pareceio meio complicado :)
 
 function main(default=false)
     if default
         numPasseios = 10000
         p = 0.6
-        barSuperior = 100
-        inicios = [10, 30, 50, 70, 90]
+        barSuperior = 200
+        inicios = [10, 30, 50, 70, 90, 150]
         Random.seed!(1)
-        pathcsv = "dadosPasseio.csv"
+        pathfile = "dadosPasseio.csv"
     else
         println("\nBem vindo ao gerador de passeios!\n")
         println("=====================================\n")
@@ -35,9 +29,9 @@ function main(default=false)
             append!(inicios, j)
         end
         println("\nInsira o nome do arquivo (ou caminho) que será salvo como csv:")
-        pathcsv = readline()
-        if !occursin(".csv", pathcsv)
-            pathcsv *= ".csv"
+        pathfile = readline()
+        if !occursin(".csv", pathfile)
+            pathfile *= ".csv"
         end
     end
     println("\n=====================================\n")
@@ -48,7 +42,7 @@ function main(default=false)
         # duracaoMaxima = 10^6
         # duracao = 0
         posicao = a
-        passeio = []
+        passeio = [a]
 
         # Probabilísticamente, é improvável que um jogo dure muito.
         # Pode ser mais eficiente para o algoritmo ignorar uma "duração máxima"
@@ -62,7 +56,7 @@ function main(default=false)
             # duracao += 1
             append!(passeio, posicao)
         end
-
+        popfirst!(passeio)
         return passeio
 
     end
@@ -71,14 +65,17 @@ function main(default=false)
 
         dfpasseios = DataFrame(
             :Caminho => Array[],
-            :Inicio => Int[],
-            :Teto => Int[],
+            :Inicio => Int16[],
+            :Teto => Int16[],
             :Probabilidade => Float16[],
+            :Duracao => Int16[],
         )
 
         for a in inicios
             for i in 1:numPasseios
-                push!(dfpasseios, [simulaPasseio(a), a, barSuperior, p])
+                passeio = simulaPasseio(a)
+                push!(dfpasseios,
+                    [passeio, a, barSuperior, p, length(passeio)])
             end
         end
 
@@ -87,8 +84,9 @@ function main(default=false)
 
     dfpasseios = geraPasseios()
 
-    CSV.write(pathcsv, dfpasseios)
+    CSV.write(pathfile, dfpasseios)
     println("CSV salvo.")
+    dfpasseios
 end
 
-main(false)
+main(true)
