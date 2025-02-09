@@ -1,0 +1,218 @@
+--- 
+title: "Relatório Semestral"
+author: "Gustavo Silva Garone, Elisabeti Kira"
+format:
+  pdf:
+    documentclass: article
+    fontsize: 12pt
+    geometry: "margin=1in"
+    # header-includes:
+    #   - \usepackage{ragged2e}
+---
+
+# PASSEIO ALEATÓRIO: MODELOS, APLICAÇÕES E SIMULAÇÃO
+
+## Introdução
+
+
+O problema da Ruína do Jogador foi inicialmente proposto por Blaise Pascal no século XVII e, desde então, tem sido
+amplamente estudado por diversos pesquisadores. Em nossos estudos, visitamos uma revisão dos principais resultados
+conhecidos sobre o problema clássico e introduzimos uma nova abordagem. Consideramos um jogo entre dois jogadores, A e B,
+que começam com $a$ e $b$ reais, respectivamente. Definimos uma variável aleatória discreta $X$, que determina as regras
+de ganho e perca de dinherio dentro do jogo. O jogo termina quando um dos
+jogadores atinge um saldo de zero reais ou não pode honrar a quantia devida ao oponente.
+
+Neste estudo, propomos um estimador para a esperança da duração total do jogo, considerando dois cenários distintos: um
+em que $X$ é fixo (caso homogêneo) e outro em que $X$ varia conforme a fortuna atual dos jogadores (caso não homogêneo).
+Para validar os resultados teóricos obtidos com o estimador, utilizamos algoritmos de simulações de Monte Carlo.
+
+Nesse relatório, apresentamos nosso progresso com o estudo do caso fixo.
+
+## Discussão
+
+Inicialmente, realizamos uma revisão da literatura existente para identificar os principais resultados sobre o problema
+da Ruína do Jogador e suas variações. Encontramos publicações abordando até o quinto momento (centrado e não centrado) da
+duração do jogo, assim como variações que incluem possibilidade de empate, probabilidades de vitória assimétricas entre
+os jogadores, aumento no número de participantes e probabilidades de vitória não uniformes ao longo do jogo, um meio não
+uniforme.
+
+Com base nesses resultados, utilizamos equações de diferenças finitas não homogêneas para reproduzir as formulações teóricas.
+Paralelamente, desenvolvemos algoritmos de simulação baseados no método de Monte Carlo. A primeira versão do algoritmo,
+implementada em Python, não obteve resultados satisfatórios em um tempo razoável. Para solucionar essa limitação, migramos
+para a linguagem Julia, especializada na manipulação de *arrays*, o que resultou em um aumento significativo na eficiência
+computacional e, por conseguinte, na qualidade dos dados.
+
+Comparação entre o mesmo (ingênuo) algoritmo em Julia e Python*, respectivamente:
+
+```{julia}
+using StatsBase, LaTeXStrings, Random
+
+function main()
+  Random.seed!(1)
+  duracoes = []
+  M = 1000000
+  p = 0.4
+  teto = 100
+  for i in 1:M
+  saldo = 30
+    duracao = 0
+    while saldo > 0 && saldo < teto
+      if p > rand()
+        saldo += 1
+      else
+        saldo -= 1
+      end
+      duracao += 1
+    end
+    append!(duracoes, duracao)
+  end
+  display(LaTeXString("Média da duração de $M passeios:
+                      \$ $(round(mean(duracoes), digits = 2))\$"))
+  display(LaTeXString("Duração da execução:"))
+end
+
+@elapsed main()
+```
+{{< pagebreak >}}
+
+```{julia}
+using PyCall
+
+py"""
+def simulacao_py():
+  import random
+  import time
+
+
+  def main():
+      random.seed(1)
+      duracoes = []
+      M = 1000000
+      p = 0.4
+      teto = 100
+      for i in range(M):
+          saldo = 30
+          duracao = 0
+          while saldo > 0 and saldo < teto:
+              if p > random.random():
+                  saldo += 1
+              else:
+                  saldo -= 1
+              duracao += 1
+          duracoes.append(duracao)
+      media = sum(duracoes) / len(duracoes)
+      print(f"Média da duração de {M} passeios: {media:.2f}")
+    
+
+  start_time = time.time()
+  main()
+  print(f"Duração da execução: {time.time() - start_time} segundos")
+"""
+py"simulacao_py"()
+```
+
+\**Nota*: Foi utilizado a biblioteca PyCall para criar um ambiente Python no Julia.
+A performance pode ter sido afetada minimamente nos tempos de chamada ao Kernel de execução do Python.
+
+Desconsiderando o tempo de compilação (aproximadamente 1.2 segundo do tempo total do código em Julia, que só precisa ser
+feito uma vez), temos que essa linguagem costuma ser considerávelmente mais rápida do que o Python, o que foi crucial nessas
+simulações.
+
+Nesse teste simples podemos comparar nosso estimador sob estudo com fórmulas conhecidas da probabilidade e as simulações.
+
+Das simulações, temos a média de duração (que se aproxima da esperança de duração) como $150$.
+
+Usando um resultado de probabilidade, temos
+
+$$
+\begin{aligned}
+\mu_a = E(T_a) = \left\{ \begin{array}{cc}
+a(N - a) & \mathbf{se}\ p = q = 1/2, \\
+\frac{a}{q - p} - \frac{N}{q - p} \left( \frac{1 - (q/p)^a}{1 - (q/p)^N} \right) & \mathbf{se}\ p \neq q.
+\end{array} \right.
+\end{aligned}
+$$
+
+Onde, nesse caso, a chance de ganhar $p=0.4 \Rightarrow q = 1-p$, o início $a=30$ e final $N=100$. Da fórmula, temos então
+que
+$$
+\mu_a = 150
+$$
+O que confere com nossas simulações.
+
+Usando nossa fórmula de aproximação para $q\neq p \neq \frac{1}{2}$,
+$$
+\widehat{E}(T_a) = \left\{ \begin{array}{cc}
+\frac{N-a}{p-q} & \mathbf{se}\ p > q \\
+\frac{a}{q-p} & \mathbf{se}\ p < q
+\end{array}\right.
+$$
+
+Ou seja, $\frac{30}{0.2}=150$. O que também condiz com os resultados.
+
+Durante o desenvolvimento dos algoritmos, introduzimos novas regras ao jogo. Nas primeiras simulações, definimos que o
+jogador A ganhava $1$ real com probabilidade $\frac{1}{3}$, ganhava $3$ reais com probabilidade $\frac{1}{3}$ e perdia $1$
+real com probabilidade $\frac{1}{3}$. O novo estimador apresentou um resultado teórico muito próximo ao obtido nas simulações.
+
+Adaptando o estimador acima, podemos trocar o denominador por uma esperança calculada com base nas regras do jogo.
+Seja X a variável aleatória que contém as regras do jogo:
+$$
+X = \begin{cases}
+\text{ganho}, \text{ com probabilidade } p \\
+\text{perda}, \text{ com probabilidade } q = 1-p \\
+\end{cases}
+$$
+
+Num caso de o jogador ganhar 2 reais com probabiliade $p=0.3$ e perder 1 real com probabilidade $q = 0.7$, temos a variável
+de regra X
+$$
+X = \begin{cases}
+2, \text{ com probabilidade } 0.3 \\
+-1, \text{ com probabilidade } q = 1-p \\
+\end{cases}
+$$
+
+Daí conseguimos nosso novo estimador:
+$$
+\widehat{E}(T_a) = \left\{ \begin{array}{cc}
+\frac{N-a}{E(X)} & \mathbf{se}\ E(X) > 0 \\
+\left\lvert\frac{a}{E(X)}\right\rvert & \mathbf{se}\ E(X) < 0
+\end{array}\right.
+$$
+
+Testamos o estimador sob diferentes regras e, em todos os casos, os resultados teóricos mostraram forte concordância com
+os valores simulados. Isso revela então a vantagem do estimador: conseguimos estimar a duração de um jogo com regras
+diversas, o que, até onde encontramos, ainda não foi feito apenas com teoria das probabilidades.
+
+
+## Conclusão e Passos Seguintes
+
+Os resultados obtidos indicam que o estimador proposto possui grande flexibilidade para diferentes configurações do jogo
+e mostra-se especialmente útil, pois as técnicas atuais não são capazes de fornecer um resultado teórico exato para as
+configurações de jogos propostas. Ademais, o estimador fornece estimativas mais precisas quando há maior circulação de
+dinheiro entre os jogadores. No entanto, observamos que o estimador tende a divergir rapidamente dos resultados simulados
+quando a esperança da variável aleatória que rege as regras do jogo aproxima-se de zero devido ao denominador.
+
+Outro desafio identificado foi a complexidade computacional envolvida na simulação de jogos com muitas regras, isto é,
+quando a variável aleatória pode assumir um grande número de valores. Essa limitação impõe a necessidade de soluções mais
+eficientes para lidar com cenários de alta complexidade, o que será um obstáculo a ser superado no estudo do caso não
+homogêneo.
+
+Um interessante caminho de abordagem que buscaremos explorar é a conexão entre passeios aleatórios e elétrica como descrito
+no livro de Snell. Queremos descobrir se existem conexões entre o estimador proposto e fórmulas da física, além de outras
+abordagens para estudarmos passeios aleatórios, como fizemos com o emprego de equações de diferenças finitas.
+
+## Bibliografia
+
+<!--<Artigo bonitinho da variância>-->
+
+ANDĚL, J.; HUDECOVÁ, Š. Variance of the game duration in the gambler’s ruin problem. **Statistics & Probability Letters**, v. 82, n. 9, p. 1750–1754, 31 maio 2012.
+
+<!--<Origem da ruina do jogador>-->
+
+EDWARDS, A. W. F. Pascal’s Problem: The “Gambler’s Ruin”. **International Statistical Review / Revue Internationale de Statistique**, v. 51, n. 1, p. 73–79, 1983.
+
+
+<!-- Livro de elétrica -->
+
+DOYLE, P. G.; J. LAURIE SNELL. Random Walks and Electric Networks. [s.l.] **American Mathematical Soc.**, 1984. 
