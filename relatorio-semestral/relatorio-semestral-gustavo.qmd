@@ -15,7 +15,7 @@ format:
 ## Introdução
 
 
-O problema da Ruína do Jogador foi inicialmente proposto por Blaise Pascal no século XVII e, desde então, tem sido
+Blaise Pascal propôs no século XVII o problema da Ruína do Jogador que, desde então, tem sido
 amplamente estudado por diversos pesquisadores. Em nossos estudos, visitamos uma revisão dos principais resultados
 conhecidos sobre o problema clássico e introduzimos uma nova abordagem. Consideramos um jogo entre dois jogadores, A e B,
 que começam com $a$ e $b$ reais, respectivamente. Definimos uma variável aleatória discreta $X$, que determina as regras
@@ -40,9 +40,9 @@ Com base nesses resultados, utilizamos equações de diferenças finitas não ho
 Paralelamente, desenvolvemos algoritmos de simulação baseados no método de Monte Carlo. A primeira versão do algoritmo,
 implementada em Python, não obteve resultados satisfatórios em um tempo razoável. Para solucionar essa limitação, migramos
 para a linguagem Julia, especializada na manipulação de *arrays*, o que resultou em um aumento significativo na eficiência
-computacional e, por conseguinte, na qualidade dos dados.
+computacional e, por conseguinte, na qualidade dos dados por nos permitir rodar mais iterações.
 
-Comparação entre o mesmo (ingênuo) algoritmo em Julia e Python*, respectivamente:
+Para demonstrar essa melhoria, comparamos o mesmo (ingênuo) algoritmo em Julia e Python*, respectivamente:
 
 ```{julia}
 using StatsBase, LaTeXStrings, Random
@@ -111,7 +111,7 @@ def simulacao_py():
 py"simulacao_py"()
 ```
 
-\**Nota*: Foi utilizado a biblioteca PyCall para criar um ambiente Python no Julia.
+\**Nota*: Foi utilizado a biblioteca PyCall que nos permite criar um ambiente Python no Julia - possibilitando rodar código Python nessa linguagem.
 A performance pode ter sido afetada minimamente nos tempos de chamada ao Kernel de execução do Python.
 
 Desconsiderando o tempo de compilação (aproximadamente 1.2 segundos do tempo total do código em Julia, que só precisa ser
@@ -172,7 +172,7 @@ X = \begin{cases}
 \end{cases}
 $$
 
-Daí conseguimos nosso novo estimador:
+Com esse recurso, podemos expandir o estimador proposto acima para funcionar com jogos mais complexos:
 $$
 \widehat{E}(T_a) = \left\{ \begin{array}{cc}
 \frac{N-a}{E(X)} & \mathbf{se}\ E(X) > 0 \\
@@ -180,9 +180,12 @@ $$
 \end{array}\right.
 $$
 
-Testamos o estimador sob diferentes regras e, em todos os casos, os resultados teóricos mostraram forte concordância com
-os valores simulados. Isso revela então a vantagem do estimador: conseguimos estimar a duração de um jogo com regras
-diversas, o que, até onde encontramos, ainda não foi feito apenas com teoria das probabilidades.
+Testamos o estimador sob diferentes regras e, na maioria dos casos, mostrou forte concordância com
+os valores simulados. Isso destaca a vantagem do estimador: conseguimos estimar a duração de um jogo com regras
+diversas, o que, até onde encontramos na literatura, não foi encotrado apenas com teoria das probabilidades.
+
+A fraqueza do estimador atualmente reside nas regras que levam a $E(X)$ próximo de 0, uma vez que, conforme $E(X)\rightarrow 0$,
+sua presença no denominador provoca divergências quando comparado com o valor simulado.
 
 
 ## Conclusão e Passos Seguintes
