@@ -19,7 +19,7 @@ O problema da Ruína do Jogador foi inicialmente proposto por Blaise Pascal no s
 amplamente estudado por diversos pesquisadores. Em nossos estudos, visitamos uma revisão dos principais resultados
 conhecidos sobre o problema clássico e introduzimos uma nova abordagem. Consideramos um jogo entre dois jogadores, A e B,
 que começam com $a$ e $b$ reais, respectivamente. Definimos uma variável aleatória discreta $X$, que determina as regras
-de ganho e perca de dinherio dentro do jogo. O jogo termina quando um dos
+de ganho e perda de dinheiro dentro do jogo. O jogo termina quando um dos
 jogadores atinge um saldo de zero reais ou não pode honrar a quantia devida ao oponente.
 
 Neste estudo, propomos um estimador para a esperança da duração total do jogo, considerando dois cenários distintos: um
@@ -114,7 +114,7 @@ py"simulacao_py"()
 \**Nota*: Foi utilizado a biblioteca PyCall para criar um ambiente Python no Julia.
 A performance pode ter sido afetada minimamente nos tempos de chamada ao Kernel de execução do Python.
 
-Desconsiderando o tempo de compilação (aproximadamente 1.2 segundo do tempo total do código em Julia, que só precisa ser
+Desconsiderando o tempo de compilação (aproximadamente 1.2 segundos do tempo total do código em Julia, que só precisa ser
 feito uma vez), temos que essa linguagem costuma ser considerávelmente mais rápida do que o Python, o que foi crucial nessas
 simulações.
 
@@ -163,7 +163,7 @@ X = \begin{cases}
 \end{cases}
 $$
 
-Num caso de o jogador ganhar 2 reais com probabiliade $p=0.3$ e perder 1 real com probabilidade $q = 0.7$, temos a variável
+Num caso de o jogador ganhar 2 reais com probabilidade $p=0.3$ e perder 1 real com probabilidade $q = 0.7$, temos a variável
 de regra X
 $$
 X = \begin{cases}
@@ -198,7 +198,7 @@ quando a variável aleatória pode assumir um grande número de valores. Essa li
 eficientes para lidar com cenários de alta complexidade, o que será um obstáculo a ser superado no estudo do caso não
 homogêneo.
 
-Um interessante caminho de abordagem que buscaremos explorar é a conexão entre passeios aleatórios e elétrica como descrito
+Um interessante caminho de abordagem que buscaremos explorar é a conexão entre passeios aleatórios e redes elétricas como descrito
 no livro de Snell. Queremos descobrir se existem conexões entre o estimador proposto e fórmulas da física, além de outras
 abordagens para estudarmos passeios aleatórios, como fizemos com o emprego de equações de diferenças finitas.
 
