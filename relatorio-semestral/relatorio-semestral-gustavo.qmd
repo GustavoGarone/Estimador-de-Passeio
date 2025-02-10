@@ -1,6 +1,6 @@
 --- 
 title: "Relatório Semestral"
-author: "Gustavo Silva Garone, Eduardio Y. G. Ishihara, Elisabeti Kira"
+author: "Gustavo Silva Garone, Eduardo Y. G. Ishihara, Elisabeti Kira"
 format:
   pdf:
     documentclass: article
