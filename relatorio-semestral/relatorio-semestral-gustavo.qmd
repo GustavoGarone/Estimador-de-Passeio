@@ -1,128 +1,50 @@
 --- 
 title: "Relatório Semestral"
-author: "Gustavo Silva Garone, Eduardo Y. G. Ishihara, Elisabeti Kira"
+bibliography: references.bib
+csl: associacao-brasileira-de-normas-tecnicas.csl
+
+authors:
+  - name: "Orientando: Gustavo Silva Garone"
+  - name: "Orientadora: Elisabeti Kira"
+
+date: last-modified
 format:
   pdf:
     documentclass: article
     fontsize: 12pt
     geometry: "margin=1in"
-    # header-includes:
-    #   - \usepackage{ragged2e}
+    include-in-header:
+      text: |
+        \usepackage{authblk}
 ---
 
-# PASSEIO ALEATÓRIO: MODELOS, APLICAÇÕES E SIMULAÇÃO
+# PASSEIO ALEATÓRIO: SIMULAÇÕES PARA VALIDAÇÃO DE MODELOS
 
 ## Introdução
 
+A Simulação de Monte Carlo é uma técnica baseada em amostragem aleatória para emular sistemas complexos, normalmente por
+meios computacionais [@harrison_introduction_2010]. Dessa forma, é útil no estudo do comportamento de passeios aleatórios
+com parâmetros diversos.
 
-Blaise Pascal propôs no século XVII o problema da Ruína do Jogador que, desde então, tem sido
-amplamente estudado por diversos pesquisadores. Em nossos estudos, visitamos uma revisão dos principais resultados
-conhecidos sobre o problema clássico e introduzimos uma nova abordagem. Consideramos um jogo entre dois jogadores, A e B,
-que começam com $a$ e $b$ reais, respectivamente. Definimos uma variável aleatória discreta $X$, que determina as regras
-de ganho e perda de dinheiro dentro do jogo. O jogo termina quando um dos
-jogadores atinge um saldo de zero reais ou não pode honrar a quantia devida ao oponente.
+Neste projeto, realizado conjuntamente com Eduardo Ishihara, analisamos um estimador proposto por esse para
+passeios mais flexíveis através do emprego dessas simulações na linguagem de programação Julia. A descrição desses
+passeios e de suas diferenças quando comparados ao problema clássico da Ruína do Jogador será apresentada ao longo do
+corpo do texto.
 
-Neste estudo, propomos um estimador para a esperança da duração total do jogo, considerando dois cenários distintos: um
-em que $X$ é fixo (caso homogêneo) e outro em que $X$ varia conforme a fortuna atual dos jogadores (caso não homogêneo).
-Para validar os resultados teóricos obtidos com o estimador, utilizamos algoritmos de simulações de Monte Carlo.
-
-Nesse relatório, apresentamos nosso progresso com o estudo do caso fixo.
-
-## Discussão
+## Atividades Desenvolvidas
 
 Inicialmente, realizamos uma revisão da literatura existente para identificar os principais resultados sobre o problema
-da Ruína do Jogador e suas variações. Encontramos publicações abordando até o quinto momento (centrado e não centrado) da
-duração do jogo, assim como variações que incluem possibilidade de empate, probabilidades de vitória assimétricas entre
-os jogadores, aumento no número de participantes e probabilidades de vitória não uniformes ao longo do jogo, um meio não
-uniforme.
+da Ruína do Jogador e suas variações. Na versão original do jogo proposta por Pascal [@edwards_pascals_1983], dois jogadores, A e B,
+competem apostando certa quantia de dinheiro no lançamento de uma moeda honesta. Ao ganhar a aposta, o jogador A recebe R\$1,00
+do jogador B e vice-versa, descrevendo um martingal [@doyle_solution_1984]. Além da questão proposta por Pascal sobre a
+probabilidade do jogador ir a ruína, ou seja, perder todo seu dinheiro, dado que começou com uma quantia $a$, também
+foram estudados o tempo esperado de duração do jogo [@stern_conditional_1975] e, pelo cálculo de equações de diferenças
+finitas, a variância dessa duração [@andel_variance_2012]. Todavia, os resultados obtidos por esses autores funcionam apenas
+para ganho e perda de R\$1,00 por aposta. 
 
-Com base nesses resultados, utilizamos equações de diferenças finitas não homogêneas para reproduzir as formulações teóricas.
-Paralelamente, desenvolvemos algoritmos de simulação baseados no método de Monte Carlo. A primeira versão do algoritmo,
-implementada em Python, não obteve resultados satisfatórios em um tempo razoável. Para solucionar essa limitação, migramos
-para a linguagem Julia, especializada na manipulação de *arrays*, o que resultou em um aumento significativo na eficiência
-computacional e, por conseguinte, na qualidade dos dados por nos permitir rodar mais iterações.
+### Introdução do estimador
 
-Para demonstrar essa melhoria, comparamos o mesmo (ingênuo) algoritmo em Julia e Python*, respectivamente:
-
-```{julia}
-using StatsBase, LaTeXStrings, Random
-
-function main()
-  Random.seed!(1)
-  duracoes = []
-  M = 1000000
-  p = 0.4
-  teto = 100
-  for i in 1:M
-  saldo = 30
-    duracao = 0
-    while saldo > 0 && saldo < teto
-      if p > rand()
-        saldo += 1
-      else
-        saldo -= 1
-      end
-      duracao += 1
-    end
-    append!(duracoes, duracao)
-  end
-  display(LaTeXString("Média da duração de $M passeios:
-                      \$ $(round(mean(duracoes), digits = 2))\$"))
-  display(LaTeXString("Duração da execução:"))
-end
-
-@elapsed main()
-```
-{{< pagebreak >}}
-
-```{julia}
-using PyCall
-
-py"""
-def simulacao_py():
-  import random
-  import time
-
-
-  def main():
-      random.seed(1)
-      duracoes = []
-      M = 1000000
-      p = 0.4
-      teto = 100
-      for i in range(M):
-          saldo = 30
-          duracao = 0
-          while saldo > 0 and saldo < teto:
-              if p > random.random():
-                  saldo += 1
-              else:
-                  saldo -= 1
-              duracao += 1
-          duracoes.append(duracao)
-      media = sum(duracoes) / len(duracoes)
-      print(f"Média da duração de {M} passeios: {media:.2f}")
-    
-
-  start_time = time.time()
-  main()
-  print(f"Duração da execução: {time.time() - start_time} segundos")
-"""
-py"simulacao_py"()
-```
-
-\**Nota*: Foi utilizado a biblioteca PyCall que nos permite criar um ambiente Python no Julia - possibilitando rodar código Python nessa linguagem.
-A performance pode ter sido afetada minimamente nos tempos de chamada ao Kernel de execução do Python.
-
-Desconsiderando o tempo de compilação (aproximadamente 1.2 segundos do tempo total do código em Julia, que só precisa ser
-feito uma vez), temos que essa linguagem costuma ser considerávelmente mais rápida do que o Python, o que foi crucial nessas
-simulações.
-
-Nesse teste simples podemos comparar nosso estimador sob estudo com fórmulas conhecidas da probabilidade e as simulações.
-
-Das simulações, temos a média de duração (que se aproxima da esperança de duração) como $150$.
-
-Usando um resultado de probabilidade, temos
+Usando os resultados de @stern_conditional_1975, temos a esperança da duração $T$ de um jogo iniciado com saldo $a, \mu_a = E(T_a)$
 
 $$
 \begin{aligned}
@@ -133,14 +55,13 @@ a(N - a) & \mathbf{se}\ p = q = 1/2, \\
 \end{aligned}
 $$
 
-Onde, nesse caso, a chance de ganhar $p=0.4 \Rightarrow q = 1-p$, o início $a=30$ e final $N=100$. Da fórmula, temos então
-que
+Vamos considerar um passeio com a chance de ganhar $p=0.4, q = 1-p$, o início $a=30$ e final $N=100$.
+Da fórmula, temos que
 $$
-\mu_a = 150
+\mu_a = \frac{30}{0.2} - \frac{100}{0.2} \left( \frac{1 - (0.6/0.4)^{30}}{1 - (0.6/0.2)^{100}} \right) \approx 150
 $$
-O que confere com nossas simulações.
 
-Usando nossa fórmula de aproximação para $q\neq p \neq \frac{1}{2}$,
+Utilizando o estimador proposto por Ishihara
 $$
 \widehat{E}(T_a) = \left\{ \begin{array}{cc}
 \frac{N-a}{p-q} & \mathbf{se}\ p > q \\
@@ -148,11 +69,13 @@ $$
 \end{array}\right.
 $$
 
-Ou seja, $\frac{30}{0.2}=150$. O que também condiz com os resultados.
+Para $q\neq p \neq \frac{1}{2}$, temos $\frac{30}{0.2}=150$. O que condiz com os resultados teóricos.
 
-Durante o desenvolvimento dos algoritmos, introduzimos novas regras ao jogo. Nas primeiras simulações, definimos que o
-jogador A ganhava $1$ real com probabilidade $\frac{1}{3}$, ganhava $3$ reais com probabilidade $\frac{1}{3}$ e perdia $1$
-real com probabilidade $\frac{1}{3}$. O novo estimador apresentou um resultado teórico muito próximo ao obtido nas simulações.
+### Aplicações em casos flexíveis
+
+Por si só, o último resultado não diz muito sobre o estimador, uma vez que podem conferir pelo pequeno valor de
+$\left( \frac{1 - (q/p)^a}{1 - (q/p)^N} \right)$. Então, passamos a testar casos em que a fórmula da esperança original
+deixou de funcionar.
 
 Adaptando o estimador acima, podemos trocar o denominador por uma esperança calculada com base nas regras do jogo.
 Seja X a variável aleatória que contém as regras do jogo:
@@ -163,16 +86,19 @@ X = \begin{cases}
 \end{cases}
 $$
 
-Num caso de o jogador ganhar 2 reais com probabilidade $p=0.3$ e perder 1 real com probabilidade $q = 0.7$, temos a variável
-de regra X
+Com esse recurso, podemos expandir o estimador proposto acima para funcionar com jogos mais complexos.
+
+Um desses jogos foi uma simples variação do jogo anterior, ainda com $p = 0.4, q = 1-p, a = 30$ e $N=100$, fizemos
+o apostador ganhar R\$2,00 por vitória, mas ainda perder apenas R\$1,00 por derrota. Nesse caso, temos nossa variável de
+regras X
 $$
 X = \begin{cases}
-2, \text{ com probabilidade } 0.3 \\
--1, \text{ com probabilidade } q = 1-p \\
+2, \text{ com probabilidade } 0.4 \\
+-1, \text{ com probabilidade } 0.6 \\
 \end{cases}
 $$
 
-Com esse recurso, podemos expandir o estimador proposto acima para funcionar com jogos mais complexos:
+E a versão expandida do estimador
 $$
 \widehat{E}(T_a) = \left\{ \begin{array}{cc}
 \frac{N-a}{E(X)} & \mathbf{se}\ E(X) > 0 \\
@@ -180,13 +106,40 @@ $$
 \end{array}\right.
 $$
 
+Desenvolvemos algoritmos de simulação baseados no método de Monte Carlo para testar o estimador. A primeira versão do algoritmo,
+implementada em Python, não satisfez as demandas de tempo e complexidade que desejavamos. Para solucionar essa limitação, migramos
+para a linguagem Julia, com velocidade computacional competitiva com o C [@godoy_evaluating_2023]. Assim, conseguimos rodar
+um número maior de simulações em tempo razoável para melhorar a acurácia dos resultados [@ritter_determining_2011].
+
+Aplicando a fórmula original, temos
+$$
+\mu_a = 150
+$$
+
+Isso desconsidera a nova regra de ganho do jogo, o que é refletido na discrepância com o valor simulado de $350$
+(veja o Apêndice A para o código dessa simulação assim como uma comparação com entre as linguagens Julia e Python) 
+
+Considerando que $E(X) = 0.2$, Aplicando o estimador, temos que
+$$
+\widehat{E}(T_a) = \frac{70}{0.2} = 350
+$$
+
+Durante o desenvolvimento dos algoritmos, introduzimos novas regras ao jogo para testarmos a flexibilidade do estimador.
+Nas primeiras simulações, definimos que o jogador A ganhava $1$ real com probabilidade $\frac{1}{3}$, ganhava $3$
+reais com probabilidade $\frac{1}{3}$ e perdia $1$ real com probabilidade $\frac{1}{3}$. Com $a=30, N = 100$, temos
+as simulações (Apêndice B), que $\mu_a \approx 70.7$. Nessa configuração, $E(X) = 1$ e, pelo estiamdor,
+$\widehat{E}(T_a) = \frac{100-30}{1}=70$.
+
 Testamos o estimador sob diferentes regras e, na maioria dos casos, mostrou forte concordância com
-os valores simulados. Isso destaca a vantagem do estimador: conseguimos estimar a duração de um jogo com regras
-diversas, o que, até onde encontramos na literatura, não foi encotrado apenas com teoria das probabilidades.
+os valores simulados. Isso destaca a vantagem do estimador: estimar a duração de um jogo com regras
+diversas, o que, até onde encontramos na literatura, não foi descrito apenas com desenvolvimento teórico em probabilidade.
 
-A fraqueza do estimador atualmente reside nas regras que levam a $E(X)$ próximo de 0, uma vez que, conforme $E(X)\rightarrow 0$,
-sua presença no denominador provoca divergências quando comparado com o valor simulado.
+Estudamos também como simplificar a variável aleatória de regras $X$ através de médias quando esta pode assumir mais
+que dois valores.
 
+O ponto fraco do estimador atualmente reside nas regras que levam a $E(X)$ próximo de 0, uma vez que, conforme $E(X)$
+se aproxima de 0, descrevendo o passeio como um martingal, sua presença no denominador provoca divergências quando
+comparado com o valor simulado.
 
 ## Conclusão e Passos Seguintes
 
@@ -202,20 +155,166 @@ eficientes para lidar com cenários de alta complexidade, o que será um obstác
 homogêneo.
 
 Um interessante caminho de abordagem que buscaremos explorar é a conexão entre passeios aleatórios e redes elétricas como descrito
-no livro de Snell. Queremos descobrir se existem conexões entre o estimador proposto e fórmulas da física, além de outras
-abordagens para estudarmos passeios aleatórios, como fizemos com o emprego de equações de diferenças finitas.
+por @doyle_random_1984. Queremos descobrir se existem conexões entre o estimador proposto e fórmulas da física, além de outras
+abordagens para estudarmos passeios aleatórios, como o emprego de equações de diferenças finitas e o estudo de martingais.
 
 ## Bibliografia
 
-<!--<Artigo bonitinho da variância>-->
+::: {#refs}
+:::
 
-ANDĚL, J.; HUDECOVÁ, Š. Variance of the game duration in the gambler’s ruin problem. **Statistics & Probability Letters**, v. 82, n. 9, p. 1750–1754, 31 maio 2012.
+{{< pagebreak >}}
 
-<!--<Origem da ruina do jogador>-->
+## Apêndice A - Comparação de um mesmo algoritmo em Julia e Python {.appendix}
 
-EDWARDS, A. W. F. Pascal’s Problem: The “Gambler’s Ruin”. **International Statistical Review / Revue Internationale de Statistique**, v. 51, n. 1, p. 73–79, 1983.
+Para validar nossa decisão de trocarmos de linguagem, comparamos o mesmo (ingênuo) algoritmo em Julia e Python que usamos
+para testar o estimador:
+
+### Julia
+
+```{julia}
+using  LaTeXStrings, Random
+
+function main()
+  Random.seed!(1)
+  duracoesSoma = 0
+  M = 1_000_000
+  p = 0.4
+  teto = 100
+  for i in 1:M
+  saldo = 30
+    duracao = 0
+    while saldo > 0 && saldo < teto
+      if p > rand()
+        saldo += 2
+      else
+        saldo -= 1
+      end
+      duracao += 1
+    end
+    duracoesSoma += duracao
+  end
+  display(LaTeXString("Média da duração de $M passeios:
+                      \$ $(round(duracoesSoma/M, digits = 2))\$"))
+  display(LaTeXString("Tempo de execução em segundos:"))
+end
+
+@elapsed main()
+```
+{{< pagebreak >}}
+
+### Python
+
+```python
+import random
+import time
 
 
-<!-- Livro de elétrica -->
+def main():
+    random.seed(1)
+    duracoes = 0
+    M = 1_000_000
+    p = 0.4
+    teto = 100
+    for i in range(M):
+        saldo = 30
+        duracao = 0
+        while saldo > 0 and saldo < teto:
+            if p > random.random():
+                saldo += 2
+            else:
+                saldo -= 1
+            duracao += 1
+        duracoes += duracao
+    media = duracoes / M
+    print(f"Média da duração de {M} passeios: {media:.2f}")
+  
 
-DOYLE, P. G.; J. LAURIE SNELL. Random Walks and Electric Networks. [s.l.] **American Mathematical Soc.**, 1984. 
+start_time = time.time()
+main()
+print(f"Tempo de execução: {time.time() - start_time} segundos")
+```
+
+```{julia}
+#| echo: false
+
+using PyCall
+
+py"""
+def simulacao_py():
+  import random
+  import time
+
+  def main():
+      random.seed(1)
+      duracoes = 0
+      M = 1000000
+      p = 0.4
+      teto = 100
+      for i in range(M):
+          saldo = 30
+          duracao = 0
+          while saldo > 0 and saldo < teto:
+              if p > random.random():
+                  saldo += 2
+              else:
+                  saldo -= 1
+              duracao += 1
+          duracoes += duracao
+      media = duracoes / M
+      print(f"Média da duração de {M} passeios: {media:.2f}")
+    
+
+  start_time = time.time()
+  main()
+  print(f"Tempo de execução: {time.time() - start_time} segundos")
+"""
+py"simulacao_py"()
+```
+
+Para a simulação em Python nesse artigo, foi utilizado a biblioteca PyCall que nos permite criar um ambiente Python no Julia,
+possibilitando rodar código Python nessa linguagem o que foi necessário para inclusão de sua saída exata no relatório.
+A performance pode ter sido afetada minimamente nos tempos de chamada ao Kernel de execução do Python.
+
+### Decisão de mudança
+
+Desconsiderando o curto tempo de compilação de aproximadamente segundos do tempo total do código em Julia, que só precisa ser
+feito uma vez, temos que essa linguagem costuma ser considerávelmente mais rápida do que o Python, o que foi crucial nessas
+simulações e justificou nossas mudanças como previsto por resultados anteriores de @godoy_evaluating_2023
+
+## Apêndice B - Código de simulação com regras mais complexas
+
+```{julia}
+using LaTeXStrings, Random
+
+function main()
+  Random.seed!(1)
+  duracoesSoma = 0
+  M = 10_000_000
+  p1 = 1/3
+  p2 = 2/3
+  teto = 100
+  for i in 1:M
+  saldo = 30
+    duracao = 0
+    while saldo > 0 && saldo < teto
+      moeda = rand()
+      if moeda < p2
+        if moeda < p1
+          saldo += 1
+        else
+          saldo += 3
+        end
+      else
+        saldo -= 1
+      end
+      duracao += 1
+    end
+    duracoesSoma += duracao
+  end
+  display(LaTeXString("Média da duração de $M passeios:
+                      \$ $(round(duracoesSoma/M, digits = 2))\$"))
+end
+main()
+```
+
