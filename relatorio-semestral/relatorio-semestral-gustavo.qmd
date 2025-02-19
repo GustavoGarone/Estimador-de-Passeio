@@ -2,6 +2,7 @@
 title: "Relatório Semestral"
 bibliography: references.bib
 csl: associacao-brasileira-de-normas-tecnicas.csl
+lang: pt
 
 authors:
   - name: "Orientando: Gustavo Silva Garone"
@@ -36,8 +37,8 @@ corpo do texto.
 
 Inicialmente, realizamos uma revisão da literatura existente para identificar os principais resultados sobre o problema
 da Ruína do Jogador e suas variações. Numa versão simples da original proposta por Pascal [@edwards_pascals_1983], dois jogadores, A e B,
-competem apostando certa quantia de dinheiro no lançamento de uma moeda honesta. Ao ganhar a aposta, o jogador A recebe R\$1,00
-do jogador B e vice-versa, descrevendo um martingal [@doyle_solution_1984]. Além da questão proposta por Pascal sobre a
+competem apostando  no lançamento de uma moeda honesta. Ao ganhar a aposta, o jogador A recebe R\$1,00
+do jogador B e vice-versa, descrevendo um martingal [@doyle_random_1984 p. 11-14]. Além da questão proposta por Pascal sobre a
 probabilidade do jogador ir a ruína, ou seja, perder todo seu dinheiro, dado que começou com uma quantia $a$, também
 foram estudados o tempo esperado de duração do jogo [@stern_conditional_1975] e, pelo cálculo de equações de diferenças
 finitas, a variância dessa duração [@andel_variance_2012]. Todavia, os resultados obtidos por esses autores funcionam apenas
@@ -57,7 +58,7 @@ a(N - a) & \mathbf{se}\ p = q = 1/2, \\
 $$ {#eq-original}
 
 Vamos considerar um passeio com a chance de ganhar $p=0.4, q = 1-p$, o início $a=30$ e dinheiro total em aposta entre os dois jogadores (final) $N=100$.
-De @eq-original, temos que
+De ([-@eq-original]), temos que
 $$
 \mu_a = \frac{30}{0.2} - \frac{100}{0.2} \left( \frac{1 - (0.6/0.4)^{30}}{1 - (0.6/0.4)^{100}} \right) \approx 150
 $$
@@ -70,7 +71,7 @@ $$
 \end{array}\right.
 $$ {#eq-estimador-simples}
 
-Para $q\neq p \neq$, temos $\frac{30}{0.2}=150$. O que condiz com os resultados teóricos.
+Para $q\neq p$, temos $\frac{30}{0.2}=150$. O que condiz com os resultados teóricos.
 
 ### Aplicações em casos com regras diferentes
 
@@ -109,8 +110,9 @@ $$ {#eq-estimador-expandido}
 
 Desenvolvemos algoritmos de simulação baseados no método de Monte Carlo para testar o estimador. A primeira versão do algoritmo,
 implementada em Python, não satisfez as demandas de tempo e complexidade que desejávamos. Para solucionar essa limitação, migramos
-para a linguagem Julia, com velocidade computacional competitiva com o C [@godoy_evaluating_2023]. Assim, conseguimos rodar
-um número maior de simulações em tempo razoável para melhorar a acurácia dos resultados [@ritter_determining_2011].
+para a linguagem Julia, com velocidade computacional competitiva com o C [@godoy_evaluating_2023], conhecida por sua alta eficiência
+característica da operação em baixo nível. Assim, conseguimos rodar um número maior de simulações em tempo razoável para melhorar a
+acurácia dos resultados [@ritter_determining_2011].
 
 Chamaremos de $\bar{\psi}_M$ a média das durações dos $M$ passeios simulados. Confere que
 $\bar{\psi}_M\stackrel{M \rightarrow \infty}{\rightarrow} E(T_a)$. Isto é, os valores simulados se aproximam
@@ -122,7 +124,7 @@ $$
 $$
 
 Isso desconsidera a nova regra de ganho do jogo, o que é refletido na discrepância com o valor simulado de 
-$\bar{\psi}_M = 350$
+$\bar{\psi}_M \approx 350$
 (veja o Apêndice A para o código dessa simulação assim como uma comparação entre as linguagens Julia e Python). 
 
 Considerando que $E(X) = 0.2$, Aplicando o estimador expandido ([-@eq-estimador-expandido]), temos que
@@ -133,7 +135,7 @@ $$
 Durante o desenvolvimento dos algoritmos, introduzimos novas regras ao jogo para testarmos a flexibilidade do estimador.
 Nas primeiras simulações, definimos que o jogador A ganhava $1$ real com probabilidade $\frac{1}{3}$, ganhava $3$
 reais com probabilidade $\frac{1}{3}$ e perdia $1$ real com probabilidade $\frac{1}{3}$. Com $a=30, N = 100$, temos
-as simulações (Apêndice B), que $\mu_a \approx 70.7$. Nessa configuração, $E(X) = 1$ e, pelo estimador,
+as simulações (Apêndice B), que $\bar{\psi}_M \approx 70.7$. Nessa configuração, $E(X) = 1$ e, pelo estimador,
 $\widehat{E}(T_a) = \frac{100-30}{1}=70$.
 
 Testamos o estimador sob diferentes regras e, na maioria dos casos, mostrou forte concordância com
@@ -147,8 +149,11 @@ O ponto fraco do estimador atualmente reside nas regras que levam a $E(X)$ próx
 se aproxima de $0$, descrevendo o passeio como um martingal, sua presença no denominador provoca divergências quando
 comparado com o valor simulado.
 
+
 ```{julia}
 #| echo: false
+#| fig-env: figure
+#| fig-cap: Comparação entre o estimador e simulações
 using  Plots, LaTeXStrings, Random
 Random.seed!(2)
 x = [+2, -1]
@@ -206,7 +211,7 @@ function main()
   analise = plot(simulacoes, estimacoes, diferenca, xlabel=L"p",
                  titlefontsize = 8, layout=(3,1),
                  plot_title=LaTeXString(
-"\$^{a = 10, N = 100, X = \\{+2, -1\\}, p \\textrm{\\ variando\\ a\\ cada\\ } 0.001 \\textrm{\\ no\\ intervalo\\ } (0,1)}\\ \\ \$"),
+"\$^{a = 10, N = 100, X = \\{+2, -1\\}, p \\textrm{\\ variando\\ } 0.001 \\textrm{\\ em\\ } (0,1)}\$"),
                  tickfont=6)
   display(analise)
 end
@@ -227,7 +232,7 @@ eficientes para lidar com cenários de alta complexidade, o que será um obstác
 homogêneo.
 
 Um interessante caminho de abordagem que buscaremos explorar é a conexão entre passeios aleatórios e redes elétricas como descrito
-por DOYLE & SNELL (1984). Queremos descobrir se existem conexões entre o estimador proposto e fórmulas da física, além de outras
+por @doyle_random_1984. Queremos descobrir se existem conexões entre o estimador proposto e fórmulas da física, além de outras
 abordagens para estudarmos passeios aleatórios, como o emprego de equações de diferenças finitas e o estudo de martingais.
 
 {{< pagebreak >}}
@@ -268,12 +273,12 @@ function main()
     end
     duracoesSoma += duracao
   end
-  display(LaTeXString("Média da duração de $M passeios:
-                      \$ $(round(duracoesSoma/M, digits = 2))\$"))
-  display(LaTeXString("Tempo de execução em segundos:"))
+  display(LaTeXString("Média da duração de \$$M\$ passeios:
+                      \$$(round(duracoesSoma/M, digits = 2))\$"))
 end
 
-@elapsed main()
+tempo = @elapsed main()
+display(LaTeXString("Tempo de execução em segundos: $tempo"))
 ```
 {{< pagebreak >}}
 
@@ -312,7 +317,7 @@ print(f"Tempo de execução: {time.time() - start_time} segundos")
 ```{julia}
 #| echo: false
 
-using PyCall
+using PyCall, LaTeXStrings
 
 py"""
 def simulacao_py():
@@ -335,15 +340,17 @@ def simulacao_py():
                   saldo -= 1
               duracao += 1
           duracoes += duracao
-      media = duracoes / M
-      print(f"Média da duração de {M} passeios: {media:.2f}")
+      return duracoes / M
+      # print(f"Média da duração de {M} passeios: {media:.2f}")
     
 
   start_time = time.time()
-  main()
-  print(f"Tempo de execução: {time.time() - start_time} segundos")
+  return main()
+  # print(f"Tempo de execução: {time.time() - start_time} segundos")
 """
-py"simulacao_py"()
+a = @elapsed media = py"simulacao_py"()
+display(LaTeXString("Média da duração de \$1000000\$ passeios: \$$(round(media, digits=2))\$"))
+display(LaTeXString("Tempo de execução: $a segundos"))
 ```
 
 Para a simulação em Python nesse artigo, foi utilizado a biblioteca PyCall que nos permite criar um ambiente Python no Julia,
@@ -387,7 +394,7 @@ function main()
     duracoesSoma += duracao
   end
   display(LaTeXString("Média da duração de $M passeios:
-                      \$ $(round(duracoesSoma/M, digits = 2))\$"))
+                      \$$(round(duracoesSoma/M, digits = 2))\$"))
 end
 main()
 ```
