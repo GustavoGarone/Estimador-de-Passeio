@@ -1,5 +1,5 @@
 --- 
-title: "Relatório Semestral"
+title: "Avaliação de um estimador para a duração média do jogo da Ruína do Jogador por simulações de Monte Carlo"
 bibliography: references.bib
 csl: associacao-brasileira-de-normas-tecnicas.csl
 lang: pt
@@ -25,70 +25,79 @@ format:
       text: |
         \usepackage{authblk}
 
+execute:
+  keep-ipynb: true
+  # eval: false
+fig-cap-location: top
 ---
 
-# PASSEIO ALEATÓRIO: SIMULAÇÕES E AVALIAÇÃO DE NOVAS ABORDAGENS
+# Introdução
 
-## Introdução
-
-Numa versão simples da original proposta por Pascal [@edwards_pascals_1983], dois jogadores, A e B,
+Em uma versão simples da original proposta por Pascal [@edwards_pascals_1983], dois jogadores, A e B,
 competem apostando no lançamento de uma moeda honesta. Ao ganhar a aposta, o jogador A recebe um real
 do jogador B e vice-versa. Além da questão proposta por Pascal sobre a
 probabilidade do jogador ir à ruína, ou seja, perder todo seu dinheiro, dado que começou com uma quantia $a$, também
 foram estudados o tempo esperado de duração do jogo [@stern_conditional_1975] e, pelo cálculo de equações de diferenças
-finitas, a variância dessa duração [@andel_variance_2012]. Todavia, os resultados obtidos por esses autores funcionam apenas
-para ganho e perda de um real por aposta. 
+finitas, a variância dessa duração [@andel_variance_2012].
 
-Neste projeto conjunto com Eduardo Ishihara, analisamos um estimador proposto por este para
-passeios aleatórios com regras mais complexas de ganho e perda através do emprego dessas simulações. 
-A descrição desses passeios e de suas diferenças quando comparados a uma forma simples do problema
-clássico da Ruína do Jogador será apresentada ao longo do corpo do texto.
+Todavia, os resultados obtidos por esses autores funcionam apenas para ganho e perda de um real por aposta. Altere o
+dinheiro disputado por lançamento, introduza a possibilidade de empate ou crie relações de dependência entre os lançamentos
+e os métodos utilizados para calcular analíticamente a esperança da duração do jogo simples já não são mais adequados.
+[@ishihara_um_2025]
 
-Para isto, empregamos o método de Monte Carlo. A Simulação de Monte Carlo é uma técnica baseada em amostragem aleatória
+Neste projeto conjunto com Eduardo Ishihara, propusemos um estimador para
+passeios aleatórios com regras mais complexas de ganho e perda e o avaliamos através do emprego de simulações. 
+Para isto, empregamos o método de Monte Carlo, uma técnica baseada em amostragem aleatória
 para emular sistemas complexos, normalmente por meios computacionais [@harrison_introduction_2010].
 Dessa forma, é útil no estudo do comportamento de passeios aleatórios com parâmetros diversos. Sendo assim,
-foi crucial na avalição do estimador proposto uma vez que, como elaborado por Ishihara, replicar as técnicas e cálculos para jogos
-mais complexos nem sempre é possível.
+foi crucial na avalição do estimador proposto, uma vez que replicar e adaptar as técnicas e cálculos usados para obter
+os resultados nos jogos simples nem sempre é possível com jogos mais complexos.
 
-## Atividades Desenvolvidas
+Empregando simulações, conseguimos verificar os casos nos quais estimador é ou não adequado. Exploramos os jogos em que o
+dinheiro em aposta por lançamento não é apenas um real, abordando jogos cujos resultados teóricos ainda não foram desenvolvidos.
+Finalmente, com a estrutura do estimador proposto, abrimos caminhos para estudo sobre casos com meios não-homogêneos —
+isto é, jogos cujo resultado de cada lançamento dependem dos anteriores — e empates.
 
-### Descrevendo jogos
+# Atividades Desenvolvidas
+
+## Descrevendo jogos
 
 No problema da Ruína do Jogador, além do valor inicial $a$ do primeiro jogador e o dinheiro total em aposta $N$, podemos
 empregar uma variável aleatória $X$ para descrever o ganho e perda em cada jogada ao longo do processo estocástico
 no tempo discreto $T$. Logo
-
 $$
-X = \begin{cases}
-1, P(X=1) = p \\
--1, P(X=-1) = 1-p = q
-\end{cases}
+X = \left\{ \begin{array}{rl}
+1, &P(X=1) = p \\
+-1, &P(X=-1) = 1-p = q
+\end{array} \right .
 $$
 
-Com essa variável aleatória de regras $X$, podemos
-obter resultados tratando da esperança da duração $T$ de jogos desse tipo em função de $a$ e $N$ [@stern_conditional_1975]
-
+Com a variável aleatória de regras $X$ dessa forma, com ganho e perda de um real, a esperança da duração $T$ de jogos
+desse tipo em função de $a$ e $N$ [@stern_conditional_1975] é dada por
 $$
 \begin{aligned}
-\mu_{a,N} = E(T_{a,N}) = \left\{ \begin{array}{cc}
-a(N - a) & \mathbf{se}\ p = q = 1/2, \\
-\frac{a}{q - p} - \frac{N}{q - p} \left( \frac{1 - (q/p)^a}{1 - (q/p)^N} \right) & \mathbf{se}\ p \neq q.
+\mu_{a,N} = E(T_{a,N}) = \left\{ \begin{array}{rl}
+a(N - a) & \mathbf{se}\ p = q = 1/2 \\
+\frac{a}{q - p} - \frac{N}{q - p} \left( \frac{1 - (q/p)^a}{1 - (q/p)^N} \right) & \mathbf{se}\ p \neq q
 \end{array} \right.
 \end{aligned}
 $$ {#eq-original}
 
-Ao técnicas utilizadas para o desenvolvimento de  para outras formas de $X$ mais complexas - como com valores de ganho
-e perda diferentes de $1$, ou com mais valores possíveis - percebe-se que se torna inviável a resolução analítica de problemas desse tipo conforme a complexidade de $X$ aumenta. Portanto, foi proposto um estimador para avaliação atraveś de simulações de Monte Carlo.
+Com esse recurso, descreveremos jogos futuros em termos de $J = J(a,N,X)$, em que $a$ representa o valor inicial do
+jogador A, $N$
+representa o dinheiro total em aposta $N=a+b$, com $b$ o saldo do jogador B, e $X$ a variável aleatória que contém as
+regras de ganho e perda do jogo.
 
-Descreveremos jogos (passeios) futuros em termos de $J = J(a,N,X)$, em que $a$ representa o valor inicial, $N$
-representa o valor da barreira superior (dinheiro em aposta) e $X$ a variável aleatória que contém as regras de ganho e
-perda do jogo.
-e buscaremos $\mu_J = E(T_J)$ a esperança
-da duração do jogo $J$, com $X$ da forma genérica
+Ao empregar e adaptar as técnicas utilizadas para o desenvolvimento de ([-@eq-original])
+para outras formas de regras $X$ mais complexas — como com valores de ganho
+e perda diferentes de $1$; ou com mais valores possíveis — percebe-se que se torna inviável a resolução analítica de
+problemas desse tipo conforme a complexidade de $X$ aumenta. Portanto, na busca de conseguir aproximar esses resultados,
+foi proposto um estimador para a esperança da duração de jogos desse tipo [@ishihara_um_2025]. Para avaliarmos a
+precisão desse estimador, empregamos simulações computacionais de jogos atraveś do método de Monte Carlo.
 
-### Introdução do estimador
+## Introduzindo o estimador
 
-O estimador sob avaliação é da seguinte forma
+O estimador sob avaliação proposto por Ishihara para a esperança da duração um jogo J é da seguinte forma
 $$
 \widehat{E}(T_J) = \left\{ \begin{array}{cc}
 \frac{N-a}{E(X)} & \mathbf{se}\ E(X) > 0 \\
@@ -96,26 +105,27 @@ $$
 \end{array}\right.
 $$ {#eq-estimador}
 
-Consideraremos um passeio $J_{30,100,X}$, com ([-@eq-var-x])
+Consideraremos um passeio $J = J(a=30,N=100,X)$, com a variável de regras $X$ dada por
 $$
-X = \begin{cases}
+X = \left\{ \begin{array}{rl}
 1, P(X=1) = 0.4 \\
 -1, P(X=-1) = 0.6
-\end{cases}
+\end{array} \right .
 $$
-De ([-@eq-original]), temos que
+De ([-@eq-original]), temos que o valor teórico do tempo médio de duração do jogo é
 $$
-\mu_J = \frac{30}{0.2} - \frac{100}{0.2} \left( \frac{1 - (0.6/0.4)^{30}}{1 - (0.6/0.4)^{100}} \right) \approx 150
+\mu_J = \frac{30}{0.2} - \frac{100}{0.2} \left( \frac{1 - (0.6/0.4)^{30}}{1 - (0.6/0.4)^{100}} \right) = 150
 $$
 
-De ([-@eq-estimador]), como $E(X) = -0.2$, temos $\widehat{E(T_J)} = \frac{30}{0.2}=150$. O que condiz com o resultado téorico.
+De ([-@eq-estimador]), temos que o valor estimado para a esperança da duração de $J$ é $\widehat{E}(T_J) = \frac{30}{0.2}=150$, o que condiz com o resultado téorico.
+Isso nos deu certa segurança para continuar explorando o estimador em jogos mais complexos.
 
-#### Aplicações em casos com regras diferentes
+### Aplicações em casos com regras diferentes
 
-Passamos a estudar casos em que ([-@eq-original]) deixa de funcionar devido a uma maior complexidade de $X$.
-
-Um desses jogos foi uma simples variação do jogo anterior, $a = 30$ e $N=100$, mas fizemos o apostador ganhar
-dois por vitória, ainda perdendo apenas um por derrota. Nesse caso, temos nossa variável de regras $X$ 
+Exploramos casos com uma maior complexidade da variável de regras $X$.
+Um destes foi uma simples variação do jogo anterior, mantendo 
+o valor inicial dos jogadores A, $a=30$ e B, $b=70$, $N= a + b = 100$, com a variação de que o apostador ganha
+dois reais por vitória e perde apenas um por derrota. Nesse caso, a variável de regras $X$ é dada por
 $$
 X = \begin{cases}
 2, P(X=2) = 0.4 \\
@@ -123,50 +133,56 @@ X = \begin{cases}
 \end{cases}
 $$
 
-E o novo jogo $J_{30, 100, X}$
+Denotamos esse novo jogo por $J = (a=30, N=100, X)$
 
-Uma vez que ([-@eq-original]) não seria apropriada devido a nova forma de $X$, desenvolvemos algoritmos de simulação
-baseados no método de Monte Carlo para avaliarmos o estimador. A primeira versão do algoritmo,
-implementada em Python, não satisfez as demandas de tempo e complexidade que desejávamos. Para solucionar essa limitação, migramos
-para a linguagem Julia, com velocidade computacional competitiva com o C [@godoy_evaluating_2023], conhecida por sua alta eficiência
-característica da operação em baixo nível. Assim, conseguimos rodar um número maior de simulações em tempo razoável para melhorar a
-acurácia dos resultados [@ritter_determining_2011].
+Uma vez que ([-@eq-original]) não seria apropriada para fornecer a esperança da duração do jogo devido à nova forma de
+$X$, impossibilitando uma comparação com o estimador, desenvolvemos algoritmos de simulação
+baseados no método de Monte Carlo para avaliarmos o estimador ([-@eq-estimador]) da esperança da duração do jogo.
+A primeira versão do algoritmo, implementada em Python, não satisfez as demandas de tempo e complexidade computacional
+que desejávamos.
+Para solucionar essa limitação, migramos para a linguagem Julia, com velocidade computacional competitiva com o C
+[@godoy_evaluating_2023], conhecida por sua alta eficiência característica da operação em baixo nível. Assim,
+conseguimos realizar um número maior de simulações em tempo razoável, melhorando a acurácia dos resultados
+[@ritter_determining_2011].
 
-Chamaremos de $\bar{\psi}_{M,J}$ a média das durações dos $M$ passeios $J$ simulados. Confere que
-$\bar{\psi}_{M,J}\stackrel{M \rightarrow \infty}{\rightarrow} \mu_J$. Isto é, os valores simulados se aproximam
+Denotamos por $\bar{\psi}_{M,J}$ a média das durações dos $M$ jogos $J$ simulados. Pela Lei dos Grandes Números, temos que
+$\bar{\psi}_{M,J}\stackrel{M \rightarrow \infty}{\rightarrow} \mu_J$. Isto é, a média dos valores simulados se aproxima
 da esperança de duração conforme o número de simulações $M$ cresce.
 
-Com esse recurso, $\bar{\psi}_{10000,J} \approx 350$
-(veja o Apêndice A para o código dessa simulação assim como uma comparação entre as linguagens Julia e Python). 
+Pelo Apêndice A, que contém o código da simulação de $M=1000000$ jogos $J$ e uma comparação entre as linguagens Julia e Python,
+obtivemos a média da duração dos jogos simulados $\bar{\psi}_{M,J} = 350.29$.
 
-Considerando que $E(X) = 0.2$, Aplicando o estimador ([-@eq-estimador]), temos que
+Aplicando o estimador ([-@eq-estimador]), temos que
 $$
 \widehat{E}(T_J) = \frac{70}{0.2} = 350
 $$
 
-o estimador sob diferentes regras e, na maioria dos casos, mostrou forte concordância com
-os valores simulados. Isso destaca a vantagem do estimador: estimar a duração de um jogo com regras
-diversas, o que, até onde encontramos na literatura, não foi descrito apenas com desenvolvimento analítico.
+Não se tratou de um resultado isolado. Sob diferentes regras, o estimador ([-@eq-estimador]) geralmente mostrou forte concordânciacom os valores simulados. 
 
 | $E(X)$ | $\widehat{E}(T_J)$ | $\bar{\psi}_{M,J}$ |
 |:------:|:------:|:------:|
-| $10$    | $12.5$    | $13.14$     |
-| $5$     | $25$      | $25.44$     |
-| $3$     | $50$      | $51.14$     |
-| $0.5$   | $100$     | $101.12$    |
-| $-3$    | $50$      | $51.14$     |
-| $-5$    | $16.66$   | $16.66$     |
+| $4$    | $12.5$    | $13.09$     |
+| $2$     | $25$      | $25.77$     |
+| $1$     | $50$      | $51.39$     |
+| $0.5$   | $100$     | $100.95$    |
+| $-1$    | $50$      | $50.49$     |
+| $-3$    | $16.66$   | $16.66$     |
 
 
-: Resultados de diferentes passeios com $a=50, N=100$ e $X$ variando {#tbl-simulados}
+: Resultados de diferentes regras $X$ com $a=50$ e $N=100$ {#tbl-simulados}
 
-Note que, como esperado, quanto menor $E(X)$, mais impreciso tende a ser o estimador,
-por $1$.
+A [@tbl-simulados] destaca que o estimador consegue, com certa precisão, fornecer uma aproximação da esperança da duração
+de um jogo com regras diversas, o que, até onde encontramos na literatura, não foi descrito apenas com
+desenvolvimento analítico.
+
+Não obstante, vale notar que, quanto menor $E(X)$, mais impreciso aparenta ser o estimador.
+Para explorar esse fenômeno, fixamos $a, N$ e os valores que $X$ pode assumir, variando a probabilidade $p$ do jogador
+$A$ ganhar um lançamento e, por consequência, alterando $E(X)$.
 
 ```{julia}
 #| echo: false
 #| fig-env: figure
-#| fig-cap: Comparação entre o estimador e simulações $^{a = 10, N = 100, X = \{+2, -1\}, p \textrm{ variando } 0.001 \textrm{ em } (0,1)}$
+#| fig-cap: Comparação entre o estimador e média de simulações $^{\qquad \qquad \qquad \qquad M= 10000, a = 10, N = 100, X = \{2,\; p;\ -1,\; 1-p\},\ p \textrm{ variando } 0.001 \textrm{ em } (0,1)}$
 #| fig-cap-location: top
 using  Plots, LaTeXStrings, Random
 Random.seed!(2)
@@ -211,68 +227,72 @@ function main()
   end
   diferencas = abs.(simulados-estimados)
 
-  simulacoes = plot(alcance, simulados, label="", ylabel=L"\bar{\psi}_M",
+  simulacoes = plot(alcance, simulados, label="", ylabel=L"\bar{\psi}_{M,J}",
                     title="Média dos passeios simulados",
                     ylim=(0,1.1 * maximum(simulados)))
   vline!([0.34], label=L"E(X)=0")
-  estimacoes = plot(alcance, estimados, label="", ylabel=L"\widehat{E}(T_a)",
+  estimacoes = plot(alcance, estimados, label="", ylabel=L"\widehat{E}(T_J)",
                     title="Valor estimado", ylim=(0, 1.3*maximum(simulados)))
   vline!([0.34], label=L"E(X)=0")
-  diferenca = plot(alcance, diferencas, label="", ylabel=L"|\widehat{E}(T_a)" *
-                     L" - \bar{\psi}_M|", title="Diferença entre valor" *
+  diferenca = plot(alcance, diferencas, label="", ylabel=L"|\widehat{E}(T_J)" *
+                     L" - \bar{\psi}_{M,J}|", title="Diferença entre valor" *
                      " estimado e simulado", ylim=(0, 1.1*maximum(simulados)))
   vline!([0.34], label=L"E(X)=0")
   analise = plot(simulacoes, estimacoes, diferenca, xlabel=L"p",
                  titlefontsize = 8, layout=(3,1),
-                 plot_title=LaTeXString(
-"\$^{a = 10, N = 100, X = \\{+2, -1\\}, p \\textrm{\\ variando\\ } 0.001 \\textrm{\\ em\\ } (0,1)}\$"),
+#                  plot_title=LaTeXString(
+# "\$^{a = 10, N = 100, X = \\{+2, -1\\}, p \\textrm{\\ variando\\ } 0.001 \\textrm{\\ em\\ } (0,1)}\$"),
                  tickfont=6)
   display(analise)
 end
 main()
 ```
 
-Estes gráficos ilustram essa inacurácia conforme $E(X)$ se aproxima de $0$ para um jogo com outras regras fixadas. Isto é
-restrições do uso do estimador residem nas regras que levam a $E(X)$ próximo de $0$, uma vez que, conforme $E(X)$
-se aproxima de $0$, sua presença no denominador provoca divergências quando comparado com o valor simulado.
+Estes gráficos confirmam a inacurácia de ([-@eq-estimador]) conforme $E(X)$ se aproxima de $0$ para um jogo com outras regras
+fixadas. Isto ocorre uma vez que, conforme $E(X)$ se aproxima de $0$, sua presença no denominador provoca
+divergências quando comparado com o valor simulado. Dessa forma, o estimador não é adequado para jogos com $E(X)$ próximo ou
+igual a $0$, o que pode indicar a necessidade de desenvolver, como em ([-@eq-original]), uma forma específica para esses casos
+ou alguma outra forma de correção.
 
-Estudamos também como simplificar a variável aleatória de regras $X$ através de médias quando esta pode assumir mais
-que dois valores.
-
-
-## Conclusão e Passos Seguintes
+# Conclusão e Passos Seguintes
 
 Os resultados obtidos indicam que o estimador proposto possui grande flexibilidade para diferentes configurações do jogo
-e mostra-se especialmente útil, pois as técnicas atuais não são capazes de fornecer um resultado teórico exato para as
+e mostra-se útil, uma vez que as técnicas analíticas atuais não fornecem um resultado exato para as
 configurações de jogos propostas. Ademais, o estimador fornece estimativas mais precisas quando há maior circulação de
-dinheiro entre os jogadores. No entanto, observamos que o estimador tende a divergir rapidamente dos resultados simulados
-quando a esperança da variável aleatória que rege as regras do jogo aproxima-se de zero devido ao denominador.
+dinheiro entre os jogadores, isto é, valores de $a$, $N$ e $X$ que promovam um jogo mais duradouro.
+No entanto, observamos que o estimador tende a divergir rapidamente dos resultados simulados quando a esperança da
+variável aleatória que rege as regras do jogo aproxima-se de zero devido ao denominador.
+
+Um interessante caminho de abordagem que exploraremos é a conexão entre passeios aleatórios e redes [@doyle_random_1984].
+Queremos estudar se existem conexões entre o estimador proposto e fórmulas da física. Dentre outras
+abordagens para explorarmos passeios aleatórios, o emprego de equações de diferenças finitas e o estudo de martingais
+mostram-se promissores na viabilização do estimador nos casos em que, na forma atual, não é adequado.
+
+No contexto de flexibilizar o estimador, estudaremos casos que envolvam empate entre os jogadores, isto é, lançamentos
+onde dinheiro não é circulado e o saldo $a$ permanece o mesmo. Acreditamos que, com a forma atual do estimador,
+empates não contribuem informação suficiente para $E(X)$. Esta falha faz com que subestime o efeito retardante que
+empates provocam no tempo até o fim do jogo.
 
 Outro desafio identificado foi a complexidade computacional envolvida na simulação de jogos com muitas regras, isto é,
-quando a variável aleatória pode assumir um grande número de valores. Essa limitação impõe a necessidade de soluções mais
-eficientes para lidar com cenários de alta complexidade, o que será um obstáculo a ser superado no estudo do caso não
-homogêneo.
+quando a variável aleatória pode assumir muitos valores. Essa limitação impõe a necessidade de soluções mais
+eficientes para lidar com cenários de alta complexidade, o que será um obstáculo a ser superado no estudo de passeios
+com empate e especialmente passeios não-homogêneos.
+Para isso, estudaremos a viabilidade da implementação de computação paralela e concorrente no contexto de simulações de
+Monte Carlo, assim como métodos de otimizar nossos métodos de simulação atuais.
 
-Um interessante caminho de abordagem que buscaremos explorar é a conexão entre passeios aleatórios e redes elétricas como descrito
-por @doyle_random_1984. Queremos descobrir se existem conexões entre o estimador proposto e fórmulas da física, além de outras
-abordagens para estudarmos passeios aleatórios, como o emprego de equações de diferenças finitas e o estudo de martingais para
-viabilização do estimador nesses casos.
-
-{{< pagebreak >}}
-
-## Bibliografia
+# Bibliografia
 
 ::: {#refs}
 :::
 
 {{< pagebreak >}}
 
-## Apêndice A - Comparação de um mesmo algoritmo em Julia e Python {.appendix}
+# Apêndice A — Comparação de um mesmo algoritmo em Julia e Python {.appendix}
 
 Para validar nossa decisão de trocarmos de linguagem, comparamos o mesmo (ingênuo) algoritmo em Julia e Python que usamos
-para avaliarmos o estimador:
+na avaliação do estimador:
 
-### Julia
+## Julia
 
 ```{julia}
 using  LaTeXStrings, Random
@@ -301,11 +321,11 @@ function main()
 end
 
 tempo = @elapsed main()
-display(LaTeXString("Tempo de execução em segundos: $tempo"))
+display(LaTeXString("Tempo de execução: $tempo segundos"))
 ```
 {{< pagebreak >}}
 
-### Python
+## Python
 
 ```python
 import random
@@ -377,25 +397,30 @@ display(LaTeXString("Tempo de execução: $a segundos"))
 ```
 
 Para a simulação em Python nesse artigo, foi utilizado a biblioteca PyCall que nos permite criar um ambiente Python no Julia,
-possibilitando rodar código Python nessa linguagem o que foi necessário para inclusão de sua saída exata no relatório.
-A performance pode ter sido afetada minimamente nos tempos de chamada ao Kernel de execução do Python.
+possibilitando executar código Python nessa linguagem o que foi necessário para inclusão de sua saída exata no relatório.
+O desempenho pode ter sido afetada minimamente nos tempos de chamada ao Kernel de execução do Python.
 
-### Decisão de mudança
+## Decisão de mudança
 
 Desconsiderando o curto tempo de compilação do tempo total do código em Julia, que só precisa ser
 feito uma vez, temos que essa linguagem costuma ser considerávelmente mais rápida do que o Python, o que foi crucial nessas
-simulações e justificou nossas mudanças como previsto por resultados anteriores de @godoy_evaluating_2023
+simulações e justificou nossas mudanças como previsto por resultados anteriores [@godoy_evaluating_2023].
 
-## Apêndice B - Código de simulação com regras mais complexas
+# Apêndice B — Código de simulação com regras mais complexas
 
 ```{julia}
 using Random, LaTeXStrings
 
-function simulador(;a = 50, N = 100, X=[[1, 0.5],[-1, 0.5]], M=10_000, semente = nothing)
-  if !isnothing(semente)
-    Random.seed!(5)
-  end
+function simulador(;a = 50, N = 100,
+                   X=[[1, 0.5],[-1, 0.5]],
+                   M=10_000, semente = 0)
+  Random.seed!(semente)
   duracoesSoma = 0
+  edex = 0
+  for x in X
+    edex += x[1] * x[2]
+  end
+  edex = round(edex, digits=2)
 
   for i in 1:M
     saldo = a
@@ -413,15 +438,16 @@ function simulador(;a = 50, N = 100, X=[[1, 0.5],[-1, 0.5]], M=10_000, semente =
     end
     duracoesSoma += duracao
   end
-  display(LaTeXString("Média da duração de \$$M\$ passeios:
-                      \$$(round(duracoesSoma/M, digits = 2))\$"))
-  return duracoesSoma / M
+  display(LaTeXString("A média da duração de \$$M\$ passeios do jogo
+                      com \$a = $a, N=$a\$ e \$E(X)=$edex\$ é
+                      \$\\bar{\\psi}_{M,J}=
+                      $(round(duracoesSoma/M, digits = 2))\$"))
 end
-simulador(X=[[8, 0.6],[-2, 0.5]], semente = 1) # 4
-simulador(X=[[6, 0.5],[4, 0.25], [-8, 0.25]], semente = 2) # 2 
-simulador(X=[[2, 0.5],[6, 0.2], [-4, 0.3]], semente = 3) # 1
-simulador(X=[[1, 0.5],[3, 0.2], [-2, 0.3]], semente = 4) # 0.5
-simulador(X=[[-2, 0.5],[-6, 0.2], [4, 0.3]], semente = 5) # -1
-simulador(X=[[5, 0.2],[-5, 0.8]], semente = 6) # -3
+simulador(X=[[8, 0.6],[-2, 0.4]], semente = 0) # 4
+simulador(X=[[6, 0.5],[4, 0.25], [-8, 0.25]], semente = 1) # 2 
+simulador(X=[[2, 0.5],[6, 0.2], [-4, 0.3]], semente = 2) # 1
+simulador(X=[[1, 0.5],[3, 0.2], [-2, 0.3]], semente = 3) # 0.5
+simulador(X=[[-2, 0.5],[-6, 0.2], [4, 0.3]], semente = 4) # -1
+simulador(X=[[5, 0.2],[-5, 0.8]], semente = 5) # -3
 ```
 
