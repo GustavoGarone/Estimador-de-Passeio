@@ -33,15 +33,16 @@ fig-cap-location: top
 
 # Introdução
 
-Em uma versão simples da original proposta por Pascal [@edwards_pascals_1983], dois jogadores, A e B,
+Em uma versão simples do Problema da Ruína do Jogador proposto por Pascal [@edwards_pascals_1983], dois jogadores, A e B,
 competem apostando no lançamento de uma moeda honesta. Ao ganhar a aposta, o jogador A recebe um real
-do jogador B e vice-versa. Além da questão proposta por Pascal sobre a
-probabilidade do jogador ir à ruína, ou seja, perder todo seu dinheiro, dado que começou com uma quantia $a$, também
+do jogador B e vice-versa. Além da questão de Pascal sobre a
+probabilidade do jogador ir à ruína (perder todo seu dinheiro) dado que começou com uma quantia $a$, também
 foram estudados o tempo esperado de duração do jogo [@stern_conditional_1975] e, pelo cálculo de equações de diferenças
 finitas, a variância dessa duração [@andel_variance_2012].
 
-Todavia, os resultados obtidos por esses autores funcionam apenas para ganho e perda de um real por aposta. Altere o
-dinheiro disputado por lançamento, introduza a possibilidade de empate ou crie relações de dependência entre os lançamentos
+Os resultados obtidos por esses autores funcionam apenas para ganho e perda de um real por aposta. Altere o
+dinheiro disputado por lançamento, introduza a possibilidade de empate ou crie relações de dependência entre todos os
+lançamentos
 e os métodos utilizados para calcular analíticamente a esperança da duração do jogo simples já não são mais adequados.
 [@ishihara_um_2025]
 
@@ -53,7 +54,7 @@ Dessa forma, é útil no estudo do comportamento de passeios aleatórios com par
 foi crucial na avalição do estimador proposto, uma vez que replicar e adaptar as técnicas e cálculos usados para obter
 os resultados nos jogos simples nem sempre é possível com jogos mais complexos.
 
-Empregando simulações, conseguimos verificar os casos nos quais estimador é ou não adequado. Exploramos os jogos em que o
+Empregando-se simulações, conseguimos verificar os casos nos quais estimador é ou não adequado. Exploramos os jogos em que o
 dinheiro em aposta por lançamento não é apenas um real, abordando jogos cujos resultados teóricos ainda não foram desenvolvidos.
 Finalmente, com a estrutura do estimador proposto, abrimos caminhos para estudo sobre casos com meios não-homogêneos —
 isto é, jogos cujo resultado de cada lançamento dependem dos anteriores — e empates.
@@ -73,10 +74,10 @@ X = \left\{ \begin{array}{rl}
 $$
 
 Com a variável aleatória de regras $X$ dessa forma, com ganho e perda de um real, a esperança da duração $T$ de jogos
-desse tipo em função de $a$ e $N$ [@stern_conditional_1975] é dada por
+desse tipo em termos de $a$ e $N$ [@stern_conditional_1975] é dada por
 $$
 \begin{aligned}
-\mu_{a,N} = E(T_{a,N}) = \left\{ \begin{array}{rl}
+\mu_{a,N} = E(T_{a,N}) = \left\{ \begin{array}{cl}
 a(N - a) & \mathbf{se}\ p = q = 1/2 \\
 \frac{a}{q - p} - \frac{N}{q - p} \left( \frac{1 - (q/p)^a}{1 - (q/p)^N} \right) & \mathbf{se}\ p \neq q
 \end{array} \right.
@@ -85,11 +86,11 @@ $$ {#eq-original}
 
 Com esse recurso, descreveremos jogos futuros em termos de $J = J(a,N,X)$, em que $a$ representa o valor inicial do
 jogador A, $N$
-representa o dinheiro total em aposta $N=a+b$, com $b$ o saldo do jogador B, e $X$ a variável aleatória que contém as
+representa o dinheiro total em aposta $N=a+b$, com $b$ o saldo do jogador B, e $X$ a variável aleatória que representa as
 regras de ganho e perda do jogo.
 
 Ao empregar e adaptar as técnicas utilizadas para o desenvolvimento de ([-@eq-original])
-para outras formas de regras $X$ mais complexas — como com valores de ganho
+em outras formas de regras $X$ mais complexas — como com valores de ganho
 e perda diferentes de $1$; ou com mais valores possíveis — percebe-se que se torna inviável a resolução analítica de
 problemas desse tipo conforme a complexidade de $X$ aumenta. Portanto, na busca de conseguir aproximar esses resultados,
 foi proposto um estimador para a esperança da duração de jogos desse tipo [@ishihara_um_2025]. Para avaliarmos a
@@ -99,7 +100,7 @@ precisão desse estimador, empregamos simulações computacionais de jogos atrav
 
 O estimador sob avaliação proposto por Ishihara para a esperança da duração um jogo J é da seguinte forma
 $$
-\widehat{E}(T_J) = \left\{ \begin{array}{cc}
+\widehat{E}(T_J) = \left\{ \begin{array}{rl}
 \frac{N-a}{E(X)} & \mathbf{se}\ E(X) > 0 \\
 \left\lvert\frac{a}{E(X)}\right\rvert & \mathbf{se}\ E(X) < 0
 \end{array}\right.
@@ -108,8 +109,8 @@ $$ {#eq-estimador}
 Consideraremos um passeio $J = J(a=30,N=100,X)$, com a variável de regras $X$ dada por
 $$
 X = \left\{ \begin{array}{rl}
-1, P(X=1) = 0.4 \\
--1, P(X=-1) = 0.6
+1, &P(X=1) = 0.4 \\
+-1,& P(X=-1) = 0.6
 \end{array} \right .
 $$
 De ([-@eq-original]), temos que o valor teórico do tempo médio de duração do jogo é
@@ -127,10 +128,10 @@ Um destes foi uma simples variação do jogo anterior, mantendo
 o valor inicial dos jogadores A, $a=30$ e B, $b=70$, $N= a + b = 100$, com a variação de que o apostador ganha
 dois reais por vitória e perde apenas um por derrota. Nesse caso, a variável de regras $X$ é dada por
 $$
-X = \begin{cases}
-2, P(X=2) = 0.4 \\
--1, P(X=-1) = 0.6 \\
-\end{cases}
+X = \left \{\begin{array}{rl}
+2, &P(X=2) = 0.4 \\
+-1,& P(X=-1) = 0.6 \\
+\end{array} \right.
 $$
 
 Denotamos esse novo jogo por $J = (a=30, N=100, X)$
@@ -157,7 +158,10 @@ $$
 \widehat{E}(T_J) = \frac{70}{0.2} = 350
 $$
 
-Não se tratou de um resultado isolado. Sob diferentes regras, o estimador ([-@eq-estimador]) geralmente mostrou forte concordânciacom os valores simulados. 
+Não se tratou de um resultado isolado. Sob diferentes regras, o estimador ([-@eq-estimador]), majoritariamente, mostrou forte
+concordância com os valores simulados. 
+
+{{< pagebreak >}}
 
 | $E(X)$ | $\widehat{E}(T_J)$ | $\bar{\psi}_{M,J}$ |
 |:------:|:------:|:------:|
@@ -175,9 +179,9 @@ A [@tbl-simulados] destaca que o estimador consegue, com certa precisão, fornec
 de um jogo com regras diversas, o que, até onde encontramos na literatura, não foi descrito apenas com
 desenvolvimento analítico.
 
-Não obstante, vale notar que, quanto menor $E(X)$, mais impreciso aparenta ser o estimador.
+Não obstante, vale notar que, quanto menor $E(X)$, mais impreciso mostra-se o estimador.
 Para explorar esse fenômeno, fixamos $a, N$ e os valores que $X$ pode assumir, variando a probabilidade $p$ do jogador
-$A$ ganhar um lançamento e, por consequência, alterando $E(X)$.
+$A$ ganhar em uma rodada e, por consequência, alterando $E(X)$.
 
 ```{julia}
 #| echo: false
@@ -232,7 +236,7 @@ function main()
                     ylim=(0,1.1 * maximum(simulados)))
   vline!([0.34], label=L"E(X)=0")
   estimacoes = plot(alcance, estimados, label="", ylabel=L"\widehat{E}(T_J)",
-                    title="Valor estimado", ylim=(0, 1.3*maximum(simulados)))
+                    title="Valor estimado", ylim=(0, 1.2*maximum(simulados)))
   vline!([0.34], label=L"E(X)=0")
   diferenca = plot(alcance, diferencas, label="", ylabel=L"|\widehat{E}(T_J)" *
                      L" - \bar{\psi}_{M,J}|", title="Diferença entre valor" *
@@ -248,11 +252,11 @@ end
 main()
 ```
 
-Estes gráficos confirmam a inacurácia de ([-@eq-estimador]) conforme $E(X)$ se aproxima de $0$ para um jogo com outras regras
+Estes gráficos confirmam a inacurácia de ([-@eq-estimador]) conforme $E(X)$ aproxima-se de $0$ para um jogo com outras regras
 fixadas. Isto ocorre uma vez que, conforme $E(X)$ se aproxima de $0$, sua presença no denominador provoca
 divergências quando comparado com o valor simulado. Dessa forma, o estimador não é adequado para jogos com $E(X)$ próximo ou
 igual a $0$, o que pode indicar a necessidade de desenvolver, como em ([-@eq-original]), uma forma específica para esses casos
-ou alguma outra forma de correção.
+ou um método de correção generalizada.
 
 # Conclusão e Passos Seguintes
 
@@ -261,10 +265,10 @@ e mostra-se útil, uma vez que as técnicas analíticas atuais não fornecem um 
 configurações de jogos propostas. Ademais, o estimador fornece estimativas mais precisas quando há maior circulação de
 dinheiro entre os jogadores, isto é, valores de $a$, $N$ e $X$ que promovam um jogo mais duradouro.
 No entanto, observamos que o estimador tende a divergir rapidamente dos resultados simulados quando a esperança da
-variável aleatória que rege as regras do jogo aproxima-se de zero devido ao denominador.
+variável aleatória que rege as regras do jogo aproxima-se de zero.
 
 Um interessante caminho de abordagem que exploraremos é a conexão entre passeios aleatórios e redes [@doyle_random_1984].
-Queremos estudar se existem conexões entre o estimador proposto e fórmulas da física. Dentre outras
+Queremos estudar a existência de conexões entre o estimador proposto e resultados da física. Dentre outras
 abordagens para explorarmos passeios aleatórios, o emprego de equações de diferenças finitas e o estudo de martingais
 mostram-se promissores na viabilização do estimador nos casos em que, na forma atual, não é adequado.
 
@@ -278,7 +282,7 @@ quando a variável aleatória pode assumir muitos valores. Essa limitação imp�
 eficientes para lidar com cenários de alta complexidade, o que será um obstáculo a ser superado no estudo de passeios
 com empate e especialmente passeios não-homogêneos.
 Para isso, estudaremos a viabilidade da implementação de computação paralela e concorrente no contexto de simulações de
-Monte Carlo, assim como métodos de otimizar nossos métodos de simulação atuais.
+Monte Carlo, assim como otimizar nossos métodos de simulação atuais.
 
 # Bibliografia
 
@@ -397,8 +401,8 @@ display(LaTeXString("Tempo de execução: $a segundos"))
 ```
 
 Para a simulação em Python nesse artigo, foi utilizado a biblioteca PyCall que nos permite criar um ambiente Python no Julia,
-possibilitando executar código Python nessa linguagem o que foi necessário para inclusão de sua saída exata no relatório.
-O desempenho pode ter sido afetada minimamente nos tempos de chamada ao Kernel de execução do Python.
+possibilitando executar código Python nessa linguagem. Isso foi necessário para inclusão de sua saída exata no relatório.
+O desempenho pode ter sido afetado minimamente nos tempos de chamada ao Kernel de execução do Python.
 
 ## Decisão de mudança
 
