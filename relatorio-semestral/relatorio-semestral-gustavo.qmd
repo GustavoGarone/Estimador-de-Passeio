@@ -267,7 +267,7 @@ dinheiro entre os jogadores, isto é, valores de $a$, $N$ e $X$ que promovam um 
 No entanto, observamos que o estimador tende a divergir rapidamente dos resultados simulados quando a esperança da
 variável aleatória que rege as regras do jogo aproxima-se de zero.
 
-Um interessante caminho de abordagem que exploraremos é a conexão entre passeios aleatórios e redes [@doyle_random_1984].
+Um interessante caminho de abordagem que exploraremos é a conexão entre passeios aleatórios e redes elétricas [@doyle_random_1984].
 Queremos estudar a existência de conexões entre o estimador proposto e resultados da física. Dentre outras
 abordagens para explorarmos passeios aleatórios, o emprego de equações de diferenças finitas e o estudo de martingais
 mostram-se promissores na viabilização do estimador nos casos em que, na forma atual, não é adequado.
