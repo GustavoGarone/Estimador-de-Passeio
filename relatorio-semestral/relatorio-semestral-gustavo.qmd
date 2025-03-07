@@ -38,26 +38,21 @@ competem apostando no lançamento de uma moeda honesta. Ao ganhar a aposta, o jo
 do jogador B e vice-versa. Além da questão de Pascal sobre a
 probabilidade do jogador ir à ruína (perder todo seu dinheiro) dado que começou com uma quantia $a$, também
 foram estudados o tempo esperado de duração do jogo [@stern_conditional_1975] e, pelo cálculo de equações de diferenças
-finitas, a variância dessa duração [@andel_variance_2012].
+finitas, a variância dessa duração [@andel_variance_2012]. Os resultados obtidos por esses autores funcionam apenas para
+ganho e perda de um real por aposta. Os métodos utilizados para calcular analíticamente a esperança da duração do jogo
+simles não são adequados se houver alterações no ganho ou perda, a possibilidade de empate ou relações de dependência
+entre lançamentos.
 
-Os resultados obtidos por esses autores funcionam apenas para ganho e perda de um real por aposta. Altere o
-dinheiro disputado por lançamento, introduza a possibilidade de empate ou crie relações de dependência entre todos os
-lançamentos
-e os métodos utilizados para calcular analíticamente a esperança da duração do jogo simples já não são mais adequados.
-[@ishihara_um_2025]
+Neste projeto, propusemos [@ishihara_um_2025] um estimador para
+passeios aleatórios com regras mais complexas de ganho e perda e o avaliamos por meio do emprego de simulações via
+o método de Monte Carlo, uma técnica baseada em amostragem aleatória
+para emular sistemas complexos [@harrison_introduction_2010]. As simuações
+foram cruciais na avalição do estimador proposto, uma vez que, com jogos mais complexos, nem sempre é possível
+replicar e adaptar as técnicas e cálculos usados para obter resultados similares aos dos jogos simples.
 
-Neste projeto conjunto com Eduardo Ishihara, propusemos um estimador para
-passeios aleatórios com regras mais complexas de ganho e perda e o avaliamos através do emprego de simulações. 
-Para isto, empregamos o método de Monte Carlo, uma técnica baseada em amostragem aleatória
-para emular sistemas complexos, normalmente por meios computacionais [@harrison_introduction_2010].
-Dessa forma, é útil no estudo do comportamento de passeios aleatórios com parâmetros diversos. Sendo assim,
-foi crucial na avalição do estimador proposto, uma vez que replicar e adaptar as técnicas e cálculos usados para obter
-os resultados nos jogos simples nem sempre é possível com jogos mais complexos.
-
-Empregando-se simulações, conseguimos verificar os casos nos quais estimador é ou não adequado. Exploramos os jogos em que o
-dinheiro em aposta por lançamento não é apenas um real, abordando jogos cujos resultados teóricos ainda não foram desenvolvidos.
-Finalmente, com a estrutura do estimador proposto, abrimos caminhos para estudo sobre casos com meios não-homogêneos —
-isto é, jogos cujo resultado de cada lançamento dependem dos anteriores — e empates.
+Empregando-se simulações, conseguimos verificar os casos nos quais o estimador é, ou não, adequado. Exploramos os jogos em que o
+o ganho e perda por lançamento não é apenas um real, abordando jogos cujos resultados teóricos ainda não foram desenvolvidos.
+Finalmente, analisamos possíveis limitações do estimador e o comportamento dessas.
 
 # Atividades Desenvolvidas
 
@@ -86,7 +81,7 @@ $$ {#eq-original}
 
 Com esse recurso, descreveremos jogos futuros em termos de $J = J(a,N,X)$, em que $a$ representa o valor inicial do
 jogador A, $N$
-representa o dinheiro total em aposta $N=a+b$, com $b$ o saldo do jogador B, e $X$ a variável aleatória que representa as
+representa o dinheiro total em aposta $N=a+b$, com $b$ sendo o saldo do jogador B, e $X$ a variável aleatória que representa as
 regras de ganho e perda do jogo.
 
 Ao empregar e adaptar as técnicas utilizadas para o desenvolvimento de ([-@eq-original])
@@ -94,11 +89,11 @@ em outras formas de regras $X$ mais complexas — como com valores de ganho
 e perda diferentes de $1$; ou com mais valores possíveis — percebe-se que se torna inviável a resolução analítica de
 problemas desse tipo conforme a complexidade de $X$ aumenta. Portanto, na busca de conseguir aproximar esses resultados,
 foi proposto um estimador para a esperança da duração de jogos desse tipo [@ishihara_um_2025]. Para avaliarmos a
-precisão desse estimador, empregamos simulações computacionais de jogos atraveś do método de Monte Carlo.
+precisão desse estimador, empregamos simulações computacionais de jogos por meio do método de Monte Carlo.
 
 ## Introduzindo o estimador
 
-O estimador sob avaliação proposto por Ishihara para a esperança da duração um jogo J é da seguinte forma
+O estimador sob avaliação proposto [@ishihara_um_2025] para a esperança da duração um jogo J é da seguinte forma
 $$
 \widehat{E}(T_J) = \left\{ \begin{array}{rl}
 \frac{N-a}{E(X)} & \mathbf{se}\ E(X) > 0 \\
@@ -132,36 +127,46 @@ X = \left \{\begin{array}{rl}
 2, &P(X=2) = 0.4 \\
 -1,& P(X=-1) = 0.6 \\
 \end{array} \right.
-$$
+$$ {#eq-regras-diferentes}
 
-Denotamos esse novo jogo por $J = (a=30, N=100, X)$
+Denotamos esse novo jogo por $J = (a=30, N=100, X)$, com $X$ descrito em ([@eq-regras-diferentes]).
 
-Uma vez que ([-@eq-original]) não seria apropriada para fornecer a esperança da duração do jogo devido à nova forma de
-$X$, impossibilitando uma comparação com o estimador, desenvolvemos algoritmos de simulação
+Até onde pesquisamos na literatura, não foram desenvolvidos resultados para a esperança da duração de jogos como $J$.
+Uma vez que ([-@eq-original]) não seria apropriada para fornecer a esperança da duração do jogo devido à nova
+forma ([-@eq-regras-diferentes]) de $X$, impossibilitando uma comparação com o estimador, desenvolvemos algoritmos de simulação
 baseados no método de Monte Carlo para avaliarmos o estimador ([-@eq-estimador]) da esperança da duração do jogo.
 A primeira versão do algoritmo, implementada em Python, não satisfez as demandas de tempo e complexidade computacional
 que desejávamos.
 Para solucionar essa limitação, migramos para a linguagem Julia, com velocidade computacional competitiva com o C
-[@godoy_evaluating_2023], conhecida por sua alta eficiência característica da operação em baixo nível. Assim,
-conseguimos realizar um número maior de simulações em tempo razoável, melhorando a acurácia dos resultados
+[@godoy_evaluating_2023]. A linguagem C é conhecida por sua alta eficiência computacional, mas demanada um maior tempo
+de desenvolvimento. Nesse contexto, adotar a linguagem Julia nos possibilitou desenvolver e
+realizar um número maior de simulações em tempo razoável, melhorando a acurácia dos resultados simulados
 [@ritter_determining_2011].
 
-Denotamos por $\bar{\psi}_{M,J}$ a média das durações dos $M$ jogos $J$ simulados. Pela Lei dos Grandes Números, temos que
-$\bar{\psi}_{M,J}\stackrel{M \rightarrow \infty}{\rightarrow} \mu_J$. Isto é, a média dos valores simulados se aproxima
-da esperança de duração conforme o número de simulações $M$ cresce.
+O Apêndice A contém uma comparação da execução de um mesmo algoritmo nas
+linguagem Julia e Python. Como previsto por resultados anteriores [@godoy_evaluating_2023], a linguagem Julia mostrou-se
+considerávelmente mais rápida do que a linguagem Python, mesmo
+levando em consideração o tempo de compilação do código em Julia, que só precisa ser feito uma vez. A adoção do Julia foi,
+portanto, justificada e rapidamente implementada graças à sua similaridade sintática com o Python.
 
-Pelo Apêndice A, que contém o código da simulação de $M=1000000$ jogos $J$ e uma comparação entre as linguagens Julia e Python,
-obtivemos a média da duração dos jogos simulados $\bar{\psi}_{M,J} = 350.29$.
+Denotamos por $\bar{\psi}_{M,J}$ a média das durações dos $M$ jogos $J$ simulados. Pela Lei dos Grandes Números, temos que,
+conforme $M$ tende a infinito, $\bar{\psi}_{M,J}$ converge em probabilidade para $\mu_J$. Isto é, a média dos valores
+simulados se aproxima da esperança de duração conforme o número de simulações $M$ cresce.
+
 
 Aplicando o estimador ([-@eq-estimador]), temos que
 $$
 \widehat{E}(T_J) = \frac{70}{0.2} = 350
 $$
 
-Não se tratou de um resultado isolado. Sob diferentes regras, o estimador ([-@eq-estimador]), majoritariamente, mostrou forte
-concordância com os valores simulados. 
+Por sua vez, utilizando o algoritmo presente no Apêndice A, simulamos $M=1000000$ jogos $J(a=30,N=100,X)$,
+com $X$ da forma ([-@eq-regras-diferentes]), e obtivemos a média da duração dos jogos simulados $\bar{\psi}_{M,J} = 350.29$,
+resultado muito próximo do estimado. Esse resultado não é isolado. Sob diferentes regras, o estimador ([-@eq-estimador])
+mostrou forte concordância com os valores simulados, como pode ser observado na [@tbl-simulados] a seguir:
 
 {{< pagebreak >}}
+
+<!-- TODO: Gerar a tabela por código em julia e deixar o código no apêndice B. Remover saída do código lá e seu echo aqui. -->
 
 | $E(X)$ | $\widehat{E}(T_J)$ | $\bar{\psi}_{M,J}$ |
 |:------:|:------:|:------:|
@@ -175,18 +180,17 @@ concordância com os valores simulados.
 
 : Resultados de diferentes regras $X$ com $a=50$ e $N=100$ {#tbl-simulados}
 
-A [@tbl-simulados] destaca que o estimador consegue, com certa precisão, fornecer uma aproximação da esperança da duração
-de um jogo com regras diversas, o que, até onde encontramos na literatura, não foi descrito apenas com
-desenvolvimento analítico.
+A [@tbl-simulados], gerada pelo código presente no Apêndice B, destaca que o estimador fornece uma aproximação da
+esperança da duração de um jogo com regras diversas.
 
-Não obstante, vale notar que, quanto menor $E(X)$, mais impreciso mostra-se o estimador.
+Não obstante, notamos que, quanto menor $E(X)$, mais impreciso tende a ser o estimador.
 Para explorar esse fenômeno, fixamos $a, N$ e os valores que $X$ pode assumir, variando a probabilidade $p$ do jogador
 $A$ ganhar em uma rodada e, por consequência, alterando $E(X)$.
 
 ```{julia}
 #| echo: false
 #| fig-env: figure
-#| fig-cap: Comparação entre o estimador e média de simulações $^{\qquad \qquad \qquad \qquad M= 10000, a = 10, N = 100, X = \{2,\; p;\ -1,\; 1-p\},\ p \textrm{ variando } 0.001 \textrm{ em } (0,1)}$
+#| fig-cap: Comparação entre o estimador e média de simulações da duração do jogo com regras diversas $^{\qquad \qquad \qquad \qquad M= 10000, a = 10, N = 100, X = \{2,\; p;\ -1,\; 1-p\},\ p \textrm{ variando } 0.001 \textrm{ em } (0,1)}$
 #| fig-cap-location: top
 using  Plots, LaTeXStrings, Random
 Random.seed!(2)
@@ -291,45 +295,12 @@ Monte Carlo, assim como otimizar nossos métodos de simulação atuais.
 
 {{< pagebreak >}}
 
-# Apêndice A — Comparação de um mesmo algoritmo em Julia e Python {.appendix}
+# Apêndice A — Código para simulações por um mesmo algoritmo em Julia e Python {.appendix}
 
 Para validar nossa decisão de trocarmos de linguagem, comparamos o mesmo (ingênuo) algoritmo em Julia e Python que usamos
-na avaliação do estimador:
+na avaliação do estimador, utilizando do modelo com regras ([-@eq-regras-diferentes]).
 
-## Julia
-
-```{julia}
-using  LaTeXStrings, Random
-
-function main()
-  Random.seed!(1)
-  duracoesSoma = 0
-  M = 1_000_000
-  p = 0.4
-  teto = 100
-  for i in 1:M
-    saldo = 30
-    duracao = 0
-    while saldo > 0 && saldo < teto
-      if p > rand()
-        saldo += 2
-      else
-        saldo -= 1
-      end
-      duracao += 1
-    end
-    duracoesSoma += duracao
-  end
-  display(LaTeXString("Média da duração de \$$M\$ passeios:
-                      \$$(round(duracoesSoma/M, digits = 2))\$"))
-end
-
-tempo = @elapsed main()
-display(LaTeXString("Tempo de execução: $tempo segundos"))
-```
-{{< pagebreak >}}
-
-## Python
+## Código da simulação de jogos simples na linguagem Python
 
 ```python
 import random
@@ -396,21 +367,50 @@ def simulacao_py():
   # print(f"Tempo de execução: {time.time() - start_time} segundos")
 """
 a = @elapsed media = py"simulacao_py"()
-display(LaTeXString("Média da duração de \$1000000\$ passeios: \$$(round(media, digits=2))\$"))
+display(LaTeXString("Resultados:\nMédia da duração de \$1000000\$ passeios: \$$(round(media, digits=2))\$"))
 display(LaTeXString("Tempo de execução: $a segundos"))
 ```
 
-Para a simulação em Python nesse artigo, foi utilizado a biblioteca PyCall que nos permite criar um ambiente Python no Julia,
+Para a simulação em Python nesse relatório, foi utilizado a biblioteca PyCall que nos permite criar um ambiente Python no Julia,
 possibilitando executar código Python nessa linguagem. Isso foi necessário para inclusão de sua saída exata no relatório.
 O desempenho pode ter sido afetado minimamente nos tempos de chamada ao Kernel de execução do Python.
 
-## Decisão de mudança
+{{< pagebreak >}}
 
-Desconsiderando o curto tempo de compilação do tempo total do código em Julia, que só precisa ser
-feito uma vez, temos que essa linguagem costuma ser considerávelmente mais rápida do que o Python, o que foi crucial nessas
-simulações e justificou nossas mudanças como previsto por resultados anteriores [@godoy_evaluating_2023].
+## Código da simulação de jogos simples na linguagem Julia
 
-# Apêndice B — Código de simulação com regras mais complexas
+```{julia}
+using  LaTeXStrings, Random
+
+function main()
+  Random.seed!(1)
+  duracoesSoma = 0
+  M = 1_000_000
+  p = 0.4
+  teto = 100
+  for i in 1:M
+    saldo = 30
+    duracao = 0
+    while saldo > 0 && saldo < teto
+      if p > rand()
+        saldo += 2
+      else
+        saldo -= 1
+      end
+      duracao += 1
+    end
+    duracoesSoma += duracao
+  end
+  display(LaTeXString("Resultados:\n
+                      Média da duração de \$$M\$ passeios:
+                      \$$(round(duracoesSoma/M, digits = 2))\$"))
+end
+
+tempo = @elapsed main()
+display(LaTeXString("Tempo de execução: $tempo segundos"))
+```
+
+# Apêndice B — Código de simulação de jogos com regras mais complexas na linguagem Julia
 
 ```{julia}
 using Random, LaTeXStrings
@@ -443,7 +443,7 @@ function simulador(;a = 50, N = 100,
     duracoesSoma += duracao
   end
   display(LaTeXString("A média da duração de \$$M\$ passeios do jogo
-                      com \$a = $a, N=$a\$ e \$E(X)=$edex\$ é
+                      com \$a = $a, N=$N\$ e \$E(X)=$edex\$ é
                       \$\\bar{\\psi}_{M,J}=
                       $(round(duracoesSoma/M, digits = 2))\$"))
 end
