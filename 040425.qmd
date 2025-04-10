@@ -1,0 +1,85 @@
+--- 
+lang: pt
+
+date: last-modified
+date-format: long
+format:
+  pdf:
+    documentclass: article
+    fontsize: 12pt
+    monofont: "Consolas"
+    geometry:
+      - top=30mm
+      - left=30mm
+      - bottom=20mm
+      - right=20mm
+    number-sections: true
+    include-in-header:
+      text: |
+        \usepackage{authblk}
+
+execute:
+  keep-ipynb: true
+  # eval: false
+fig-cap-location: top
+---
+```{julia}
+using Random, LaTeXStrings
+
+  a = 50
+  N = 100
+  X=[[1, 0.5],[-1, 0.5]]
+  M=10000
+  semente = 0
+  Random.seed!(semente)
+  duracoesSoma = 0
+  edex = 0
+  for x in X
+    edex += x[1] * x[2]
+  end
+  edex = round(edex, digits=2)
+
+  for i in 1:M
+    saldo = a
+    duracao = 0
+    while saldo > 0 && saldo < N
+      p = rand()
+      for x in X
+        p -= x[2]
+        if p < 0
+          saldo += x[1]
+          break
+        end
+      end
+      duracao += 1
+    end
+    duracoesSoma += duracao
+  end
+
+  # display(LaTeXString("\$\$ \\left\\{\\begin{array}{ll}"))
+  # for i in X
+  #   display(LaTeXString("$(i[1]), & $(i[2])"))
+  # end
+  # display(LaTeXString("\\end{array}\\right.\$\$"))
+  display(LaTeXString("A média da duração de \$$M\$ passeios do jogo
+                      com \$a = $a, N=$N\$ e \$E(X)=$edex\$ é
+                      \$\\bar{\\psi}_{M,J}=
+                      $(round(duracoesSoma/M, digits = 2))\$"))
+  p0 = 0
+  esperanca = 0
+  for i in X
+    if i[1] == 0
+      p0 += i[2]
+    end
+    esperanca += abs(i[1] * i[2])
+  end
+  esperanca
+  estimador = a*(N-a)/((1-p0) * esperanca^2)
+
+  display(LaTeXString("Esperança da duração do jogo
+                      com \$a = $a, N=$N\$ é
+                      \$\\widehat{E}(T_{a}) = 
+                      $(round(estimador, digits = 2))\$"))
+end
+simulador()
+```
