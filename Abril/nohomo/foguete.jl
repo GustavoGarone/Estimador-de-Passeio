@@ -1,12 +1,12 @@
-using Random, StatsBase
+using Random, StatsBase, Distributions
 
 
 function fuel()
   S = 10
   i = 1
   t = 0
-  meio = rand(S)
-  meio = meio ./ 2
+  d = Uniform(0.1, 1)
+  meio = rand(d, S)
   while i <= S
     if rand() < meio[i]
       i += 1
@@ -15,6 +15,7 @@ function fuel()
   end
   return t
 end
+
 
 function fuel2()
   S = 10
@@ -36,7 +37,7 @@ function MCMC()
   M = 1_000_000
   rodados = []
   for i in 1:M
-    append!(rodados, fuel2())
+    append!(rodados, fuel())
   end
   println("Média: $(mean(rodados))")
 end
