@@ -51,13 +51,14 @@ def calcula_tempo(i, Monte_Carlo=False):
     
     else:
         S = 0
+        A = 0
         M = 10_000
         i = 0
         while i < M:
             vetor = np.random.uniform(0.1, 0.9, tamanho-1).tolist()
-            S += f_wrapper(*vetor)
+            A += f_numeric(*(np.random.uniform(0.1,0.9, tamanho-1)))
             i += 1
-        print(S/M)
+        print(A/M)
 
 
 

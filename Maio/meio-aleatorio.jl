@@ -1,6 +1,6 @@
 using Symbolics, LinearAlgebra, LinearSolve, Integrals
 
-function main(n::Int64)
+function main(n::Int64, distribuicao)
 
   @variables μ[1:n]
   @variables prob[1:n]
@@ -16,22 +16,9 @@ function main(n::Int64)
 
   function integrar(sisSol, i)
     expr = simplify(sisSol[i])
-    expr += 0 * (prob[1:n])
-    println(expr)
     funcao_expressao = build_function(expr, prob)
-    println("1")
-    # avaliavel = eval(funcao_expressao)
-    println("2")
-    # f(prob, p) = avaliavel(prob)
     f(valores, p) = substitute(funcao_expressao,
-                               Dict(prob[i]=>valores[i] for i in 2:(n-1)))
-    println("3")
-    println("4")
-    dominio = (0.1ones(n-2), 0.9ones(n-2))
-    println("5")
-    integral = IntegralProblem(f, dominio)
-    println("6")
-    return solve(integral, HCubatureJL())
+      Dict(prob[i] => valores[i] for i in 1:n))
   end
 
   integrar(resolve_sistema(), 2)
