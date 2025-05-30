@@ -56,6 +56,7 @@ function main(X=Dict(1 => 0.2, -1 => 0.5, 0 => 0.3), tamanho=100, MC=10_000)
   pest = scatter(estimativaPorMinimos,
     title="Comparação de estimadores",
     label="Estimativa por Mínimo",
+    xlabel="Início",
     markersize=1.5,
     markerstrokewidth=0
   )
@@ -71,7 +72,10 @@ function main(X=Dict(1 => 0.2, -1 => 0.5, 0 => 0.3), tamanho=100, MC=10_000)
   )
   ppasseio1 = histogram(
     simulados[50],
-    title="Histograma do passeio 50",
+    title="Passeios ini. 50",
+    label="",
+    xlabel="Duração",
+    normalize=:pdf,
     color=:tomato,
     linecolor=:gray45)
   plot(pest, ppasseio1)
