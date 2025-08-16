@@ -3,6 +3,7 @@ using Plots
 using Random
 using Base.Threads
 using DataFrames
+using StatsPlots
 
 function main(inicio=1, passo=1, n=20, MC=10_000)
   seq = inicio:passo:n
@@ -71,4 +72,5 @@ function montecarlo(inicios, tamanhos, dims_cum, prob_cums, passos, MC)
   return tempos
 end
 
-main()
+dados = main(1, 5, 100, 1000)
+boxplot(dados, markersize=0.5)
