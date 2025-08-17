@@ -1,0 +1,11 @@
+{
+  "hash": "02de3dc1a6476ce634a195f5e535c702",
+  "result": {
+    "engine": "julia",
+    "markdown": "--- \ntitle: \"Aproximações para a duração de passeios aleatórios\"\nbibliography: references.bib\ncsl: associacao-brasileira-de-normas-tecnicas.csl\nlang: pt\n\nauthors:\n  - name: \"Orientando: Gustavo Silva Garone\"\n  - name: \"Orientadora: Elisabeti Kira\"\nabstract: \"Inspirados na física, propusemos aproximações para a duração de passeios aleatórios diversos, em especial, os de difícil derivação analítica. Para testar as aproximações, utilizamos simulações de Monte Carlo na linguagem Julia. Analisamos o desempenho desta linguagem comparando-a com a linguagem Python. Com modelos (passeios) mais sofisticados, utilizamos recursos computacionais para solução de sistemas lineares na construção de novas aproximações. Descrevemos o uso de paralelismo e de outras ferramentas. Exibimos e analisamos os resultados obtidos.\"\nkeywords:\n    - Monte Carlo\n    - Probabilidade\n    - Estimação\ndate: last-modified\ndate-format: long\nformat:\n  pdf:\n    documentclass: article\n    fontsize: 12pt\n    monofont: \"Consolas\"\n    geometry:\n      - top=20mm\n      - left=20mm\n      - bottom=20mm\n      - right=20mm\n    number-sections: true\n    include-in-header:\n      text: |\n        \\usepackage{authblk}\n  html:\n    theme: cosmo\n  docx: default\n\nengine: julia\nexecute:\n  keep-ipynb: true\n  # eval: false\nfig-cap-location: top\n---\n\n",
+    "supporting": [
+      "index_files/figure-pdf"
+    ],
+    "filters": []
+  }
+}

@@ -7,14 +7,11 @@ function main(n::Int64, distribuicao)
 
   function resolve_sistema()
     eqs::Vector{Real} = [μ[-1], μ[0]]
-    println("b")
     for i in 1:(n-1)
       append!(eqs, prob[i] * μ[i+2] + (1 - prob[i]) * μ[i-2] + 1 - μ[i])
     end
     append!(eqs, μ[n])
     append!(eqs, μ[n+1])
-    println("a")
-    print(eqs)
     return symbolic_linear_solve(eqs .~ 0, collect(μ))
   end
 

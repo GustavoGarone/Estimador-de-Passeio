@@ -1,0 +1,40 @@
+--- 
+title: "Aproximações para a duração de passeios aleatórios"
+bibliography: references.bib
+csl: associacao-brasileira-de-normas-tecnicas.csl
+lang: pt
+
+authors:
+  - name: "Orientando: Gustavo Silva Garone"
+  - name: "Orientadora: Elisabeti Kira"
+abstract: "Inspirados na física, propusemos aproximações para a duração de passeios aleatórios diversos, em especial, os de difícil derivação analítica. Para testar as aproximações, utilizamos simulações de Monte Carlo na linguagem Julia. Analisamos o desempenho desta linguagem comparando-a com a linguagem Python. Com modelos (passeios) mais sofisticados, utilizamos recursos computacionais para solução de sistemas lineares na construção de novas aproximações. Descrevemos o uso de paralelismo e de outras ferramentas. Exibimos e analisamos os resultados obtidos."
+keywords:
+    - Monte Carlo
+    - Probabilidade
+    - Estimação
+date: last-modified
+date-format: long
+format:
+  pdf:
+    documentclass: article
+    fontsize: 12pt
+    monofont: "Consolas"
+    geometry:
+      - top=20mm
+      - left=20mm
+      - bottom=20mm
+      - right=20mm
+    number-sections: true
+    include-in-header:
+      text: |
+        \usepackage{authblk}
+  html:
+    theme: cosmo
+  docx: default
+
+engine: julia
+execute:
+  keep-ipynb: true
+  # eval: false
+fig-cap-location: top
+---
