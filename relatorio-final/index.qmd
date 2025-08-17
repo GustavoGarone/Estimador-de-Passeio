@@ -2,15 +2,25 @@
 title: "Aproximações para a duração de passeios aleatórios"
 bibliography: references.bib
 csl: associacao-brasileira-de-normas-tecnicas.csl
-lang: pt
+lang: es
 
 authors:
   - name: "Orientando: Gustavo Silva Garone"
   - name: "Orientadora: Elisabeti Kira"
-abstract: "Inspirados na física, propusemos aproximações para a duração de passeios aleatórios diversos, em especial, os de difícil derivação analítica. Para testar as aproximações, utilizamos simulações de Monte Carlo na linguagem Julia. Analisamos o desempenho desta linguagem comparando-a com a linguagem Python. Com modelos (passeios) mais sofisticados, utilizamos recursos computacionais para solução de sistemas lineares na construção de novas aproximações. Descrevemos o uso de paralelismo e de outras ferramentas. Exibimos e analisamos os resultados obtidos."
+
+abstract: > 
+            Inspirados na física, propusemos aproximações para a duração de
+            passeios aleatórios diversos, em especial, os de difícil derivação analítica.
+            Para testar as aproximações, utilizamos simulações de Monte Carlo na linguagem
+            Julia. Analisamos o desempenho desta linguagem comparando-a com a linguagem
+            Python. Com modelos (passeios) mais sofisticados, utilizamos recursos
+            computacionais para solução de sistemas lineares na construção de novas
+            aproximações. Descrevemos o uso de paralelismo e de outras ferramentas. Exibimos
+            e analisamos os resultados obtidos.
+
 keywords:
     - Monte Carlo
-    - Probabilidade
+    - Julia
     - Estimação
 date: last-modified
 date-format: long
@@ -38,3 +48,96 @@ execute:
   # eval: false
 fig-cap-location: top
 ---
+
+# Introdução
+
+Neste artigo, estudaremos a duração de passeios aleatórios e suas aproximações.
+Temos como objetivo descrever modeleos de passeios como a "Ruína do Jogador" de
+Pascal, discutido em @edwards_pascals_1983, genericamente.
+
+# Modelando paseios aleatórios
+
+:::{#def-modelodiscreto}
+
+## Modelo discreto
+
+Sejam $\pmb{V}$ um produto cartesiano em $\mathbb{Z}^d$ de $d$ vetores de
+dimensões $d_1, d_2, \dots d_d$ da forma $v_j =(0, 1, 2, \dots, d_j)$, $j =
+1,2,\ldots d$, $a$ em $\mathbb{Z}^d$ um vetor $d$-dimensional e $\mathbb{X} =
+\{X_{v}\}_{\forall v \in \pmb{V}}$ um produto cartesiano de dimensão igual a
+$\pmb{V}$ composto por vetores aleatórios de dimensão $d$ em $(\Omega,
+\mathscr{F}, P)$. A ênupla $(\pmb{V}, a, \mathbb{X})$ define um passeio
+aleatório $J(\pmb{V},a, \mathbb{X})$ descrito pela sequência $\{X_{S_0, 1},
+X_{S_1, 2}, \dots X_{S_{t-1}, t}\} = \{X_{v, i}\}{i\geq1}$. Definem-se $S_n = a
++\sum^n_{i=1} X_{\cdot, i}$ as posições do passeio no instante $i$ baseado no
+início $a$ e $X_{v, i}$ as "regras do jogo" na posição $v = (v_1, v_2, \dots,
+v_d)$ e instante $i$. Seja $\tau = \min\{i : \exists j \in S_i \leq 0 \lor
+\exists k \in S_i \geq d_j,\ j = 1, 2, \dots, d\}$ a regra de parada do passeio.
+
+:::
+
+
+
+:::{#rem-uniforme} 
+Em especial, se $X_{v, i} = X_{v', i}$ para todo
+$v \neq v'$, dizemos que o passeio está em meio uniforme (uniforme no espaço).
+Analogamente, se $X_{v, i} = X_{v, i'}$ para todo
+$i \neq i'$, dizemos que o passeio é uniforme no tempo.
+
+Simplificaremos casos em meio uniforme escrevendo simplesmente $X_{i}$.
+Não trateremos de casos não uniformes no tempo neste artigo.
+:::
+
+Para ajudar no entendimento deste modelo admitivelmente complexo, oferecemos um
+exemplo:
+
+:::{#exm-modelodiscreto}
+
+## Ruína do Jogador bidimensional
+
+Considere um jogador apostando em um casino no lançamento de duas moedas
+honestas. A primeira moeda define se apostará seus dólares ou seus euros. A
+segunda moeda decide se ganhará ou perderá a jogada. No caso de derrota, deverá
+deixar um dólar ou um euro com o casino, enquanto ganha essa quantidade no caso
+de sucesso em sua aposta. Terminará o jogo quando atingir cem dólares ou cem
+euros, ou caso vá à ruína (seu saldo chegue em zero em alguma das moedas). O
+jogador começa com 50 dólares e 25 euros.
+
+Podemos modelar esse jogo no modelo da @def-modelodiscreto, utilizando da
+simplificação do @rem-uniforme. Tome $\pmb{V} = (v_1, v_2)$ com
+$v_1 = v_2 = (0, 1, \dots, 100)$, $a = (50, 25)$ e
+
+$$
+R = \begin{cases}
+(-1, 0), & 0.25 \\
+(0, -1), & 0.25 \\
+(1, 0), & 0.25 \\
+(0, 1), & 0.25.
+\end{cases}
+$$
+
+Após $5$ jogadas, o jogo tomou o seguinte percurso:
+$$
+\begin{aligned}
+J(\pmb{V}, a, \pmb{x}) &= \{x_1, x_2, x_3, x_4, x_5\} \\
+&= \{(1,0), (-1, 0), (0, 1), (0, 1), (-1, 0)\}.
+\end{aligned}
+$$
+
+:::
+
+Conforme a regra de parada $\tau$, o jogo encerrar-se-á assim que um elemento de
+$S_n$, isto é, uma moeda (dólar ou euro) chegar em zero ou cem. No
+@exm-modelodiscreto, é fácil ver que o jogo ainda não acabou, pois $S_5 = (24,
+52)$.
+
+Estamos interessados na duração esperada do jogo, ou seja, queremos encontrar
+$E(\tau)$. Abordaremos técnicas analíticas, computacionais e estimativas para
+este valor no restante deste artigo.
+
+{{< pagebreak >}}
+
+# Referências
+
+:::{.refs}
+::::
