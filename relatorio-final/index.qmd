@@ -2,7 +2,7 @@
 title: "Aproximações para a duração de passeios aleatórios"
 bibliography: references.bib
 csl: associacao-brasileira-de-normas-tecnicas.csl
-lang: es
+lang: pt-BR
 
 authors:
   - name: "Orientando: Gustavo Silva Garone"
@@ -88,7 +88,7 @@ Simplificaremos casos em meio uniforme escrevendo simplesmente $X_{i}$.
 Não trateremos de casos não uniformes no tempo neste artigo.
 :::
 
-Para ajudar no entendimento deste modelo admitivelmente complexo, oferecemos um
+Para ajudar no entendimento deste modelo , oferecemos um
 exemplo:
 
 :::{#exm-modelodiscreto}
@@ -108,13 +108,15 @@ simplificação do @rem-uniforme. Tome $\pmb{V} = (v_1, v_2)$ com
 $v_1 = v_2 = (0, 1, \dots, 100)$, $a = (50, 25)$ e
 
 $$
-R = \begin{cases}
+X = \begin{cases}
 (-1, 0), & 0.25 \\
 (0, -1), & 0.25 \\
 (1, 0), & 0.25 \\
 (0, 1), & 0.25.
 \end{cases}
 $$
+
+Note que é o mesmo para todo tempo $i$ e todo estado $v$ enquanto o jogo durar.
 
 Após $5$ jogadas, o jogo tomou o seguinte percurso:
 $$
@@ -127,13 +129,46 @@ $$
 :::
 
 Conforme a regra de parada $\tau$, o jogo encerrar-se-á assim que um elemento de
-$S_n$, isto é, uma moeda (dólar ou euro) chegar em zero ou cem. No
-@exm-modelodiscreto, é fácil ver que o jogo ainda não acabou, pois $S_5 = (24,
-52)$.
+$S_n$ - isto é, uma moeda (dólar ou euro) - chegar em zero ou cem. No
+@exm-modelodiscreto, é fácil ver que o jogo ainda não acabou, pois $S_5 = (49,
+27)$.
 
 Estamos interessados na duração esperada do jogo, ou seja, queremos encontrar
 $E(\tau)$. Abordaremos técnicas analíticas, computacionais e estimativas para
 este valor no restante deste artigo.
+
+
+# Aproximando durações de passeios aleatórios
+
+Uma pergunta natural quando se discute aproximações é quanto sua utilidade. Se
+possível, é mais desejável utilizar resultados obtidos analiticamente, como, no
+exemplo da Ruína do Jogador clássica, os desenvolvidos em
+@stern_conditional_1975. Conforme os passeios (e os modelos) complicam-se, pode
+não ser possível, ou ser muito difícil, obter uma derivação analítica de
+$E(\tau)$.
+
+<!-- TOOD: ADICIONAR SESSÃO DO SISTEMA -->
+Nos cenários em que não é prático o desenvolvimento analítico, soluções
+computacionais são buscadas. Estas soluções podem fornecer resultados teóricos
+corretos, como na solução de sistemas lineares extensos que abordaremos na
+[SESSÃO AQUI], ou aproximações pelo método de Monte Carlo, como aborda
+@harrison_introduction_2010.
+
+Ainda assim, a simulação também traz desvantagens. Como descrito em
+@ritter_determining_2011, um número considerável de simulações é necessário para
+garantir acurácia dos dados e estabilidade. Além disso, com modelos mais
+complexos, justamente os usados na resolução de problemas reais, estes problemas
+se agravam. Diante disso, vê-se justificável a busca de estimadores eficientes
+para a duração esperada de passeios aleatórios diversos.
+
+## Ruína do Jogador e variações
+
+Na Ruína do Jogador,
+
+
+
+
+
 
 {{< pagebreak >}}
 
