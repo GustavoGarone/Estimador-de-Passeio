@@ -77,34 +77,43 @@ headsep = 1.06cm,
 A Ruína do Jogador é um dos mais conhecidos modelos de passeio aleatório, um
 processo estocástico markoviano com espaço de estados enumerável e barreiras
 absorventes. Nele, dois jogadores apostam seu dinheiro a cada rodada e, com base
-em uma distribuição de probabilidades, ganham ou perdem valores diversos. Por sua
-utilidade na modelagem  estatística e aplicação em algoritmos computacionais,
-seu comportamento já foi amplamente estudado em sua forma mais simples
-(unitário, uniforme e em meio não aleatório), em especial quanto a probabilidade
-de ruína \cite{ross_introduction_2019}. Esse trabalho tem como objetivo estudar
-o tempo esperado até a ruína para passeios mais complexos, propondo métodos de
-estimar essa duração e avaliando-os por vias computacionais.
+em uma distribuição de probabilidades, ganham ou perdem valores diversos.
+Passeios desse tipo possuem grande utilidade na modelagem estatística e
+aplicações em algoritmos computacionais \cite{ross_markov_2019}. Por isso, seu
+comportamento já foi amplamente estudado em sua forma mais simples (unitário,
+uniforme e em meio não aleatório), em especial quanto a probabilidade de
+ruína ou vitória \cite{ross_introduction_2019}. Esse trabalho tem como objetivo
+estudar o tempo esperado até a ruína para passeios mais complexos, propondo
+métodos de estimar essa duração e avaliando-os por vias computacionais, assim
+expandindo o conhecimento acerca de passeios desse tipo e algumas de suas
+variações.
 
 \section{Métodos}
 
-Iniciamos por uma revisão da literatura na derivação analítica de passeios mais
-simples. Analisamos o cálculo da esperança e da variância da duração da Ruína do
-Jogador simples \cite{andel_variance_2012} na qual destacou-se o uso de sistemas
-de equações de diferenças finitas. Depois, desenvolvemos um primeiro estimador
-heurístico baseado em analogia à velocidade média em Física, que funcionou para
-a maioria dos passeios não unitários. Isto é, passeios em que os jogadores podem
-ganhar ou perder valores diferentes de $\mathrm{R}\$1,00$ por rodada. Uma vez que estes
-passeios não possuem resultado analítico (ou de difícil construção), avaliamos este
-estimador por simulações de Monte Carlo na linguagem de programação Python.
-Posteriormente, conforme utilizávamos regras de jogo que prolongavam muito as
-simulações e demandavam maior poder computacional, passamos a utilizar a
-linguagem Julia por sua velocidade.
+Iniciamos por uma estudo da literatura sobre a derivação analítica de passeios
+mais simples. Analisamos o cálculo da esperança e da variância da duração da
+Ruína do Jogador simples \cite{andel_variance_2012} na qual destacou-se o uso de
+sistemas de equações de diferenças finitas. Depois, desenvolvemos um primeiro
+estimador heurístico baseado numa analogia à velocidade média em Física, que
+funcionou para a maioria dos passeios não unitários. Definimos passeios não
+unitpariso como aqueles em que os jogadores podem ganhar ou perder valores
+diferentes de $\mathrm{R}\$1,00$ por rodada.
+
+Uma vez que estes passeios não possuem resultado analítico (ou de difícil
+construção), avaliamos este estimador por simulações de Monte Carlo, com base em
+métodos propostos por Ritter \cite{ritter_determining_2011}, na linguagem de
+programação Python. Posteriormente, conforme utilizávamos regras de jogo que
+prolongavam muito as simulações e demandavam maior poder computacional, passamos
+a empregar a linguagem Julia, como recomendado por Godoy
+\cite{godoy_evaluating_2023}. Refinamos o estimador para lidar com situações em
+que o empate entre os jogadores (não há troca de dinheiron na rodada) é
+possível.
 
 Compreendidos os limites deste estimador,
 
 \section{Resultados}
 
-O estimador apresentou resultados muito
+O primeiro estimador, proposto para casos não unitários, apresentou resultados muito
 próximos dos simulados, como exibe a Figura 1.
 
 O estimador proposto mostrou-se eficaz para o caso unidimensional em meio
