@@ -1,0 +1,138 @@
+\documentclass[a4paper,10pt,twocolumn]{article}
+
+%Layout
+% \setlength\columnsep{.8cm}
+% \setlength\topmargin{-1.71cm}
+% \setlength\textheight{23.4cm}
+% \setlength\textwidth{15.8cm}
+
+%Pacotes
+\usepackage{amsthm,amssymb,amsmath}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[
+layout = a4paper,
+includehead,
+paperheight = 29.7cm,
+headheight = 3.41cm,
+paperwidth = 21cm,
+textwidth = 15.8cm,
+textheight = 23.4cm,
+columnsep = 0.8cm,
+top = 1.25cm,
+bottom = 4.2cm,
+left = 2.6cm,
+right = 2.6cm,
+headsep = 1.06cm,
+]{geometry}
+
+%Fonte Arial
+\renewcommand{\rmdefault}{phv}
+\renewcommand{\sfdefault}{phv}
+
+\titleformat
+{\section} % command
+[display] % shape
+{\normalfont\fontsize{13}{13}\bfseries} % format
+{} % label
+{0cm} % sep
+{
+    \centering
+} % before-code
+[
+] % after-code
+\titlespacing*{\section}
+{0pt}
+{2pt}
+{2pt}
+[0pt]
+
+\begin{document}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[L]{\includegraphics[width=3.41cm]{logo_siicusp.jpg}}
+\renewcommand{\headrulewidth}{0pt}
+
+\twocolumn[{
+    % Bloco centralizado (ocupa as duas colunas)
+    \begin{center}
+        {\fontsize{13}{13}\selectfont \textbf{ESTIMANDO A DURAÇÃO ESPERADA DE
+        PASSEIOS ALEATÓRIOS}}\\[1em]
+        {\fontsize{13}{13}\selectfont \textbf{Eduardo Yukio Garrafa Ishihara}}\\[0.3em]
+        {\fontsize{13}{13}\selectfont \textbf{Gustavo Silva Garone}}\\[0.9em]
+        {\fontsize{13}{13}\selectfont \textbf{Prof.ª Dra. Elisabeti Kira}}\\[0.8em]
+        {\fontsize{13}{13}\selectfont Instituto de Matemática e Estatística, Universidade de São Paulo}\\[0.3em]
+        {\fontsize{10}{10}\selectfont eduardoyukio.ishihara@usp.br}
+    \end{center}
+    \vspace{1.5em} % espaço antes de começar o corpo do texto
+}]
+
+\section{Objetivos}
+
+A Ruína do Jogador é um dos mais conhecidos modelos de passeio aleatório, um
+processo estocástico markoviano com espaço de estados enumerável e barreiras
+absorventes. Nele, dois jogadores apostam seu dinheiro a cada rodada e, com base
+em uma distribuição de probabilidades, ganham ou perdem valores diversos. Por sua
+utilidade na modelagem  estatística e aplicação em algoritmos computacionais,
+seu comportamento já foi amplamente estudado em sua forma mais simples
+(unitário, uniforme e em meio não aleatório), em especial quanto a probabilidade
+de ruína \cite{ross_introduction_2019}. Esse trabalho tem como objetivo estudar
+o tempo esperado até a ruína para passeios mais complexos, propondo métodos de
+estimar essa duração e avaliando-os por vias computacionais.
+
+\section{Métodos}
+
+Iniciamos por uma revisão da literatura na derivação analítica de passeios mais
+simples. Analisamos o cálculo da esperança e da variância da duração da Ruína do
+Jogador simples \cite{andel_variance_2012} na qual destacou-se o uso de sistemas
+de equações de diferenças finitas. Depois, desenvolvemos um primeiro estimador
+heurístico baseado em analogia à velocidade média em Física, que funcionou para
+a maioria dos passeios não unitários. Isto é, passeios em que os jogadores podem
+ganhar ou perder valores diferentes de $\mathrm{R}\$1,00$ por rodada. Uma vez que estes
+passeios não possuem resultado analítico (ou de difícil construção), avaliamos este
+estimador por simulações de Monte Carlo na linguagem de programação Python.
+Posteriormente, conforme utilizávamos regras de jogo que prolongavam muito as
+simulações e demandavam maior poder computacional, passamos a utilizar a
+linguagem Julia por sua velocidade.
+
+Compreendidos os limites deste estimador,
+
+\section{Resultados}
+
+O estimador apresentou resultados muito
+próximos dos simulados, como exibe a Figura 1.
+
+O estimador proposto mostrou-se eficaz para o caso unidimensional em meio
+uniforme e foi adaptado com sucesso ao caso não uniforme. Em dimensões mais
+altas, constatou-se que a esperança do tempo de ruína só pode ser determinada
+numericamente, dada a explosão combinatória das equações envolvidas e,
+demonstrou crescimento linear conforme o número de dimensões aumenta a partir da
+$50$ª dimensão. Para o passeio do foguete, foram obtidas expressões teóricas em
+meios uniforme, não uniforme, em meios aleatórios e não aleatórios. Foi
+necessário o uso de computadores para obter valores numéricos dos casos
+aleatórios não uniformes, revelando que a complexidade cresce proporcionalmente
+ao número de estados possíveis. Em todos os casos, os estimadores se aproximaram
+dos valores simulados, embora apresentem maiores desvios quando a esperança da
+variável de transição se aproxima de zero ou quando o estado inicial está
+próximo das fronteiras.
+
+\section{Conclusões}
+
+O estudo demonstrou que o estimador proposto é uma ferramenta versátil para
+analisar a duração média da ruína do jogador em diferentes configurações,
+especialmente quando resultados teóricos são inviáveis. A extensão para o
+passeio do foguete mostrou que modelos alternativos podem ser tratados dentro do
+mesmo arcabouço metodológico. No entanto, a análise em altas dimensões e em
+meios aleatórios não uniformes permanece um desafio, reforçando a necessidade de
+abordagens computacionais e de futuros refinamentos do estimador.
+
+\vspace{2.5pt}
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
