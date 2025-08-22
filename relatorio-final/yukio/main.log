@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org) (preloaded format=pdflatex 1980.1.1)  22 AUG 2025 12:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org) (preloaded format=pdflatex 1980.1.1)  22 AUG 2025 16:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -407,20 +407,25 @@ ex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
-<boxplots.pdf, id=1, 602.25pt x 401.5pt>
-File: boxplots.pdf Graphic file (type pdf)
-<use boxplots.pdf>
-Package pdftex.def Info: boxplots.pdf  used on input line 131.
+
+Underfull \hbox (badness 3068) in paragraph at lines 128--128
+[]\OT1/phv/m/n/10 Figura 1: Compara[][]ao do es-ti-ma-dor com
+ []
+
+<graficoest.pdf, id=1, 602.25pt x 401.5pt>
+File: graficoest.pdf Graphic file (type pdf)
+<use graficoest.pdf>
+Package pdftex.def Info: graficoest.pdf  used on input line 130.
 (pdftex.def)             Requested size: 213.39566pt x 142.26698pt.
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+Underfull \vbox (badness 4193) has occurred while \output is active []
 
 
 
 <logo_siicusp.jpg, id=2, 602.25pt x 602.25pt>
 File: logo_siicusp.jpg Graphic file (type jpg)
 <use logo_siicusp.jpg>
-Package pdftex.def Info: logo_siicusp.jpg  used on input line 146.
+Package pdftex.def Info: logo_siicusp.jpg  used on input line 132.
 (pdftex.def)             Requested size: 97.02399pt x 97.0236pt.
 
 Package fancyhdr Warning: \headheight is too small (97.02399pt): 
@@ -435,21 +440,26 @@ Package fancyhdr Warning: \headheight is too small (97.02399pt):
 
 
  <./logo_siicusp.jpg>]
-<graficoest.pdf, id=14, 602.25pt x 401.5pt>
-File: graficoest.pdf Graphic file (type pdf)
-<use graficoest.pdf>
-Package pdftex.def Info: graficoest.pdf  used on input line 151.
+<boxplots.pdf, id=14, 602.25pt x 401.5pt>
+File: boxplots.pdf Graphic file (type pdf)
+<use boxplots.pdf>
+Package pdftex.def Info: boxplots.pdf  used on input line 143.
 (pdftex.def)             Requested size: 213.39566pt x 142.26698pt.
 
 
 (./main.bbl
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 4.
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 20.
+
+Underfull \hbox (badness 1122) in paragraph at lines 24--27
+[]\OT1/phv/m/n/10 S.M. Ross.  \OT1/phv/m/sl/10 Mar-kov Chain Monte Carlo
+ []
+
 )
 
 File: logo_siicusp.jpg Graphic file (type jpg)
 <use logo_siicusp.jpg>
-Package pdftex.def Info: logo_siicusp.jpg  used on input line 175.
+Package pdftex.def Info: logo_siicusp.jpg  used on input line 176.
 (pdftex.def)             Requested size: 97.02399pt x 97.0236pt.
 
 Package fancyhdr Warning: \headheight is too small (97.02399pt): 
@@ -458,20 +468,20 @@ Package fancyhdr Warning: \headheight is too small (97.02399pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.59966pt}.
 
-[2 <./boxplots.pdf> <./graficoest.pdf>] (./main.aux)
+[2 <./graficoest.pdf> <./boxplots.pdf>] (./main.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-06-09>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 5187 strings out of 467890
- 84003 string characters out of 5410143
- 512318 words of memory out of 5000000
- 33684 multiletter control sequences out of 15000+600000
+ 5188 strings out of 467890
+ 84013 string characters out of 5410143
+ 509318 words of memory out of 5000000
+ 33685 multiletter control sequences out of 15000+600000
  636188 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,15n,65p,228b,409s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,15n,65p,226b,411s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts
 /type1/public/amsfonts/cm/cmmi10.pfb></nix/store/w6p2va3ar44y89m5imfkp7vln1zrmm
 p7-texlive-2025-env-texmfdist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></nix/st
@@ -482,7 +492,7 @@ lic/amsfonts/cm/cmr10.pfb></nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-
 etic/uhvb8a.pfb></nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-t
 exmfdist/fonts/type1/urw/helvetic/uhvr8a.pfb></nix/store/w6p2va3ar44y89m5imfkp7
 vln1zrmmp7-texlive-2025-env-texmfdist/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on main.pdf (2 pages, 497294 bytes).
+Output written on main.pdf (2 pages, 504930 bytes).
 PDF statistics:
  52 PDF objects out of 1000 (max. 8388607)
  30 compressed objects within 1 object stream

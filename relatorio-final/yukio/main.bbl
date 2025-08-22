@@ -1,9 +1,5 @@
 \begin{thebibliography}{1}
 
-\bibitem{ross_markov_2019}
-{\em Markov Chain Monte Carlo Methods}.
-\newblock Academic Press.
-
 \bibitem{andel_variance_2012}
 Jiří Anděl and Šárka Hudecová.
 \newblock Variance of the game duration in the gambler’s ruin problem.
@@ -15,14 +11,18 @@ William~F. Godoy et~al.
   models.
 
 \bibitem{ritter_determining_2011}
-Frank~E. Ritter, Michael~J. Schoelles, Karen~S. Quigley, and Laura~Cousino
-  Klein.
+Frank~E. Ritter et~al.
 \newblock Determining the number of simulation runs.
 \newblock Springer.
 
 \bibitem{ross_introduction_2019}
 S.M. Ross.
 \newblock {\em Introduction to Probability Models}.
+\newblock Academic Press.
+
+\bibitem{ross_markov_2019}
+S.M. Ross.
+\newblock {\em Markov Chain Monte Carlo Methods}.
 \newblock Academic Press.
 
 \end{thebibliography}
