@@ -16,6 +16,7 @@ in
         python-pkgs.ipython
         python-pkgs.scipy
       ]))
+      gcc
     ]);
     runScript = "fish";
   }).env

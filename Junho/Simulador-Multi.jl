@@ -1,5 +1,4 @@
 using StatsBase
-using Plots
 using Random
 using Base.Threads
 using DataFrames
