@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org) (preloaded format=pdflatex 1980.1.1)  21 AUG 2025 21:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org) (preloaded format=pdflatex 1980.1.1)  22 AUG 2025 12:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -199,6 +199,15 @@ File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
 \Gin@req@width=\dimen160
 )
 (/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/lat
+ex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count297
+\float@exts=\toks32
+\float@box=\box55
+\@float@everytoks=\toks33
+\@floatcapt=\box56
+)
+(/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/lat
 ex/ragged2e/ragged2e.sty
 Package: ragged2e 2023/06/22 v3.6 ragged2e Package
 \CenteringLeftskip=\skip57
@@ -234,17 +243,17 @@ Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 \f@nch@widthL=\skip82
 \f@nch@widthC=\skip83
 \f@nch@widthR=\skip84
-\@temptokenb=\toks32
+\@temptokenb=\toks34
 )
 (/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/lat
 ex/titlesec/titlesec.sty
 Package: titlesec 2025/01/04 v2.17 Sectioning titles
-\ttl@box=\box55
+\ttl@box=\box57
 \beforetitleunit=\skip85
 \aftertitleunit=\skip86
 \ttl@plus=\dimen161
 \ttl@minus=\dimen162
-\ttl@toksa=\toks33
+\ttl@toksa=\toks35
 \titlewidth=\dimen163
 \titlewidthlast=\dimen164
 \titlewidthfirst=\dimen165
@@ -261,9 +270,9 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 eric/iftex/iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 ))
-\Gm@cnth=\count297
-\Gm@cntv=\count298
-\c@Gm@tempcnt=\count299
+\Gm@cnth=\count298
+\Gm@cntv=\count299
+\c@Gm@tempcnt=\count300
 \Gm@bindingoffset=\dimen166
 \Gm@wd@mp=\dimen167
 \Gm@odd@mp=\dimen168
@@ -272,7 +281,7 @@ Package: iftex 2024/12/12 v1.0g TeX engine tests
 \Gm@layoutheight=\dimen171
 \Gm@layouthoffset=\dimen172
 \Gm@layoutvoffset=\dimen173
-\Gm@dimlist=\toks34
+\Gm@dimlist=\toks36
 
 
 Package geometry Warning: Over-specification in `h'-direction.
@@ -284,7 +293,7 @@ Package geometry Warning: Over-specification in `v'-direction.
 
 )
 LaTeX Font Info:    Trying to load font information for OT1+phv on input line 5
-5.
+6.
 
 (/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/lat
 ex/psnfss/ot1phv.fd
@@ -293,42 +302,42 @@ File: ot1phv.fd 2020/03/25 scalable font definitions for OT1/phv.
 (/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/lat
 ex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-06-09 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count300
+\l__color_backend_stack_int=\count301
 ) (./main.aux
 Package babel Info: 'brazil' activates 'portuges' shorthands.
 (babel)             Reported  on input line 10.
 )
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 55.
-LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 56.
+LaTeX Font Info:    ... okay on input line 56.
 
 (/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/con
 text/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count301
+\scratchcounter=\count302
 \scratchdimen=\dimen174
-\scratchbox=\box56
-\nofMPsegments=\count302
-\nofMParguments=\count303
-\everyMPshowfont=\toks35
-\MPscratchCnt=\count304
+\scratchbox=\box58
+\nofMPsegments=\count303
+\nofMParguments=\count304
+\everyMPshowfont=\toks37
+\MPscratchCnt=\count305
 \MPscratchDim=\dimen175
-\MPnumerator=\count305
-\makeMPintoPDFobject=\count306
-\everyMPtoPDFconversion=\toks36
+\MPnumerator=\count306
+\makeMPintoPDFobject=\count307
+\everyMPtoPDFconversion=\toks38
 )
 (/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/lat
 ex/epstopdf-pkg/epstopdf-base.sty
@@ -377,20 +386,20 @@ e
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 LaTeX Font Info:    Trying to load font information for TS1+phv on input line 7
-3.
+5.
 
 (/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/lat
 ex/psnfss/ts1phv.fd
 File: ts1phv.fd 2020/03/25 scalable font definitions for TS1/phv.
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 100
+LaTeX Font Info:    Trying to load font information for U+msa on input line 102
 .
 
 (/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/lat
 ex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 100
+LaTeX Font Info:    Trying to load font information for U+msb on input line 102
 .
 
 (/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/lat
@@ -398,22 +407,20 @@ ex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
+<boxplots.pdf, id=1, 602.25pt x 401.5pt>
+File: boxplots.pdf Graphic file (type pdf)
+<use boxplots.pdf>
+Package pdftex.def Info: boxplots.pdf  used on input line 131.
+(pdftex.def)             Requested size: 213.39566pt x 142.26698pt.
 
-Underfull \hbox (badness 1009) in paragraph at lines 121--135
-\OT1/phv/m/n/10 mais al-tas, constatou-se que a dura[][]ao es-
- []
-
-
-Underfull \hbox (badness 2173) in paragraph at lines 121--135
-\OT1/phv/m/n/10 das equa[][]oes en-vol-vi-das e, sur-pre-en-den-te-
- []
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
-<logo_siicusp.jpg, id=1, 602.25pt x 602.25pt>
+<logo_siicusp.jpg, id=2, 602.25pt x 602.25pt>
 File: logo_siicusp.jpg Graphic file (type jpg)
 <use logo_siicusp.jpg>
-Package pdftex.def Info: logo_siicusp.jpg  used on input line 135.
+Package pdftex.def Info: logo_siicusp.jpg  used on input line 146.
 (pdftex.def)             Requested size: 97.02399pt x 97.0236pt.
 
 Package fancyhdr Warning: \headheight is too small (97.02399pt): 
@@ -422,24 +429,27 @@ Package fancyhdr Warning: \headheight is too small (97.02399pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.59966pt}.
 
-[1{/nix/store/hx1c7wv8vq842xl3a71bk8kk6k9a21bg-texlive-2025-env/share/texmf-var
+[1{/nix/store/dy61w96cncqhnwbz5p70w0ccyh0nnx3k-texlive-2025-env/share/texmf-var
 /fonts/map/pdftex/updmap/pdftex.map}{/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp
 7-texlive-2025-env-texmfdist/fonts/enc/dvips/base/8r.enc}
 
 
- <./logo_siicusp.jpg>] (./main.bbl
+ <./logo_siicusp.jpg>]
+<graficoest.pdf, id=14, 602.25pt x 401.5pt>
+File: graficoest.pdf Graphic file (type pdf)
+<use graficoest.pdf>
+Package pdftex.def Info: graficoest.pdf  used on input line 151.
+(pdftex.def)             Requested size: 213.39566pt x 142.26698pt.
+
+
+(./main.bbl
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10> not available
 (Font)              Font shape `OT1/phv/m/sl' tried instead on input line 4.
-
-Underfull \vbox (badness 3503) has occurred while \output is active []
-
-
-
 )
 
 File: logo_siicusp.jpg Graphic file (type jpg)
 <use logo_siicusp.jpg>
-Package pdftex.def Info: logo_siicusp.jpg  used on input line 157.
+Package pdftex.def Info: logo_siicusp.jpg  used on input line 175.
 (pdftex.def)             Requested size: 97.02399pt x 97.0236pt.
 
 Package fancyhdr Warning: \headheight is too small (97.02399pt): 
@@ -448,20 +458,20 @@ Package fancyhdr Warning: \headheight is too small (97.02399pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-3.59966pt}.
 
-[2] (./main.aux)
+[2 <./boxplots.pdf> <./graficoest.pdf>] (./main.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-06-09>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 5098 strings out of 467890
- 82366 string characters out of 5410143
- 509878 words of memory out of 5000000
- 33599 multiletter control sequences out of 15000+600000
+ 5187 strings out of 467890
+ 84003 string characters out of 5410143
+ 512318 words of memory out of 5000000
+ 33684 multiletter control sequences out of 15000+600000
  636188 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,15n,65p,226b,411s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,15n,65p,228b,409s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts
 /type1/public/amsfonts/cm/cmmi10.pfb></nix/store/w6p2va3ar44y89m5imfkp7vln1zrmm
 p7-texlive-2025-env-texmfdist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></nix/st
@@ -472,10 +482,10 @@ lic/amsfonts/cm/cmr10.pfb></nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-
 etic/uhvb8a.pfb></nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-t
 exmfdist/fonts/type1/urw/helvetic/uhvr8a.pfb></nix/store/w6p2va3ar44y89m5imfkp7
 vln1zrmmp7-texlive-2025-env-texmfdist/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on main.pdf (2 pages, 121570 bytes).
+Output written on main.pdf (2 pages, 497294 bytes).
 PDF statistics:
- 48 PDF objects out of 1000 (max. 8388607)
- 28 compressed objects within 1 object stream
+ 52 PDF objects out of 1000 (max. 8388607)
+ 30 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

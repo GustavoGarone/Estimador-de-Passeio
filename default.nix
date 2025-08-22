@@ -13,6 +13,7 @@ with import <nixpkgs> {};
       openblas
       perl
       zlib
+      poppler-utils
     ];
     shellHook = ''
       export LD_LIBRARY_PATH="${gfortran.cc.lib}/lib"

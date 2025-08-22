@@ -1,16 +1,16 @@
 # Fdb version 4
-["bibtex main"] 1755822586.47584 "main.aux" "main.bbl" "main" 1755822587.37116 0
-  "./references.bib" 1755815784.45362 10261 5decaec2e0c43a143fae98efba8b95c4 ""
+["bibtex main"] 1755876192.06586 "main.aux" "main.bbl" "main" 1755876193.09422 0
+  "./references.bib" 1755869548.32035 9563 b1acacc84973fbc014cc18d207674b7c ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/bibtex/bst/base/plain.bst" 1 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "main.aux" 1755822587.06712 1031 5b9a7aee5a05b9a7ffe793ae5eb75784 "pdflatex"
+  "main.aux" 1755876192.74036 1407 befb269886fb4839ebdc6d1826031038 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1755822586.59204 "main.tex" "main.pdf" "main" 1755822587.3716 0
-  "/nix/store/hx1c7wv8vq842xl3a71bk8kk6k9a21bg-texlive-2025-env/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1 5523625 4ea472fc3e540a602ebee2249e79c648 ""
-  "/nix/store/hx1c7wv8vq842xl3a71bk8kk6k9a21bg-texlive-2025-env/share/texmf-var/web2c/pdftex/pdflatex.fmt" 1 3600364 701f02e34010ffda850c767228f8abca ""
-  "/nix/store/hx1c7wv8vq842xl3a71bk8kk6k9a21bg-texlive-2025-env/share/texmf-var/web2c/texmf.cnf" 1 43847 0f669ca90b6f7543879cd19f8514d9a3 ""
+["pdflatex"] 1755876192.20095 "main.tex" "main.pdf" "main" 1755876193.0949 0
+  "/nix/store/dy61w96cncqhnwbz5p70w0ccyh0nnx3k-texlive-2025-env/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1 5523625 32f87e8767816eebc1b83b81f33061a4 ""
+  "/nix/store/dy61w96cncqhnwbz5p70w0ccyh0nnx3k-texlive-2025-env/share/texmf-var/web2c/pdftex/pdflatex.fmt" 1 3600364 701f02e34010ffda850c767228f8abca ""
+  "/nix/store/dy61w96cncqhnwbz5p70w0ccyh0nnx3k-texlive-2025-env/share/texmf-var/web2c/texmf.cnf" 1 43847 240f5031f95c865a0be8c57cac4cc2e0 ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/enc/dvips/base/8r.enc" 1 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/map/fontname/texfonts.map" 1 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/adobe/helvetic/phvb7t.tfm" 1 2240 eb56c13537f4d8a0bd3fafc25572b1bd ""
@@ -61,6 +61,7 @@
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/base/size10.clo" 1 8448 686612a86f0e04f41ea577f5ec7e83d8 ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/epstopdf-pkg/epstopdf-base.sty" 1 13886 d1306dcf79a944f6988e688c1785f9ce ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/fancyhdr/fancyhdr.sty" 1 31715 19e60610b63819fe670dfa1cd84a4e94 ""
+  "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/float/float.sty" 1 6749 16d2656a1984957e674b149555f1ea1d ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/geometry/geometry.sty" 1 41601 9cf6c5257b1bc7af01a58859749dd37a ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/graphics-cfg/graphics.cfg" 1 1224 978390e9c2234eab29404bc21b268d1e ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/graphics-def/pdftex.def" 1 19440 9da9dcbb27470349a580fca7372d454b ""
@@ -74,10 +75,12 @@
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/psnfss/ts1phv.fd" 1 1181 ec0c641cd2e0fb69a449534a0279b5ca ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/ragged2e/ragged2e.sty" 1 10085 3dececaeed388e31285c366e124c0c4e ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/titlesec/titlesec.sty" 1 48766 87a17a4ef312a39cd43896e34a679a56 ""
-  "logo_siicusp.jpg" 1755815784.37162 52680 bd0c99b0da216b28701fe9415fb1a306 ""
-  "main.aux" 1755822587.06712 1031 5b9a7aee5a05b9a7ffe793ae5eb75784 "pdflatex"
-  "main.bbl" 1755822586.58313 1319 a79ba253e7eb579f91c378cd286b679b "bibtex main"
-  "main.tex" 1755822582.24419 6516 7f57df6af2bf7a9ee9a7063b0aaca24f ""
+  "boxplots.pdf" 1755869002.02742 349547 34dde54e10a644c0c37a3752f36ecc65 ""
+  "graficoest.pdf" 1755875791.13446 29857 c0dd00e5671225dac1e020b3396ace4f ""
+  "logo_siicusp.jpg" 1755759680 52680 bd0c99b0da216b28701fe9415fb1a306 ""
+  "main.aux" 1755876192.74036 1407 befb269886fb4839ebdc6d1826031038 "pdflatex"
+  "main.bbl" 1755876192.19635 770 e841e896dd51a42301245a6ff75ede7e "bibtex main"
+  "main.tex" 1755876188.81332 6971 660df9bf0d366a67e81b1a913d921f28 ""
   (generated)
   "main.aux"
   "main.log"

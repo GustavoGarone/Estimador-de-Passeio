@@ -12,6 +12,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsfonts}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{ragged2e}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
@@ -57,6 +58,7 @@ headsep = 1.06cm,
 \fancyhead{}
 \fancyhead[L]{\includegraphics[width=3.41cm]{logo_siicusp.jpg}}
 \renewcommand{\headrulewidth}{0pt}
+\pagenumbering{gobble}
 
 \twocolumn[{
     % Bloco centralizado (ocupa as duas colunas)
@@ -120,18 +122,33 @@ não unitários, também em dimensões superiores e em meio não uniforme.
 
 O estimador proposto mostrou-se eficaz para o caso unidimensional em meio
 uniforme, como mostra a Figura 1, e foi adaptado com sucesso ao caso não
-uniforme. Em dimensões mais altas, constatou-se que a duração esperada do
+uniforme.
+
+\begin{figure}[h]
+    \caption{Passos simulados até fim do jogo com $1000$ simulações em diversas
+    dimensões.}
+    \centering
+    \includegraphics[width=7.5cm]{"boxplots.pdf"}
+\end{figure}
+
+Em dimensões mais altas, constatou-se que a duração esperada do
 passeio só pode ser determinada numericamente, dada a explosão combinatória das
 equações envolvidas e, surpreendentemente, demonstrou crescimento linear
-conforme o número de dimensões aumenta a partir da $50$ª dimensão, como consta a
+conforme o número de dimensões aumenta a partir da $100$ª dimensão, como consta a
 Figura 2. Para o "passeio do foguete", em que o jogador não pode perder
 dinheiro, foram obtidas expressões teóricas em meios uniforme, não uniforme, em
-meios aleatórios e não aleatórios. Foi revelando que a complexidade cresce
+meios aleatórios e não aleatórios. Foi revelado que a complexidade cresce
 proporcionalmente ao número de estados possíveis. Em todos os casos, os
 estimadores se aproximaram dos valores simulados, embora apresentem maiores
 desvios quando a esperança da variável de transição se aproxima de zero, o que
 denominamos jogos com pouco movimento assintótico esperado, ou quando o estado
 inicial está próximo das fronteiras.
+
+\begin{figure}[b!]
+    \caption{Comparação do estimador com 100.000 simulações por posição inicial}
+    \centering
+    \includegraphics[width=7.5cm]{"graficoest.pdf"}
+\end{figure}
 
 \section{Conclusões}
 

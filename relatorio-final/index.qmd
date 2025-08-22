@@ -1,5 +1,5 @@
 --- 
-title: "Aproximações para a duração de passeios aleatórios"
+title: "Aproximações para a duração média de passeios aleatórios"
 bibliography: references.bib
 csl: associacao-brasileira-de-normas-tecnicas.csl
 lang: pt-BR

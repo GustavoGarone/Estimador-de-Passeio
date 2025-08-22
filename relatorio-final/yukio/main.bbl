@@ -1,7 +1,7 @@
 \begin{thebibliography}{1}
 
 \bibitem{ross_markov_2019}
-{\em Markov Chain Monte Carlo Methods}, pages 260--265.
+{\em Markov Chain Monte Carlo Methods}.
 \newblock Academic Press.
 
 \bibitem{andel_variance_2012}
@@ -10,21 +10,15 @@ Jiří Anděl and Šárka Hudecová.
 \newblock 82(9):1750--1754.
 
 \bibitem{godoy_evaluating_2023}
-William~F. Godoy, Pedro Valero-Lara, T.~Elise Dettling, Christian Trefftz, Ian
-  Jorquera, Thomas Sheehy, Ross~G. Miller, Marc Gonzalez-Tallada, Jeffrey~S.
-  Vetter, and Valentin Churavy.
+William~F. Godoy et~al.
 \newblock Evaluating performance and portability of high-level programming
-  models: Julia, python/numba, and kokkos on exascale nodes.
-\newblock In {\em 2023 {IEEE} International Parallel and Distributed Processing
-  Symposium Workshops ({IPDPSW})}, pages 373--382.
+  models.
 
 \bibitem{ritter_determining_2011}
 Frank~E. Ritter, Michael~J. Schoelles, Karen~S. Quigley, and Laura~Cousino
   Klein.
-\newblock Determining the number of simulation runs: Treating simulations as
-  theories by not sampling their behavior.
-\newblock In Ling Rothrock and S.~Narayanan, editors, {\em Human-in-the-Loop
-  Simulations: Methods and Practice}, pages 97--116. Springer.
+\newblock Determining the number of simulation runs.
+\newblock Springer.
 
 \bibitem{ross_introduction_2019}
 S.M. Ross.

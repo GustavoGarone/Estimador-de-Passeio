@@ -1,0 +1,401 @@
+% Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  brazilian,
+  12pt,
+]{article}
+\usepackage{xcolor}
+\usepackage[top=20mm,left=20mm,bottom=20mm,right=20mm]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+  \setmonofont[]{Consolas}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
+
+
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+
+
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
+
+\usepackage{authblk}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Índice}
+\else
+  \newcommand\contentsname{Índice}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{Lista de Figuras}
+\else
+  \newcommand\listfigurename{Lista de Figuras}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{Lista de Tabelas}
+\else
+  \newcommand\listtablename{Lista de Tabelas}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figura}
+\else
+  \newcommand\figurename{Figura}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Tabela}
+\else
+  \newcommand\tablename{Tabela}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listagem}
+\newcommand*\listoflistings{\listof{codelisting}{Lista de Listagens}}
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{definition}{Definição}[section]
+\theoremstyle{definition}
+\newtheorem{example}{Exemplo}[section]
+\theoremstyle{remark}
+\AtBeginDocument{\renewcommand*{\proofname}{Comprovação}}
+\newtheorem*{remark}{Comentário}
+\newtheorem*{solution}{Solução}
+\newtheorem{refremark}{Comentário}[section]
+\newtheorem{refsolution}{Solução}[section]
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Aproximações para a duração média de passeios aleatórios},
+  pdflang={pt-BR},
+  pdfkeywords={Monte Carlo, Julia, Estimação},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+
+\title{Aproximações para a duração média de passeios aleatórios}
+\author{Orientando: Gustavo Silva Garone \and Orientadora: Elisabeti
+Kira}
+\date{19 de agosto de 2025}
+\begin{document}
+\maketitle
+\begin{abstract}
+Inspirados na física, propusemos aproximações para a duração de passeios
+aleatórios diversos, em especial, os de difícil derivação analítica.
+Para testar as aproximações, utilizamos simulações de Monte Carlo na
+linguagem Julia. Analisamos o desempenho desta linguagem comparando-a
+com a linguagem Python. Com modelos (passeios) mais sofisticados,
+utilizamos recursos computacionais para solução de sistemas lineares na
+construção de novas aproximações. Descrevemos o uso de paralelismo e de
+outras ferramentas. Exibimos e analisamos os resultados obtidos.
+\end{abstract}
+
+
+\section{Introdução}\label{introduuxe7uxe3o}
+
+Neste artigo, estudaremos a duração de passeios aleatórios e suas
+aproximações. Temos como objetivo descrever modeleos de passeios como a
+``Ruína do Jogador'' de Pascal, discutido em EDWARDS (1983),
+genericamente.
+
+\section{Modelando paseios
+aleatórios}\label{modelando-paseios-aleatuxf3rios}
+
+\begin{definition}[Modelo
+discreto]\protect\hypertarget{def-modelodiscreto}{}\label{def-modelodiscreto}
+
+Sejam \(\pmb{V}\) um produto cartesiano em \(\mathbb{Z}^d\) de \(d\)
+vetores de dimensões \(d_1, d_2, \dots d_d\) da forma
+\(v_j =(0, 1, 2, \dots, d_j)\), \(j =
+1,2,\ldots d\), \(a\) em \(\mathbb{Z}^d\) um vetor \(d\)-dimensional e
+\(\mathbb{X} =
+\{X_{v}\}_{\forall v \in \pmb{V}}\) um produto cartesiano de dimensão
+igual a \(\pmb{V}\) composto por vetores aleatórios de dimensão \(d\) em
+\((\Omega,
+\mathscr{F}, P)\). A ênupla \((\pmb{V}, a, \mathbb{X})\) define um
+passeio aleatório \(J(\pmb{V},a, \mathbb{X})\) descrito pela sequência
+\(\{X_{S_0, 1},
+X_{S_1, 2}, \dots X_{S_{t-1}, t}\} = \{X_{v, i}\}{i\geq1}\). Definem-se
+\(S_n = a
++\sum^n_{i=1} X_{\cdot, i}\) as posições do passeio no instante \(i\)
+baseado no início \(a\) e \(X_{v, i}\) as ``regras do jogo'' na posição
+\(v = (v_1, v_2, \dots,
+v_d)\) e instante \(i\). Seja
+\(\tau = \min\{i : \exists j \in S_i \leq 0 \lor
+\exists k \in S_i \geq d_j,\ j = 1, 2, \dots, d\}\) a regra de parada do
+passeio.
+
+\end{definition}
+
+\begin{refremark}
+Em especial, se \(X_{v, i} = X_{v', i}\) para todo \(v \neq v'\),
+dizemos que o passeio está em meio uniforme (uniforme no espaço).
+Analogamente, se \(X_{v, i} = X_{v, i'}\) para todo \(i \neq i'\),
+dizemos que o passeio é uniforme no tempo.
+
+Simplificaremos casos em meio uniforme escrevendo simplesmente
+\(X_{i}\). Não trateremos de casos não uniformes no tempo neste artigo.
+
+\label{rem-uniforme}
+
+\end{refremark}
+
+Para ajudar no entendimento deste modelo , oferecemos um exemplo:
+
+\begin{example}[Ruína do Jogador
+bidimensional]\protect\hypertarget{exm-modelodiscreto}{}\label{exm-modelodiscreto}
+
+Considere um jogador apostando em um casino no lançamento de duas moedas
+honestas. A primeira moeda define se apostará seus dólares ou seus
+euros. A segunda moeda decide se ganhará ou perderá a jogada. No caso de
+derrota, deverá deixar um dólar ou um euro com o casino, enquanto ganha
+essa quantidade no caso de sucesso em sua aposta. Terminará o jogo
+quando atingir cem dólares ou cem euros, ou caso vá à ruína (seu saldo
+chegue em zero em alguma das moedas). O jogador começa com 50 dólares e
+25 euros.
+
+Podemos modelar esse jogo no modelo da
+Definição~\ref{def-modelodiscreto}, utilizando da simplificação do
+Remark~\ref{rem-uniforme}. Tome \(\pmb{V} = (v_1, v_2)\) com
+\(v_1 = v_2 = (0, 1, \dots, 100)\), \(a = (50, 25)\) e
+
+\[
+X = \begin{cases}
+(-1, 0), & 0.25 \\
+(0, -1), & 0.25 \\
+(1, 0), & 0.25 \\
+(0, 1), & 0.25.
+\end{cases}
+\]
+
+Note que é o mesmo para todo tempo \(i\) e todo estado \(v\) enquanto o
+jogo durar.
+
+Após \(5\) jogadas, o jogo tomou o seguinte percurso: \[
+\begin{aligned}
+J(\pmb{V}, a, \pmb{x}) &= \{x_1, x_2, x_3, x_4, x_5\} \\
+&= \{(1,0), (-1, 0), (0, 1), (0, 1), (-1, 0)\}.
+\end{aligned}
+\]
+
+\end{example}
+
+Conforme a regra de parada \(\tau\), o jogo encerrar-se-á assim que um
+elemento de \(S_n\) - isto é, uma moeda (dólar ou euro) - chegar em zero
+ou cem. No Exemplo~\ref{exm-modelodiscreto}, é fácil ver que o jogo
+ainda não acabou, pois \(S_5 = (49,
+27)\).
+
+Estamos interessados na duração esperada do jogo, ou seja, queremos
+encontrar \(E(\tau)\). Abordaremos técnicas analíticas, computacionais e
+estimativas para este valor no restante deste artigo.
+
+\section{Aproximando durações de passeios
+aleatórios}\label{aproximando-durauxe7uxf5es-de-passeios-aleatuxf3rios}
+
+Uma pergunta natural quando se discute aproximações é quanto sua
+utilidade. Se possível, é mais desejável utilizar resultados obtidos
+analiticamente, como, no exemplo da Ruína do Jogador clássica, os
+desenvolvidos em STERN (1975). Conforme os passeios (e os modelos)
+complicam-se, pode não ser possível, ou ser muito difícil, obter uma
+derivação analítica de \(E(\tau)\).
+
+Nos cenários em que não é prático o desenvolvimento analítico, soluções
+computacionais são buscadas. Estas soluções podem fornecer resultados
+teóricos corretos, como na solução de sistemas lineares extensos que
+abordaremos na {[}SESSÃO AQUI{]}, ou aproximações pelo método de Monte
+Carlo, como aborda HARRISON (2010).
+
+Ainda assim, a simulação também traz desvantagens. Como descrito em
+RITTER et al. (2011), um número considerável de simulações é necessário
+para garantir acurácia dos dados e estabilidade. Além disso, com modelos
+mais complexos, justamente os usados na resolução de problemas reais,
+estes problemas se agravam. Diante disso, vê-se justificável a busca de
+estimadores eficientes para a duração esperada de passeios aleatórios
+diversos.
+
+\subsection{Ruína do Jogador e
+variações}\label{ruuxedna-do-jogador-e-variauxe7uxf5es}
+
+Na Ruína do Jogador,
+
+\newpage{}
+
+\section{Referências}\label{referuxeancias}
+
+\phantomsection\label{refs}
+\begin{CSLReferences}{0}{1}
+\bibitem[\citeproctext]{ref-edwards_pascals_1983}
+EDWARDS, A. W. F. \href{https://doi.org/10.2307/1402732}{Pascal's
+Problem: The 'Gambler's Ruin'}. \textbf{International Statistical Review
+/ Revue Internationale de Statistique}, v. 51, n. 1, p. 73--79, 1983.
+
+\bibitem[\citeproctext]{ref-harrison_introduction_2010}
+HARRISON, R. L. \href{https://doi.org/10.1063/1.3295638}{Introduction To
+Monte Carlo Simulation}. \textbf{{AIP} conference proceedings}, v. 1204,
+p. 17--21, 5 jan. 2010.
+
+\bibitem[\citeproctext]{ref-ritter_determining_2011}
+RITTER, F. E. et al.
+\href{https://doi.org/10.1007/978-0-85729-883-6_5}{Determining the
+Number of Simulation Runs: Treating Simulations as Theories by Not
+Sampling Their Behavior}. Em: ROTHROCK, L.; NARAYANAN, S. (Eds.).
+\textbf{Human-in-the-Loop Simulations: Methods and Practice}. London:
+Springer, 2011. p. 97--116.
+
+\bibitem[\citeproctext]{ref-stern_conditional_1975}
+STERN, F.
+\href{https://doi.org/10.1080/0025570X.1975.11976486}{Conditional
+Expectation of the Duration in the Classical Ruin Problem}.
+\textbf{Mathematics Magazine}, v. 48, n. 4, p. 200--203, 1 set. 1975.
+
+\end{CSLReferences}
+
+
+
+
+\end{document}
