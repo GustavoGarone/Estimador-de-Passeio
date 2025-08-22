@@ -72,4 +72,6 @@ function montecarlo(inicios, tamanhos, dims_cum, prob_cums, passos, MC)
 end
 
 dados = main(1, 5, 100, 1000)
-boxplot(dados, markersize=0.5)
+pgfplotsx()
+boxplot(dados.dim, dados.t, markersize=0.5, label="")
+savefig("boxplots.svg")
