@@ -1,16 +1,16 @@
 # Fdb version 4
-["bibtex main"] 1755891726.04276 "main.aux" "main.bbl" "main" 1755970067.43207 0
-  "./references.bib" 1755963877.69776 9525 ea41e2be055e016061d1f15fb6674a8e ""
+["bibtex main"] 1755891726.04276 "main.aux" "main.bbl" "main" 1755975877.00808 0
+  "./references.bib" 1755891577.10414 9525 ea41e2be055e016061d1f15fb6674a8e ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/bibtex/bst/base/plain.bst" 1 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "main.aux" 1755970067.06238 1383 d3d3ea4b93fc0db9c859060679eb12c0 "pdflatex"
+  "main.aux" 1755975876.64149 1383 d3d3ea4b93fc0db9c859060679eb12c0 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1755970066.45075 "main.tex" "main.pdf" "main" 1755970067.43233 0
-  "/nix/store/hx1c7wv8vq842xl3a71bk8kk6k9a21bg-texlive-2025-env/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1 5523625 4ea472fc3e540a602ebee2249e79c648 ""
-  "/nix/store/hx1c7wv8vq842xl3a71bk8kk6k9a21bg-texlive-2025-env/share/texmf-var/web2c/pdftex/pdflatex.fmt" 1 3600364 701f02e34010ffda850c767228f8abca ""
-  "/nix/store/hx1c7wv8vq842xl3a71bk8kk6k9a21bg-texlive-2025-env/share/texmf-var/web2c/texmf.cnf" 1 43847 0f669ca90b6f7543879cd19f8514d9a3 ""
+["pdflatex"] 1755975876.00767 "main.tex" "main.pdf" "main" 1755975877.00834 0
+  "/nix/store/dy61w96cncqhnwbz5p70w0ccyh0nnx3k-texlive-2025-env/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1 5523625 32f87e8767816eebc1b83b81f33061a4 ""
+  "/nix/store/dy61w96cncqhnwbz5p70w0ccyh0nnx3k-texlive-2025-env/share/texmf-var/web2c/pdftex/pdflatex.fmt" 1 3600364 701f02e34010ffda850c767228f8abca ""
+  "/nix/store/dy61w96cncqhnwbz5p70w0ccyh0nnx3k-texlive-2025-env/share/texmf-var/web2c/texmf.cnf" 1 43847 240f5031f95c865a0be8c57cac4cc2e0 ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/enc/dvips/base/8r.enc" 1 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/map/fontname/texfonts.map" 1 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/adobe/helvetic/phvb7t.tfm" 1 2240 eb56c13537f4d8a0bd3fafc25572b1bd ""
@@ -86,12 +86,12 @@
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/psnfss/ts1phv.fd" 1 1181 ec0c641cd2e0fb69a449534a0279b5ca ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/ragged2e/ragged2e.sty" 1 10085 3dececaeed388e31285c366e124c0c4e ""
   "/nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/titlesec/titlesec.sty" 1 48766 87a17a4ef312a39cd43896e34a679a56 ""
-  "boxplots.pdf" 1755969893.45101 366366 936453cc272a2bca79e35b27354b6f9a ""
-  "graficoest.pdf" 1755970060.58344 48759 6f2dfda71cb1328b7d3b8bbd089e9b9b ""
-  "logo_siicusp.jpg" 1755815784.37162 52680 bd0c99b0da216b28701fe9415fb1a306 ""
-  "main.aux" 1755970067.06238 1383 d3d3ea4b93fc0db9c859060679eb12c0 "pdflatex"
-  "main.bbl" 1755963877.69576 730 cbe2d0b05e35129155a5ce1421198dd9 "bibtex main"
-  "main.tex" 1755970032.02871 7143 cfe5ca2473ca36422993286d3479b7f4 ""
+  "boxplots.pdf" 1755975808.85 366366 936453cc272a2bca79e35b27354b6f9a ""
+  "graficoest.pdf" 1755975860.64369 51904 2e0f7b43a838f7f14fec0f719715e966 ""
+  "logo_siicusp.jpg" 1755759680 52680 bd0c99b0da216b28701fe9415fb1a306 ""
+  "main.aux" 1755975876.64149 1383 d3d3ea4b93fc0db9c859060679eb12c0 "pdflatex"
+  "main.bbl" 1755891726.17671 730 cbe2d0b05e35129155a5ce1421198dd9 "bibtex main"
+  "main.tex" 1755975808.855 7143 cfe5ca2473ca36422993286d3479b7f4 ""
   (generated)
   "main.aux"
   "main.log"
