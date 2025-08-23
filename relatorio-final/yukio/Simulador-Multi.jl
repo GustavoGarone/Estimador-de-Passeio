@@ -72,6 +72,6 @@ end
 
 dados = main(1, 10, 500, 1000)
 boxplot(
-    dados.dim, dados.t, markersize = 0.7, label = "", xlabel = "Dimensões", box_width = 1.5, ylabel = "Duração em passos", color = :red, markercolor = :yellow
+    dados.dim, dados.t, yrotation = 60, markersize = 0.6, msw = 0.4, label = "", xlabel = "Dimensões", bar_width = 4.5, ylabel = "Duração em passos", color = :red, markercolor = :yellow
 )
-savefig("boxplots.png")
+savefig("boxplots.pdf")

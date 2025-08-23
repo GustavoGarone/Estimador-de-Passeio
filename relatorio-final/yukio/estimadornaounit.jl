@@ -28,7 +28,7 @@ function monteCarlo(M)
     pushfirst!(medias, 0)
     esp = a * p - b * (1 - p)
     est(k) = esp > 0 ? (tamanho - k) / esp : k / abs(esp)
-    plt = plot(medias, label = "Simulada", xlabel = "Posição inicial", legendfontsize = 10)
+    plt = plot(medias, label = "Simulada", yrotation = 60, xlabel = "Posição inicial", ylabel = "Duração em passos", legendfontsize = 13)
     plot!(est, label = "Estimada")
     savefig("graficoest.pdf")
     return
