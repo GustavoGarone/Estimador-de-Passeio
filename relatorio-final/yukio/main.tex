@@ -8,7 +8,7 @@
 
 %Pacotes
 \usepackage{amsthm,amssymb,amsmath}
-\usepackage[english]{babel}
+\usepackage[brazil]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{amsfonts}
 \usepackage{graphicx}
@@ -76,63 +76,53 @@ headsep = 1.06cm,
 
 \section{Objetivos}
 
-A Ruína do Jogador é um dos mais conhecidos modelos de passeio aleatório, um
-processo estocástico markoviano com espaço de estados enumerável e barreiras
-absorventes. Nele, dois jogadores apostam seu dinheiro a cada rodada e, com base
-em uma distribuição de probabilidades, ganham ou perdem valores diversos.
-Passeios desse tipo possuem grande utilidade na modelagem estatística e
-aplicações em algoritmos computacionais \cite{ross_markov_2019}. Por isso, seu
-comportamento já foi amplamente estudado em sua forma mais simples (unitário,
-uniforme e em meio não aleatório), em especial quanto a probabilidade de
-ruína ou vitória \cite{ross_introduction_2019}. Esse trabalho tem como objetivo
-estudar o tempo esperado até a ruína para passeios mais complexos, propondo
-métodos de estimar essa duração e avaliando-os por vias computacionais, assim
-expandindo o conhecimento acerca de passeios desse tipo e algumas de suas
-variações.
-
-The Gambler's Ruin is one of the most well known random walks, a markovian
-stochastic process with enumerable states and absorbing barriers. This random
-process describes a game between two players, where they gamble their money each
-round and, based on a certain probability distribution, gain or lose some of
-that money. Random walks like the Gambler's Ruin are of great utility in
-statistical modeling and in the development of computer algorithms
-\cite{ross_markov_2019}. For this reason, the behavior of simple random walks
-(unitary, homogenous and non-random)
-have been extensively studied
+A Ruína do Jogador é um passeio aleatório, um dos mais conhecidos modelos de 
+processo estocástico Markoviano. Nele, um jogador aposta seu dinheiro a cada 
+rodada e, com base em uma regra probabilística, ganha ou perde valores diversos.
+Modelos desse tipo possuem grande utilidade na modelagem estatística e
+aplicações em algoritmos computacionais \cite{ross_markov_2019}. Seu
+comportamento já foi amplamente estudado em sua forma mais simples - o jogador 
+ganha $\mathrm{R}\$1,00$ com probabilidade $p$ e perde $\mathrm{R}\$1,00$ com 
+probabilidade $1-p$ - em especial no que diz respeito à probabilidade de ruína ou vitória 
+\cite{ross_introduction_2019}. Esse trabalho tem como objetivo estudar o tempo 
+esperado até a ruína para modelos mais complexos, propondo métodos de estimar 
+essa duração e avaliando-os por vias computacionais, assim expandindo o 
+conhecimento acerca desses processos e algumas de suas variações.
 
 \section{Métodos}
 
-Iniciamos por uma estudo da literatura sobre a derivação analítica de passeios
-mais simples. Analisamos o cálculo da esperança e da variância da duração da
-Ruína do Jogador simples \cite{andel_variance_2012} na qual destacou-se o uso de
-sistemas de equações de diferenças finitas. Depois, desenvolvemos um primeiro
+Analisamos o cálculo da esperança e da variância da duração da
+Ruína do Jogador simples \cite{andel_variance_2012}, na qual destacou-se o uso de
+sistemas de equações de diferenças finitas. Desenvolvemos um primeiro
 estimador heurístico baseado numa analogia à velocidade média em Física, que
-funcionou para a maioria dos passeios não unitários. Definimos passeios não
-unitários como aqueles em que os jogadores podem ganhar ou perder valores
-diferentes de $\mathrm{R}\$1,00$ por rodada.
+forneceu boas estimativas  para a maioria dos passeios aleatórios, tanto os simples 
+como aqueles em que os jogadores podem ganhar ou perder valores
+diferentes de $\mathrm{R}\$1,00$ por rodada. No caso do jogo honesto, isso é, quando
+o lucro esperado em cada rodada é nulo, o estimador forneceu estimativas que
+desviaram significativamente dos valores calculados e simulados.
 
-Uma vez que estes passeios não possuem resultado analítico (ou de difícil
-construção), avaliamos este estimador por simulações de Monte Carlo, com base em
+Para passeios com regras mais amplas que não possuem resultado analítico,
+avaliamos este estimador por simulações de Monte Carlo, com base em
 métodos propostos por Ritter \cite{ritter_determining_2011}, na linguagem de
-programação Python. Posteriormente, conforme utilizávamos regras de jogo que
-prolongavam muito as simulações e demandavam maior poder computacional, passamos
-a empregar a linguagem Julia, como recomendado por Godoy
-\cite{godoy_evaluating_2023}. Refinamos o estimador para lidar com situações em
-que o empate entre os jogadores (não há troca de dinheiro na rodada) é
-possível.
+programação Python. Conforme considerávamos regras de jogo mais amplas e que
+prolongavam muito o tempo das simulações e demandavam maior poder computacional,
+passamos a empregar a linguagem Julia, como recomendado por Godoy
+\cite{godoy_evaluating_2023}. Refinamos o estimador para lidar com situações de empate
+dentro da rodada.
 
-Compreendidos os limites deste estimador, estendemos nossos estudos para
-passeios em $\mathbb{Z}^d$, como jogos com mais tipos de moeda. Resolvendo
+Compreendidos os limites deste estimador para uma dimensão, estendemos nossos estudos para
+passeios em $\mathbb{Z}^d$. Resolvendo
 sistemas de equações computacionalmente por bibliotecas simbólicas, conseguimos
-resultados analíticos para passeios unitários, mas não necessariamente uniformes
-ou não aleatórios. Novos estimadores foram pensados e analisados para passeios
-não unitários, também em dimensões superiores e em meio não uniforme.
+resultados analíticos para passeios unitários e com diferentes regras probabilísticas.
+Novos estimadores foram propostos e analisados para passeios unitários ou não, os quais
+apresentaram boas estimativas quando o número de dimensões é suficientemente grande ou a 
+regra probabilística do modelo não é patológica.
 
 \section{Resultados}
 
 O estimador proposto mostrou-se eficaz para o caso unidimensional em meio
-uniforme, como mostra a Figura 1, e foi adaptado com sucesso ao caso não
-uniforme.
+uniforme, como mostra a Figura 1, e foi adaptado com sucesso ao caso em que a regra
+probabilística depende da fortuna atual do jogador.
 
 \begin{figure}[H]
     \caption{Comparação do estimador com 100.000 simulações por posição inicial}
@@ -141,10 +131,10 @@ uniforme.
 \end{figure}
 
 Em dimensões mais altas, constatou-se que a duração esperada do
-passeio só pode ser determinada numericamente, dada a explosão combinatória das
-equações envolvidas e, surpreendentemente, demonstrou crescimento linear
-conforme o número de dimensões aumenta a partir da $100$ª dimensão, como consta a
-Figura 2.
+passeio só pode ser determinada por métodos numéricos, dado o crescimento exponencial das
+equações envolvidas com a dimensão. Surpreendentemente, observou-se crescimento linear
+do tempo médio de duração do jogo conforme o número de dimensões aumenta a partir da 
+$100$ª dimensão, como ilustra a Figura 2.
 
 \begin{figure}[h]
     \caption{Passos simulados até fim do jogo com $1000$ simulações em diversas
@@ -153,23 +143,22 @@ Figura 2.
     \includegraphics[width=7.5cm]{"boxplots.pdf"}
 \end{figure}
 
-Para o "passeio do foguete", em que o jogador não pode perder
-dinheiro, foram obtidas expressões teóricas em meios uniforme, não uniforme, em
-meios aleatórios e não aleatórios. Foi revelado que a complexidade cresce
-proporcionalmente ao número de estados possíveis. Em todos os casos, os
-estimadores se aproximaram dos valores simulados, embora apresentem maiores
-desvios quando a esperança da variável de transição se aproxima de zero, o que
-denominamos jogos com pouco movimento assintótico esperado, ou quando o estado
-inicial está próximo das fronteiras.
+Para o caso particular do modelo em que o jogador não pode perder
+dinheiro, foram obtidas expressões teóricas em meio uniforme, não uniforme, em
+meio aleatório e não aleatório. Foi revelado que a complexidade das equações que 
+descrevem o tempo médio de duração do jogo cresce proporcionalmente ao tamanho
+do espaço de estados. Em todos os casos, os estimadores se aproximaram dos valores
+simulados, embora apresentem maiores desvios quando o jogo é aproximadamente
+honesto, ou quando o estado inicial está próximo das fronteiras.
 
 \section{Conclusões}
 
-A Ruína do Jogador é um problema clássico de quase quatro séculos atrás. Ainda
-assim, mesmo munidos apenas da intuição, é possível para alunos da graduação
+A Ruína do Jogador é um problema clássico, proposto há quase quatro séculos. 
+Ainda assim, munidos apenas da intuição, é possível para alunos da graduação
 explorarem novas perguntas e hipóteses, testá-las com ajuda dos recursos
-computacionais hoje abundantes para finalmente formalizá-las com rigor
+computacionais, hoje abundantes, para finalmente formalizá-las com rigor
 matemático. Esperamos que esse trabalho incentive outros alunos da graduação a
-explorarem e reexplorarem por si clássicos problemas matemáticos em busca de
+explorarem e reexplorarem por si problemas matemáticos clássicos em busca de
 soluções para problemas modernos.
 
 \section{Agradecimentos}
