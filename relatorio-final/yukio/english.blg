@@ -1,0 +1,56 @@
+This is BibTeX, Version 0.99d (TeX Live 2025/nixos.org)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: english.aux
+The style file: plain.bst
+Database file #1: references.bib
+Warning--empty journal in andel_variance_2012
+Warning--empty year in andel_variance_2012
+Warning--empty booktitle in godoy_evaluating_2023
+Warning--empty year in godoy_evaluating_2023
+Warning--empty booktitle in ritter_determining_2011
+Warning--empty year in ritter_determining_2011
+Warning--empty year in ross_introduction_2019
+Warning--empty chapter and pages in ross_markov_2019
+Warning--empty year in ross_markov_2019
+You've used 5 entries,
+            2118 wiz_defined-function locations,
+            516 strings with 4474 characters,
+and the built_in function-call counts, 1343 in all, are:
+= -- 114
+> -- 53
+< -- 0
++ -- 21
+- -- 16
+* -- 83
+:= -- 226
+add.period$ -- 14
+call.type$ -- 5
+change.case$ -- 19
+chr.to.int$ -- 0
+cite$ -- 14
+duplicate$ -- 63
+empty$ -- 129
+format.name$ -- 16
+if$ -- 275
+int.to.chr$ -- 0
+int.to.str$ -- 5
+missing$ -- 7
+newline$ -- 27
+num.names$ -- 10
+pop$ -- 51
+preamble$ -- 1
+purify$ -- 16
+quote$ -- 0
+skip$ -- 31
+stack$ -- 0
+substring$ -- 56
+swap$ -- 3
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 16
+warning$ -- 9
+while$ -- 12
+width$ -- 6
+write$ -- 45
+(There were 9 warnings)
