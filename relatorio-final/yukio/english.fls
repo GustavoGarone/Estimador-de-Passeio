@@ -138,10 +138,6 @@ INPUT ./logo_siicusp.jpg
 INPUT ./logo_siicusp.jpg
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/vf/adobe/helvetic/phvr7t.vf
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/adobe/helvetic/phvr8r.tfm
-INPUT ./logo_siicusp.jpg
-INPUT ./logo_siicusp.jpg
-INPUT ./logo_siicusp.jpg
-INPUT ./logo_siicusp.jpg
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/vf/adobe/helvetic/phvro7t.vf
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/adobe/helvetic/phvro8r.tfm
 INPUT english.aux
