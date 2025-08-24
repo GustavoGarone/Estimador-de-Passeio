@@ -78,47 +78,48 @@ headsep = 1.06cm,
 
 \section{Objectives}
 
-A Ruína do Jogador é um passeio aleatório, um dos mais conhecidos modelos de
-processo estocástico Markoviano. Nele, um jogador aposta seu dinheiro a cada
-rodada e, com base em uma regra probabilística, ganha ou perde valores diversos.
-Modelos desse tipo possuem grande utilidade na modelagem estatística e
-aplicações em algoritmos computacionais \cite{ross_markov_2019}. Seu
-comportamento já foi amplamente estudado em sua forma mais simples - o jogador
-ganha $\mathrm{R}\$1,00$ com probabilidade $p$ e perde $\mathrm{R}\$1,00$ com
-probabilidade $1-p$ - em especial no que diz respeito à probabilidade de ruína
-ou vitória \cite{ross_introduction_2019}. Esse trabalho tem como objetivo
-estudar o tempo esperado até a ruína para modelos mais complexos, propondo
-métodos de estimar essa duração e avaliando-os por vias computacionais, assim
-expandindo o conhecimento acerca desses processos e algumas de suas variações.
+The Gambler’s Ruin is a random walk, one of the most classical models of a
+Markovian stochastic process. In this model, a gambler wagers money in each
+round and, according to a probabilistic rule, either gains or loses varying
+amounts. Such models are widely applicable in statistical modeling and
+computational algorithms \cite{ross_markov_2019}. Their behavior has been
+thoroughly studied in the simplest form — the gambler wins
+$\mathrm{R}\$1.00$ with probability $p$ and loses $\mathrm{R}\$1.00$ with
+probability $1-p$ — particularly concerning the probability of ruin or
+absorption \cite{ross_introduction_2019}. The aim of this work is to investigate
+the expected time to ruin in more complex models, by proposing methods to
+estimate this duration and evaluating their performance through computational
+approaches, thus expanding the understanding of these processes and some of
+their generalizations.
 
 \section{Materials and methods}
 
-Analisamos o cálculo da esperança e da variância da duração da Ruína do Jogador
-simples \cite{andel_variance_2012}, na qual destacou-se o uso de sistemas de
-equações de diferenças finitas. Desenvolvemos um primeiro estimador heurístico
-baseado numa analogia à velocidade média em Física, que forneceu boas
-estimativas  para a maioria dos passeios aleatórios, tanto os simples como
-aqueles em que os jogadores podem ganhar ou perder valores diferentes de
-$\mathrm{R}\$1,00$ por rodada. No caso do jogo honesto, isso é, quando o lucro
-esperado em cada rodada é nulo, o estimador forneceu estimativas que desviaram
-significativamente dos valores calculados e simulados.
+We analyzed the calculation of the expectation and variance of the duration
+of the classical Gambler’s Ruin problem \cite{andel_variance_2012}, highlighting
+the use of systems of finite difference equations. We developed an initial heuristic
+estimator based on an analogy with average velocity in Physics, that yielded
+accurate approximations for most random walks, both in the simple case and in
+models where the gambler may win or lose amounts different from
+$\mathrm{R}\$1.00$ per round. In the fair game case, i.e., when the expected gain
+per round is zero, the estimator deviated significantly from the theoretical and
+simulated values.
 
-Para passeios com regras mais amplas que não possuem resultado analítico,
-avaliamos este estimador por simulações de Monte Carlo, com base em métodos
-propostos por Ritter \cite{ritter_determining_2011}, na linguagem de programação
-Python. Conforme considerávamos regras de jogo mais amplas e que prolongavam
-muito o tempo das simulações e demandavam maior poder computacional, passamos a
-empregar a linguagem Julia, como recomendado por Godoy
-\cite{godoy_evaluating_2023}. Refinamos o estimador para lidar com situações de
-empate dentro da rodada.
+For random walks with more general rules, where analytical solutions are not
+available, we evaluated this estimator using Monte Carlo simulations, based on
+methods proposed by Ritter \cite{ritter_determining_2011}, using the Python
+programming language. As we considered broader rules and rules that greatly
+extended the simulation times and required more computational power, we
+migrated to the Julia language, as recommended by Godoy
+\cite{godoy_evaluating_2023}. We further refined the estimator to account for
+ties within a round.
 
-Compreendidos os limites deste estimador para uma dimensão, estendemos nossos
-estudos para passeios em $\mathbb{Z}^d$. Resolvendo sistemas de equações
-computacionalmente por bibliotecas simbólicas, conseguimos resultados analíticos
-para passeios unitários e com diferentes regras probabilísticas. Novos
-estimadores foram propostos e analisados para passeios unitários ou não, os
-quais apresentaram boas estimativas quando o número de dimensões é
-suficientemente grande ou a regra probabilística do modelo não é patológica.
+Having identified the limitations of this estimator in one dimension, we extended
+our study to random walks in $\mathbb{Z}^d$. By solving systems of equations
+computationally with symbolic libraries, we obtained analytical results for unit-step
+walks with different probabilistic rules. New estimators were proposed and analyzed
+for both unit and non-unit step walks, which provided good estimates when the
+number of dimensions was sufficiently large or when the probabilistic rule of the
+model was non-pathological.
 
 \section{Results}
 
