@@ -79,17 +79,17 @@ headsep = 1.06cm,
 \section{Objectives}
 
 The Gambler’s Ruin is a random walk, one of the most classical models of a
-Markovian stochastic process. In this model, a gambler wagers money in each
+markovian stochastic process. In this model, a gambler wagers money in each
 round and, according to a probabilistic rule, either gains or loses varying
 amounts. Such models are widely applicable in statistical modeling and
 computational algorithms \cite{ross_markov_2019}. Their behavior has been
-thoroughly studied in the simplest form — the gambler wins
-$\mathrm{R}\$1.00$ with probability $p$ and loses $\mathrm{R}\$1.00$ with
-probability $1-p$ — particularly concerning the probability of ruin or
-absorption \cite{ross_introduction_2019}. The aim of this work is to investigate
-the expected time to ruin in more complex models, by proposing methods to
-estimate this duration and evaluating their performance through computational
-approaches, thus expanding the understanding of these processes and some of
+thoroughly studied in the simplest form — the gambler wins $\mathrm{R}\$1.00$
+with probability $p$ and loses $\mathrm{R}\$1.00$ with probability $1-p$ —
+particularly concerning the probability of ruin or absorption
+\cite{ross_introduction_2019}. The aim of this project is to investigate the
+expected time to ruin in more complex models by proposing methods to estimate
+this duration and evaluating their performance through computational approaches.
+With this, we hope to expand the understanding of these processes and some of
 their generalizations.
 
 \section{Materials and methods}
@@ -97,10 +97,10 @@ their generalizations.
 We analyzed the calculation of the expectation and variance of the duration
 of the classical Gambler’s Ruin problem \cite{andel_variance_2012}, highlighting
 the use of systems of finite difference equations. We developed an initial heuristic
-estimator based on an analogy with average velocity in Physics, that yielded
+estimator based on an analogy with average velocity in Physics. This estimator yielded
 accurate approximations for most random walks, both in the simple case and in
 models where the gambler may win or lose amounts different from
-$\mathrm{R}\$1.00$ per round. In the fair game case, i.e., when the expected gain
+$\mathrm{R}\$1.00$ per round. In the fair game case, that is, when the expected gain
 per round is zero, the estimator deviated significantly from the theoretical and
 simulated values.
 

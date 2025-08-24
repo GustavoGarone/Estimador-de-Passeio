@@ -1,6 +1,6 @@
-PWD /home/minze/usp/Estimador-de-Passeio/relatorio-final/yukio
-INPUT /nix/store/hx1c7wv8vq842xl3a71bk8kk6k9a21bg-texlive-2025-env/share/texmf-var/web2c/texmf.cnf
-INPUT /nix/store/hx1c7wv8vq842xl3a71bk8kk6k9a21bg-texlive-2025-env/share/texmf-var/web2c/pdftex/pdflatex.fmt
+PWD /home/minze/usp/Pesquisa/Estimador-de-Passeio/relatorio-final/yukio
+INPUT /nix/store/dy61w96cncqhnwbz5p70w0ccyh0nnx3k-texlive-2025-env/share/texmf-var/web2c/texmf.cnf
+INPUT /nix/store/dy61w96cncqhnwbz5p70w0ccyh0nnx3k-texlive-2025-env/share/texmf-var/web2c/pdftex/pdflatex.fmt
 INPUT english.tex
 OUTPUT english.log
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/base/article.cls
@@ -117,7 +117,7 @@ INPUT ./logo_siicusp.jpg
 INPUT ./logo_siicusp.jpg
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/vf/adobe/helvetic/phvb7t.vf
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/adobe/helvetic/phvb8r.tfm
-INPUT /nix/store/hx1c7wv8vq842xl3a71bk8kk6k9a21bg-texlive-2025-env/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map
+INPUT /nix/store/dy61w96cncqhnwbz5p70w0ccyh0nnx3k-texlive-2025-env/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/enc/dvips/base/8r.enc
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/vf/adobe/helvetic/phvr7t.vf
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/adobe/helvetic/phvr8r.tfm
