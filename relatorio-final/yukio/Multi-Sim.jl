@@ -73,6 +73,19 @@ end
 Random.seed!(25)
 dados = main(1, 10, 500, 1000)
 boxplot(
-    dados.dim, dados.t, yrotation = 60, markersize = 0.6, msw = 0.4, label = "", xlabel = "Dimension", bar_width = 4.5, ylabel = "Duration in steps", color = :red, markercolor = :yellow
+    dados.dim, dados.t,
+    yrotation = 60,
+    markersize = 0.6,
+    msw = 0.4,
+    guidefontfamily = "times",
+    tickfontfamily = "times",
+    legendfontfamily = "times",
+    legendfontsize = 13,
+    label = "",
+    xlabel = "Dimension",
+    bar_width = 4.5,
+    ylabel = "Duration in steps",
+    color = :lightblue,
+    markercolor = :tomato
 )
 savefig("boxplots-en.pdf")
