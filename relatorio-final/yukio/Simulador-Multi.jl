@@ -70,8 +70,9 @@ function montecarlo(inicios, tamanhos, dims_cum, prob_cums, passos, MC)
     return tempos
 end
 
+Random.seed!(25)
 dados = main(1, 10, 500, 1000)
 boxplot(
-    dados.dim, dados.t, yrotation = 60, markersize = 0.6, msw = 0.4, label = "", xlabel = "Dimensões", bar_width = 4.5, ylabel = "Duração em passos", color = :red, markercolor = :yellow
+    dados.dim, dados.t, yrotation = 60, markersize = 0.6, msw = 0.4, label = "", xlabel = "Dimensão", bar_width = 4.5, ylabel = "Duração em passos", color = :red, markercolor = :yellow
 )
 savefig("boxplots.pdf")

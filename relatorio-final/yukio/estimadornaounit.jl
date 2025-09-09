@@ -34,4 +34,5 @@ function monteCarlo(M)
     return
 end
 
+Random.seed!(25)
 monteCarlo(100_000)

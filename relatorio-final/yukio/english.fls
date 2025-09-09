@@ -58,6 +58,8 @@ INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/fancyhdr/fancyhdr.sty
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/titlesec/titlesec.sty
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/titlesec/titlesec.sty
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/natbib/natbib.sty
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/natbib/natbib.sty
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/caption/caption.sty
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/caption/caption.sty
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/tex/latex/caption/caption3.sty
@@ -110,6 +112,18 @@ INPUT ./graficoest-en.pdf
 OUTPUT english.pdf
 INPUT ./graficoest-en.pdf
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/adobe/helvetic/phvr7t.tfm
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/public/cm/cmr9.tfm
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/public/cm/cmr6.tfm
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/public/cm/cmmi9.tfm
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/public/cm/cmmi6.tfm
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/public/cm/cmsy9.tfm
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/public/cm/cmsy6.tfm
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/public/amsfonts/cmextra/cmex9.tfm
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/public/amsfonts/symbols/msam10.tfm
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/public/amsfonts/symbols/msam7.tfm
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT ./logo_siicusp.jpg
 INPUT ./logo_siicusp.jpg
 INPUT ./logo_siicusp.jpg
@@ -144,6 +158,7 @@ INPUT english.aux
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/type1/public/amsfonts/cm/cmmi7.pfb
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/type1/public/amsfonts/cm/cmr10.pfb
+INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/type1/public/amsfonts/cm/cmr9.pfb
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/type1/public/amsfonts/symbols/msbm10.pfb
 INPUT /nix/store/w6p2va3ar44y89m5imfkp7vln1zrmmp7-texlive-2025-env-texmfdist/fonts/type1/urw/helvetic/uhvb8a.pfb

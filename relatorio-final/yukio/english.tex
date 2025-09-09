@@ -16,22 +16,25 @@
 \usepackage{ragged2e}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
+\usepackage{natbib}
 \usepackage[font=small]{caption}
 \usepackage[
 layout = a4paper,
 includehead,
 paperheight = 29.7cm,
-headheight = 2.8cm,
+headheight = 3.41cm,
 paperwidth = 21cm,
 textwidth = 15.8cm,
 textheight = 23.4cm,
 columnsep = 0.8cm,
-top = 1.20cm,
-bottom = 4.1cm,
+top = 1.25cm,
+bottom = 4.2cm,
 left = 2.6cm,
 right = 2.6cm,
-headsep = 1.06cm,
+headsep = 0.3cm,
 ]{geometry}
+
+\setlength{\bibsep}{1pt}
 
 %Fonte Arial
 \renewcommand{\rmdefault}{phv}
@@ -57,7 +60,7 @@ headsep = 1.06cm,
 \begin{document}
 \pagestyle{fancy}
 \fancyhead{}
-\fancyhead[L]{\includegraphics[width=2.8cm]{logo_siicusp.jpg}}
+\fancyhead[L]{\includegraphics[width=3.41cm]{logo_siicusp.jpg}}
 \renewcommand{\headrulewidth}{0pt}
 \pagenumbering{gobble}
 
@@ -79,35 +82,35 @@ headsep = 1.06cm,
 \section{Objectives}
 
 The Gambler’s Ruin is a random walk, one of the most classical models of a
-markovian stochastic process. In this model, a gambler wagers money in each
-round and, according to a probabilistic rule, either gains or loses varying
-amounts. Such models are widely applicable in statistical modeling and
+Markovian stochastic process. In this model, a gambler wagers money on each
+round, either gaining or losing varying amounts according to a probabilistic
+rule. Such models have many applications in statistical modeling and
 computational algorithms \cite{ross_markov_2019}. Their behavior has been
-thoroughly studied in the simplest form — the gambler wins $\mathrm{R}\$1.00$
-with probability $p$ and loses $\mathrm{R}\$1.00$ with probability $1-p$ —
-particularly concerning the probability of ruin or absorption
-\cite{ross_introduction_2019}. The aim of this project is to investigate the
-expected time to ruin in more complex models by proposing methods to estimate
-this duration and evaluating their performance through computational approaches.
-With this, we hope to expand the understanding of these processes and some of
-their generalizations.
+thoroughly studied in the simplest form — the gambler wins $\$1.00$
+with probability $p$ and loses $\$1.00$ with probability $1-p$ —
+particularly concerning the probability of ruin.
+\cite{ross_introduction_2019}. This project's aim is to investigate the
+expected game duration in more complex random walks by proposing estimators
+and evaluating their performance through computational approaches.
+We hope through this approach to shine light on interesting and computationally
+cheap ways to estimate random walks.
 
 \section{Materials and methods}
 
-We analyzed the calculation of the expectation and variance of the duration
-of the classical Gambler’s Ruin problem \cite{andel_variance_2012}, highlighting
-the use of systems of finite difference equations. We developed an initial heuristic
+We analyzed the expected value and variance of the duration
+of the classical Gambler’s Ruin problem \cite{andel_variance_2012} using
+finite difference equations systems. We developed a heuristic
 estimator based on an analogy with average velocity in Physics. This estimator yielded
 accurate approximations for most random walks, both in the simple case and in
 models where the gambler may win or lose amounts different from
-$\mathrm{R}\$1.00$ per round. In the fair game case, that is, when the expected gain
+$\$1.00$ per round. In the fair game case, that is, when the expected gain
 per round is zero, the estimator deviated significantly from the theoretical and
 simulated values.
 
 For random walks with more general rules, where analytical solutions are not
 available, we evaluated this estimator using Monte Carlo simulations, based on
 methods proposed by Ritter \cite{ritter_determining_2011}, using the Python
-programming language. As we considered broader rules and rules that greatly
+programming language. As we considered broader rules that greatly
 extended the simulation times and required more computational power, we
 migrated to the Julia language, as recommended by Godoy
 \cite{godoy_evaluating_2023}. We further refined the estimator to account for
@@ -116,53 +119,51 @@ ties within a round.
 Having identified the limitations of this estimator in one dimension, we extended
 our study to random walks in $\mathbb{Z}^d$. By solving systems of equations
 computationally with symbolic libraries, we obtained analytical results for unit-step
-walks with different probabilistic rules. New estimators were proposed and analyzed
-for both unit and non-unit step walks, which provided good estimates when the
-number of dimensions was sufficiently large or when the probabilistic rule of the
-model was non-pathological.
+walks with different probabilistic rules. New estimators were analyzed
+for the simple and more complex random walks. Parallel programming enabled quick
+simulation of random walks in high dimensions.
 
 \section{Results}
 
 The proposed estimator showed efficacy in predicting the duration of
-one-dimensional uniform walks, as depicted by Figure 1, and adapts successfully
+one-dimensional walks, as depicted by Figure 1, and adapts successfully
 when the transition probability depends on the gambler's current fortune.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=7.5cm]{"graficoest-en.pdf"}
     \centering
-    \caption{Comparing the estimator with 100.000 simulations per starting
+    \caption{Comparing the estimator with $100\, 000$ simulations per starting
     position}
 \end{figure}
 
-In higher dimensions the expected duration of the random walk must be obtained
-numerically due to the system of balance equations growing exponentially with
-the number of dimensions, rendering a closed form solution intractable. Still, a
-surprising result was revealed: once the dimensionality exceeds roughly the
-$100$th dimension, the average time to game completion increases almost linearly
-with each additional dimension as shown in Figure 2.
+In higher dimensions, the expected duration of the random walk must be obtained
+numerically due to the system of finite different equation's exponential growth,
+rendering a closed form solution intractable. A surprising result was observed
+in this environment: once the dimensionality exceeds roughly $d=100$, the
+average time to game completion increases almost linearly with each additional
+dimension as shown in Figure 2.
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=7.5cm]{"boxplots-en.pdf"}
     \centering
-    \caption{Simulated steps in 1.000 simulations em different dimensions.}
+    \caption{Game duration in $1\, 000$ simulations by dimension.}
 \end{figure}
 
 In the particular model where the gambler cannot lose his money, we've obtained
-analytic expressions for the uniform, non-uniform, random and non-random
-variants. The complexity of the equations that describe the game's duration
-grows proportionally to the state space's size. In all cases, the estimated
-values show great proximity to simulated ones, although greater discrepancies
-show when the game is close to fair - that is, when the gambler's expected
-earnings per round are close to $0$ - or when the starting position is close to
-a boundary value.
+analytic expressions for the random and non-random variants. The complexity of
+the equations that describe the game's duration grows proportionally to the
+state space's size. In all cases, the estimated values show great proximity to
+simulated ones, although greater discrepancies show when the game is close to
+fair - that is, when the gambler's expected earnings per round are close to $0$
+- or when the starting position is close to a boundary value.
 
 \section{Conclusions}
 
 The Gambler's Ruin is a classical math problem proposed almost four centuries
 ago. Through intuition, undergraduates can formulate fresh questions and
-hypothesis, explore them computationally, and finally developing rigorous
+hypothesis, explore them computationally, and finally developg rigorous
 mathematics. It is our hope that this work encourages other undergraduates to
 explore and reexplore classical math problems in search of solutions to modern
 day challenges.
