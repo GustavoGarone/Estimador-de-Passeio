@@ -82,7 +82,7 @@ boxplot(
     legendfontfamily = "times",
     legendfontsize = 13,
     label = "",
-    xlabel = "Dimension",
+    xlabel = "Dimensions",
     bar_width = 4.5,
     ylabel = "Duration in steps",
     color = :powderblue,
