@@ -60,6 +60,8 @@ probs = (p, q, r, s)
 
 (mus, teoricos, eqs) = main(n, probs)
 
+teoricos = Float64.(teoricos)
+
 myArray = NamedArray(reverse(teoricos, dims = 1), (0:n, 0:n), ("i", "j"))
 show(stdout, "text/plain", myArray)
 
@@ -72,4 +74,13 @@ heatmap(
     tickfontfamily = "times",
     legendfontfamily = "times",
 )
+
+# Escreve os valores calculados sobre o heatmap
+for i in 1:(n+1)
+    for j in 1:(n+1)
+        annotate!(j, i, text(string(teoricos[i,j]), 6, :black, "times"))
+    end
+end
+
 savefig("./heatmap.pdf")
+
