@@ -5,7 +5,7 @@ bilidade q, ganha 1 real na d2 com probabilidade r, perde 1 real na d2 com pro-
 babilidade s de tal modo que p+q+r+s=1.
 O jogo termina quando, em qualquer dimensão, o jogador chega a 0 ou n reais.
 """
-
+# Requer miktex para plotar o gráfico
 using SciMLBase, Symbolics, SciPy, Plots, NamedArrays
 
 function main(n, probs)
@@ -73,6 +73,8 @@ heatmap(
     guidefontfamily = "times",
     tickfontfamily = "times",
     legendfontfamily = "times",
+    xlabel = L"a_1",
+    ylabel = L"a_2",
 )
 
 # Escreve os valores calculados sobre o heatmap
@@ -83,4 +85,5 @@ for i in 1:(n+1)
 end
 
 savefig("./heatmap.pdf")
+
 
