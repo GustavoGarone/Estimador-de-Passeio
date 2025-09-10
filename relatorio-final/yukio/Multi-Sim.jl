@@ -85,7 +85,7 @@ boxplot(
     xlabel = "Dimension",
     bar_width = 4.5,
     ylabel = "Duration in steps",
-    color = :lightblue,
+    color = :mediumslateblue,
     markercolor = :tomato
 )
 savefig("boxplots-en.pdf")
