@@ -20,7 +20,7 @@ abstract: >
 
 keywords:
     - Monte Carlo
-    - Julia
+    - Passeio Aleatório
     - Estimação
 date: last-modified
 date-format: long
@@ -52,46 +52,72 @@ fig-cap-location: top
 # Introdução
 
 Neste artigo, estudaremos a duração de passeios aleatórios e suas aproximações.
-Temos como objetivo descrever modeleos de passeios como a "Ruína do Jogador" de
-Pascal, discutido em @edwards_pascals_1983, genericamente.
+Temos como objetivo descrever modelos de passeios como a "Ruína do Jogador" de
+Pascal, discutido em @edwards_pascals_1983, generalizando-o para múltiplas
+dimensões. Abordaremos técnicas analíticas, computacionais e de estimativas para
+a duração esperada destes passeios. 
+
+Começamos por definir o modelo que será utilizado para descrever os passeios
+aleatórios, acompanhado de exemplo. Então, apresentarmos o estimador descrito
+por @ishihara_um_2025, e partimos para sua avaliação. Primeiramente, o
+comparamos com resultados probabilísticos estabelecidos na área. Quando
+avançamos para passeios em que resultados analíticos não são factíveis,
+iniciamos a comparação do estimador com simulações de Monte Carlo.
+
+Descrevemos e justificamos pela literatura a adoção da linguagem de programação
+*Julia*, essencial para possibilitar a execução eficiente de simulações
+computacionalmente intensivas em passeios mais complexos.
+
+Em dimensões maiores, fornecemos, até onde é computacionalmente possível,
+resultados exatos para a duração esperada de passeios aleatórios. Para obter
+esses resultados, utilizamos métodos para solução de sistemas lineares extensos
+simbólicos e empregamos técnicas de computação paralela, que serão brevemente
+discutidas.
+
+Este artigo priorizará a descrição do aspecto computacional dessa pesquisa.
+Leitores são encorajados a consultar a referência @ishihara_um_2025 para uma
+descrição mais detalhada da construção matemática do estimador e do modelo
+utilizado.
 
 # Modelando paseios aleatórios
 
-:::{#def-modelodiscreto}
+## Modelo 
 
-## Modelo discreto
+:::{#def-modelodiscreto, title="Modelo Discreto de Passeio Aleatório"}
 
-Sejam $\pmb{V}$ um produto cartesiano em $\mathbb{Z}^d$ de $d$ vetores de
-dimensões $d_1, d_2, \dots d_d$ da forma $v_j =(0, 1, 2, \dots, d_j)$, $j =
-1,2,\ldots d$, $a$ em $\mathbb{Z}^d$ um vetor $d$-dimensional e $\mathbb{X} =
-\{X_{v}\}_{\forall v \in \pmb{V}}$ um produto cartesiano de dimensão igual a
-$\pmb{V}$ composto por vetores aleatórios de dimensão $d$ em $(\Omega,
-\mathscr{F}, P)$. A ênupla $(\pmb{V}, a, \mathbb{X})$ define um passeio
-aleatório $J(\pmb{V},a, \mathbb{X})$ descrito pela sequência $\{X_{S_0, 1},
-X_{S_1, 2}, \dots X_{S_{t-1}, t}\} = \{X_{v, i}\}{i\geq1}$. Definem-se $S_n = a
-+\sum^n_{i=1} X_{\cdot, i}$ as posições do passeio no instante $i$ baseado no
-início $a$ e $X_{v, i}$ as "regras do jogo" na posição $v = (v_1, v_2, \dots,
-v_d)$ e instante $i$. Seja $\tau = \min\{i : \exists j \in S_i \leq 0 \lor
-\exists k \in S_i \geq d_j,\ j = 1, 2, \dots, d\}$ a regra de parada do passeio.
+Considere que o jogador $A$ começa com ma fortuna inicial com um total $\$N$ em
+jogo,  $\$a$, $0 \leq a \leq N$,  fornecendo um espaço de estados $\{0, 1,
+\dots, a, \dots, N\}$. Cada rodada produz um resultado aleatório independente
+$X_i$, $i=1,2,\dots$, representando o ganho ou perda naquela etapa. Isso será
+chamado de variável "regra". Após $n$ rodadas, a fortuna do jogador $A$ é dada
+por
 
+$$
+    S_n = a + \sum_{i=1}^n X_i.
+$$
+
+A **duração do jogo** é o primeiro tempo $n$ tal que $S_n \leq 0$ (ruína) ou
+$S_n \geq N$ (vitória) e é denotada por $\tau_{X, a, N}$.
+
+Ao indexarmos $X_i$ na posição atual do passeio, $X_{i, S_n}$, podemos estender
+esse modelo para passeios em meio aleatório.
 :::
-
 
 
 :::{#rem-uniforme} 
-Em especial, se $X_{v, i} = X_{v', i}$ para todo
-$v \neq v'$, dizemos que o passeio está em meio uniforme (uniforme no espaço).
-Analogamente, se $X_{v, i} = X_{v, i'}$ para todo
-$i \neq i'$, dizemos que o passeio é uniforme no tempo.
-
-Simplificaremos casos em meio uniforme escrevendo simplesmente $X_{i}$.
-Não trateremos de casos não uniformes no tempo neste artigo.
+Em especial, se $X_{i, S_n} = X_i$ para todo possível valor $S_n$ (posição),
+dizemos que o passeio está em meio uniforme (uniforme no espaço), pois a regra
+não depende do estado atual do passeio. Analogamente, se
+$X_{i, S_n} = X_{j, S_n}$ para todo $i \neq j$, dizemos que o passeio é
+uniforme no tempo, pois a regra não depende do tempo $i$.
 :::
 
-Para ajudar no entendimento deste modelo , oferecemos um
+Para ajudar no entendimento deste modelo, oferecemos um
 exemplo:
 
 :::{#exm-modelodiscreto}
+
+:::{#exm-modelodiscretodim}
 
 ## Ruína do Jogador bidimensional
 
@@ -140,7 +166,7 @@ este valor no restante deste artigo.
 
 # Aproximando durações de passeios aleatórios
 
-Uma pergunta natural quando se discute aproximações é quanto sua utilidade. Se
+Uma pergunta natural quando se discute aproximações é quanto a sua utilidade. Se
 possível, é mais desejável utilizar resultados obtidos analiticamente, como, no
 exemplo da Ruína do Jogador clássica, os desenvolvidos em
 @stern_conditional_1975. Conforme os passeios (e os modelos) complicam-se, pode
