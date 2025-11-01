@@ -186,6 +186,8 @@
 \newcommand*\listoflistings{\listof{codelisting}{Lista de Listagens}}
 \usepackage{amsthm}
 \theoremstyle{definition}
+\newtheorem{definition}{Definição}[section]
+\theoremstyle{definition}
 \newtheorem{example}{Exemplo}[section]
 \theoremstyle{remark}
 \AtBeginDocument{\renewcommand*{\proofname}{Comprovação}}
@@ -200,6 +202,26 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
+\makeatletter
+\@ifpackageloaded{algorithm}{}{\usepackage{algorithm}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{algpseudocode}{}{\usepackage{algpseudocode}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\makeatother
+    \makeatletter
+    \newcommand\fs@nocaption{
+      \def\@fs@cfont{\bfseries}
+      \let\@fs@capt\floatc@plain
+      \def\@fs@pre{}%
+      \def\@fs@post{\kern2pt\hrule}%
+      \def\@fs@mid{\hrule\kern2pt}%
+      \let\@fs@iftopcapt\iftrue}
+    \makeatother
+  
+\captionsetup[algorithm]{justification=raggedright}
 \usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
@@ -218,19 +240,22 @@
 \title{Aproximações para a duração média de passeios aleatórios}
 \author{Orientando: Gustavo Silva Garone \and Orientadora: Elisabeti
 Kira}
-\date{30 de outubro de 2025}
+\date{31 de outubro de 2025}
 \begin{document}
 \maketitle
 \begin{abstract}
 Inspirados na física, propusemos aproximações para a duração de passeios
 aleatórios diversos, em especial, os de difícil derivação analítica.
-Para testar as aproximações, utilizamos simulações de Monte Carlo na
+Para avaliar as aproximações, utilizamos simulações de Monte Carlo na
 linguagem Julia. Analisamos o desempenho desta linguagem comparando-a
 com a linguagem Python. Com modelos (passeios) mais sofisticados,
 utilizamos recursos computacionais para solução de sistemas lineares na
-construção de novas aproximações. Descrevemos o uso de paralelismo e de
-outras ferramentas. Exibimos e analisamos os resultados obtidos.
+construção de novas aproximações, descrevendo o uso de paralelismo e de
+outras ferramentas. Exibimos e analisamos os resultados obtidos, assim
+como os algoritmos utilizados.
 \end{abstract}
+
+\floatname{algorithm}{Algoritmo}
 
 
 \section{Introdução}\label{introduuxe7uxe3o}
@@ -242,66 +267,66 @@ generalizando-o para múltiplas dimensões. Abordaremos técnicas
 analíticas, computacionais e de estimativas para a duração esperada
 destes passeios.
 
-Começamos por definir o modelo que será utilizado para descrever os
-passeios aleatórios, acompanhado de exemplo. Então, apresentarmos o
-estimador descrito por ISHIHARA (2025), e partimos para sua avaliação.
-Primeiramente, o comparamos com resultados probabilísticos estabelecidos
-na área. Quando avançamos para passeios em que resultados analíticos não
-são factíveis, iniciamos a comparação do estimador com simulações de
-Monte Carlo.
+Começaremos por definir o modelo que será utilizado para descrever os
+passeios aleatórios, acompanhado de exemplo. Então, apresentaremos o
+estimador descrito por ISHIHARA (2025), e partiremos para sua avaliação.
+Primeiramente, compará-lo-emos com resultados probabilísticos
+estabelecidos na área. Quando avançarmos para passeios em que resultados
+analíticos não são factíveis, iniciaremos a comparação do estimador com
+simulações de Monte Carlo.
 
 Descrevemos e justificamos pela literatura a adoção da linguagem de
 programação \emph{Julia}, essencial para possibilitar a execução
 eficiente de simulações computacionalmente intensivas em passeios mais
 complexos.
 
-Em dimensões maiores, fornecemos, até onde é computacionalmente
+Em dimensões maiores, forneceremos, até onde é computacionalmente
 possível, resultados exatos para a duração esperada de passeios
-aleatórios. Para obter esses resultados, utilizamos métodos para solução
-de sistemas lineares extensos simbólicos e empregamos técnicas de
-computação paralela, que serão brevemente discutidas.
+aleatórios. Para obter esses resultados, utilizaremos métodos para
+solução de sistemas lineares extensos simbólicos e empregaremos técnicas
+de computação paralela, que serão brevemente discutidas.
 
 Este artigo priorizará a descrição do aspecto computacional dessa
 pesquisa. Leitores são encorajados a consultar a referência ISHIHARA
 (2025) para uma descrição mais detalhada da construção matemática do
 estimador e do modelo utilizado.
 
-\section{Modelando paseios
-aleatórios}\label{modelando-paseios-aleatuxf3rios}
+\section{Modelando passeios
+aleatórios}\label{modelando-passeios-aleatuxf3rios}
 
 \subsection{Modelo}\label{modelo}
 
-:::\{\#def-modelodiscreto, title=``Modelo Discreto de Passeio
-Aleatório''\}
+\begin{definition}[]\protect\hypertarget{def-modelodiscreto}{}\label{def-modelodiscreto}
 
-Considere que o jogador \(A\) começa com ma fortuna inicial com um total
-\(\$N\) em jogo, \(\$a\), \(0 \leq a \leq N\), fornecendo um espaço de
-estados \(\{0, 1,
-\dots, a, \dots, N\}\). Cada rodada produz um resultado aleatório
-independente \(X_i\), \(i=1,2,\dots\), representando o ganho ou perda
-naquela etapa. Isso será chamado de variável ``regra''. Após \(n\)
-rodadas, a fortuna do jogador \(A\) é dada por
+Considere que o jogador \(A\) começa com uma fortuna inicial com um
+total \(\$N\) em jogo, \(\$a\), \(0 \leq a \leq N\), fornecendo um
+espaço de estados \(\{0, 1, \dots, a, \dots, N\}\). Cada rodada produz
+um resultado aleatório independente \(X_i\), \(i=1,2,\dots\),
+representando o ganho ou perda naquela etapa. Isso será chamado de
+variável ``regra''. Após \(n\) rodadas, a fortuna do jogador \(A\) é
+dada por
 
 \[
-    S_n = a + \sum_{i=1}^n X_i.
+S_n = a + \sum_{i=1}^n X_i.
 \]
 
 A \textbf{duração do jogo} é o primeiro tempo \(n\) tal que
-\(S_n \leq 0\) (ruína) ou \(S_n \geq N\) (vitória) e é denotada por
-\(\tau_{X, a, N}\).
+\(S_n \leq 0\) (ruína) ou \(S_n \geq N\) (vitória). É denotada por
+\(\tau_{X, a, N}\), a regra de parada.
 
-Ao indexarmos \(X_i\) na posição atual do passeio, \(X_{i, S_n}\),
-podemos estender esse modelo para passeios em meio aleatório. :::
+Ao indexarmos \(X\) na posição atual do passeio, \(X_{n} := X_{S_n}\),
+podemos estender esse modelo para passeios em meio não homogêneo:
+definimos \(\pmb{R} =
+\{X_1, \dots, X_N\}\) e \(\tau_{\pmb{R}, a, N}\).
+
+\end{definition}
 
 \begin{refremark}
-Em especial, se \(X_{i, S_n} = X_i\) para todo possível valor \(S_n\)
-(posição), dizemos que o passeio está em meio uniforme (uniforme no
-espaço), pois a regra não depende do estado atual do passeio.
-Analogamente, se \(X_{i, S_n} = X_{j, S_n}\) para todo \(i \neq j\),
-dizemos que o passeio é uniforme no tempo, pois a regra não depende do
-tempo \(i\).
+Neste artigo, não trataremos de passeios em meio não homogêneo no tempo,
+mas podemos, se preciso, estender esse modelo para incluir essa
+característica.
 
-\label{rem-uniforme}
+\label{rem-tempo}
 
 \end{refremark}
 
@@ -309,55 +334,82 @@ Para ajudar no entendimento deste modelo, oferecemos um exemplo:
 
 \begin{example}[]\protect\hypertarget{exm-modelodiscreto}{}\label{exm-modelodiscreto}
 
-~
+Considere um jogador apostando em um casino no lançamento de uma moeda
+honesta. Se a moeda cair em cara, o jogador ganha um dólar; se cair em
+coroa, perde um dólar. O jogo termina quando o jogador atingir cem
+dólares ou vá à ruína (seu saldo chegue em zero). O jogador começa com
+cinquenta dólares.
 
-\begin{example}[Ruína do Jogador
-bidimensional]\protect\hypertarget{exm-modelodiscretodim}{}\label{exm-modelodiscretodim}
+Podemos modelar esse jogo no modelo da
+Definição~\ref{def-modelodiscreto}:
 
-Considere um jogador apostando em um casino no lançamento de duas moedas
-honestas. A primeira moeda define se apostará seus dólares ou seus
-euros. A segunda moeda decide se ganhará ou perderá a jogada. No caso de
-derrota, deverá deixar um dólar ou um euro com o casino, enquanto ganha
-essa quantidade no caso de sucesso em sua aposta. Terminará o jogo
-quando atingir cem dólares ou cem euros, ou caso vá à ruína (seu saldo
-chegue em zero em alguma das moedas). O jogador começa com 50 dólares e
-25 euros.
-
-Podemos modelar esse jogo no modelo da \textbf{?@def-modelodiscreto},
-utilizando da simplificação do Remark~\ref{rem-uniforme}. Tome
-\(\pmb{V} = (v_1, v_2)\) com \(v_1 = v_2 = (0, 1, \dots, 100)\),
-\(a = (50, 25)\) e
+Seja \(a = 50\) e \(N = 100\). A variável regra do jogo é dada por
 
 \[
 X = \begin{cases}
-(-1, 0), & 0.25 \\
-(0, -1), & 0.25 \\
-(1, 0), & 0.25 \\
-(0, 1), & 0.25.
+-1, & \mathbb{P}(X = -1) = 0.4, \\
++1, & \mathbb{P}(X = +1) = 0.6.
 \end{cases}
 \]
 
-Note que é o mesmo para todo tempo \(i\) e todo estado \(v\) enquanto o
-jogo durar.
+Nota-se que a regra é a mesma para todo estado \(S_n\) enquanto o jogo
+durar, ou seja, o passeio está homogêneo no espaço e tempo.
 
 Após \(5\) jogadas, o jogo tomou o seguinte percurso: \[
-\begin{aligned}
-J(\pmb{V}, a, \pmb{x}) &= \{x_1, x_2, x_3, x_4, x_5\} \\
-&= \{(1,0), (-1, 0), (0, 1), (0, 1), (-1, 0)\}.
-\end{aligned}
+\pmb{x} = \{x_1, x_2, x_3, x_4, x_5\} = \{1, -1, 1, 1, -1\}.
+\]
+
+temos então que a posição (fortuna) atual do jogador é \[
+S_5 = 50 + (1 - 1 + 1 + 1 -1) = 51.
 \]
 
 \end{example}
 
-Conforme a regra de parada \(\tau\), o jogo encerrar-se-á assim que um
-elemento de \(S_n\) - isto é, uma moeda (dólar ou euro) - chegar em zero
-ou cem. No Exemplo~\ref{exm-modelodiscreto}, é fácil ver que o jogo
-ainda não acabou, pois \(S_5 = (49,
-27)\).
+\subsection{Jogos unitários e não
+unitários}\label{jogos-unituxe1rios-e-nuxe3o-unituxe1rios}
+
+Definimos um jogo como \textbf{unitário} se a variável regra \(X\)
+assume apenas valores inteiros unitários, ou seja,
+\(X: \Omega \rightarrow \{-1, +1\}\). Caso contrário, o jogo é dito
+\textbf{não unitário}. No Exemplo~\ref{exm-modelodiscreto}, o jogo é
+unitário.
+
+Essa distinção faz-se importante, uma vez que, como apresentaremos na
+próxima seção, a abordagem analítica para determinar a duração esperada
+do jogo difere entre jogos unitários e não unitários. De fato, em jogos
+não unitários, a determinação analítica de
+\(\mathbb{E}(\tau_{X, a, N})\) pode ser muito mais complexa, ou até
+mesmo inviável.
+
+\subsection{\texorpdfstring{Abordagem analítica para determinar
+\(\mathbb{E}(\tau_{X, a, N})\)}{Abordagem analítica para determinar \textbackslash mathbb\{E\}(\textbackslash tau\_\{X, a, N\})}}\label{sec-anali}
 
 Estamos interessados na duração esperada do jogo, ou seja, queremos
-encontrar \(E(\tau)\). Abordaremos técnicas analíticas, computacionais e
-estimativas para este valor no restante deste artigo.
+encontrar \(\mathbb{E}(\tau_{X, a, N})\). Para jogos unitários, podemos
+calcular essa esperança por simples condicionamento, como descrito em
+STERN (1975).
+
+Com o uso de equações de diferenças finitas, podemos obter esses mesmos
+resultados de forma mais elegante, como feito por ANDĚL; HUDECOVÁ
+(2012). Desses métodos, obtemos a seguinte expressão para a duração
+esperada desses jogos:
+
+\protect\phantomsection\label{eq-tempoteorico}
+\[
+\mathbb{E}(\tau_{X, a, N}) = \begin{cases}
+a(N - a), & \mathbb{E}(X) = 0, \\
+\frac{a}{q-p}-\frac{N}{q-p} \left( \frac{1- \left( \frac{q}{p} \right)^a}
+        {1- \left( \frac{q}{p} \right)^N}\right), & \mathbb{E}(X) \neq 0.
+\end{cases}.
+\]
+
+em que \(p = \mathbb{P}(X = +1)\) e \(q = \mathbb{P}(X = -1) = 1 - p\).
+
+Com esse mesmo método, é possível determinar o tempo esperado para
+alguns outros jogos. Contudo, como descrito por ISHIHARA (2025), a
+complexidade de resolução do sistema de EDFs cresce exponencialmente.
+Essa limitação motivou a criação de um estimador para
+\(\mathbb{E}(\tau_{X, a, N})\).
 
 \section{Aproximando durações de passeios
 aleatórios}\label{aproximando-durauxe7uxf5es-de-passeios-aleatuxf3rios}
@@ -365,23 +417,89 @@ aleatórios}\label{aproximando-durauxe7uxf5es-de-passeios-aleatuxf3rios}
 Uma pergunta natural quando se discute aproximações é quanto a sua
 utilidade. Se possível, é mais desejável utilizar resultados obtidos
 analiticamente, como, no exemplo da Ruína do Jogador clássica, os
-desenvolvidos em STERN (1975). Conforme os passeios (e os modelos)
-complicam-se, pode não ser possível, ou ser muito difícil, obter uma
-derivação analítica de \(E(\tau)\).
+apresentados na Seção~\ref{sec-anali}.
 
 Nos cenários em que não é prático o desenvolvimento analítico, soluções
 computacionais são buscadas. Estas soluções podem fornecer resultados
 teóricos corretos, como na solução de sistemas lineares extensos que
 abordaremos na {[}SESSÃO AQUI{]}, ou aproximações pelo método de Monte
-Carlo, como aborda HARRISON (2010).
+Carlo, como descreve HARRISON (2010).
 
-Ainda assim, a simulação também traz desvantagens. Como descrito em
-RITTER et al. (2011), um número considerável de simulações é necessário
-para garantir acurácia dos dados e estabilidade. Além disso, com modelos
-mais complexos, justamente os usados na resolução de problemas reais,
-estes problemas se agravam. Diante disso, vê-se justificável a busca de
-estimadores eficientes para a duração esperada de passeios aleatórios
-diversos.
+Ainda assim, a simulação também traz desvantagens para além da perda de
+precisão e de interpretabilidade. Por exemplo, como abordado em RITTER
+et al. (2011), um número considerável de simulações é necessário para
+garantir acurácia dos dados e estabilidade. Diante disso, vê-se
+justificável a busca de estimadores eficientes para a duração esperada
+de passeios aleatórios diversos.
+
+\subsection{Um estimador heurístico}\label{um-estimador-heuruxedstico}
+
+Baseando-se na mecânica clássica, ISHIHARA (2025) propôs um estimador
+para passeios não unitários em meio homogêneo:
+
+\begin{definition}[]\protect\hypertarget{def-estimadorsimples}{}\label{def-estimadorsimples}
+
+Seja um jogo definido conforme a Definição~\ref{def-modelodiscreto}, com
+variável regra \(X\) tal que \(\mathbb{E}(X) \neq 0\), valores \(a\) e
+\(N\). O estimador proposto para a duração esperada desse jogo é dado
+por:
+
+\[
+\hat{\mathbb{E}}(\tau_{X, a N}) = \begin{cases}
+\frac{N-a}{\mathbb{E}(X)},  & \mathbb{E}(X) > 0, \\
+\left \lvert \frac{a}{\mathbb{E}(X)} \right \rvert,  & \mathbb{E}(X) < 0.
+\end{cases}
+\]
+
+\end{definition}
+
+Primeiramente, o estimador da Definição~\ref{def-estimadorsimples} foi
+comparado com o resultado da \textbf{?@eq-tempoteorico} para jogos
+unitários. Retomando o Exemplo~\ref{exm-modelodiscreto}, temos, como
+\(\mathbb{E}(X) = 0.2\):
+
+\[
+\begin{aligned}
+\hat{\mathbb{E}}(\tau_{X, 50, 100}) = \frac{100}{0.2} = 250 \\
+\mathbb{E}(\tau_{X, 50, 100}) = \frac{50}{0.6 - 0.4} - \frac{100}{0.6 - 0.4}
+\left( \frac{1 - \left( \frac{0.4}{0.6} \right)^{50}}{1 - \left( \frac{0.4}{0.6}
+\right)^{100}} \right) = 250
+\end{aligned}
+\]
+
+Validado o estimador para o caso mais simples, partimos para análise em
+jogos não unitários. Para isso, utilizamos simulações de Monte Carlo
+para obter valores aproximados de \(\mathbb{E}(\tau_{X, a, N})\).
+Apresentamos no Algoritmo~\ref{alg-montecarlosimples} uma implementação
+simples desse processo:
+
+\floatstyle{ruled}
+\restylefloat{algorithm}
+\begin{algorithm}[htb!]
+\caption{\label{alg-montecarlosimples}Quicksort}
+\begin{algorithmic}[1]
+\Procedure{Quicksort}{$A, p, r$}
+  \If{$p < r$}
+    \State $q = $ \Call{Partition}{$A, p, r$}
+    \State \Call{Quicksort}{$A, p, q - 1$}
+    \State \Call{Quicksort}{$A, q + 1, r$}
+  \EndIf
+\EndProcedure
+\Procedure{Partition}{$A, p, r$}
+  \State $x = A[r]$
+  \State $i = p - 1$
+  \For{$j = p$ \To $r - 1$}
+    \If{$A[j] < x$}
+      \State $i = i + 1$
+      \State exchange
+      $A[i]$ with     $A[j]$
+    \EndIf
+    \State exchange $A[i]$ with $A[r]$
+  \EndFor
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\floatstyle{plain}
 
 \subsection{Ruína do Jogador e
 variações}\label{ruuxedna-do-jogador-e-variauxe7uxf5es}
@@ -392,10 +510,14 @@ Na Ruína do Jogador,
 
 \section{Referências}\label{referuxeancias}
 
-\end{example}
-
 \protect\phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
+\bibitem[\citeproctext]{ref-andel_variance_2012}
+ANDĚL, J.; HUDECOVÁ, Š.
+\href{https://doi.org/10.1016/j.spl.2012.05.023}{Variance of the game
+duration in the gambler's ruin problem}. \textbf{Statistics \&
+Probability Letters}, v. 82, n. 9, p. 1750--1754, 2012.
+
 \bibitem[\citeproctext]{ref-edwards_pascals_1983}
 EDWARDS, A. W. F. \href{https://doi.org/10.2307/1402732}{Pascal's
 Problem: The 'Gambler's Ruin'}. \textbf{International Statistical Review
