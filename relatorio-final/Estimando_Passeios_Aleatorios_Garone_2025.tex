@@ -151,6 +151,13 @@
 
 \usepackage{authblk}
 \makeatletter
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{plain}
+\@ifundefined{c@chapter}{\newfloat{algo}{h}{loalgo}}{\newfloat{algo}{h}{loalgo}[chapter]}
+\floatname{algo}{Algoritmo}
+\newcommand*\listofalgos{\listof{algo}{List of Algoritmos}}
+\makeatother
+\makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
 \ifdefined\contentsname
@@ -186,9 +193,9 @@
 \newcommand*\listoflistings{\listof{codelisting}{Lista de Listagens}}
 \usepackage{amsthm}
 \theoremstyle{definition}
-\newtheorem{definition}{Definição}[section]
-\theoremstyle{definition}
 \newtheorem{example}{Exemplo}[section]
+\theoremstyle{definition}
+\newtheorem{definition}{Definição}[section]
 \theoremstyle{remark}
 \AtBeginDocument{\renewcommand*{\proofname}{Comprovação}}
 \newtheorem*{remark}{Comentário}
@@ -240,7 +247,7 @@
 \title{Aproximações para a duração média de passeios aleatórios}
 \author{Orientando: Gustavo Silva Garone \and Orientadora: Elisabeti
 Kira}
-\date{31 de outubro de 2025}
+\date{7 de novembro de 2025}
 \begin{document}
 \maketitle
 \begin{abstract}
@@ -255,25 +262,41 @@ outras ferramentas. Exibimos e analisamos os resultados obtidos, assim
 como os algoritmos utilizados.
 \end{abstract}
 
+\renewcommand{\Return}{\State \textbf{return}~}
+\newcommand{\Print}{\State \textbf{print}~}
+\newcommand{\Break}{\State \textbf{break}}
+\newcommand{\Continue}{\State \textbf{continue}}
+\newcommand{\True}{\textbf{true}}
+\newcommand{\False}{\textbf{false}}
+\renewcommand{\And}{\textbf{and}~}
+\newcommand{\Or}{\textbf{or}~}
+\renewcommand{\Not}{\textbf{not}~}
+\newcommand{\To}{\textbf{to}~}
+\newcommand{\DownTo}{\textbf{downto}~}
+
 \floatname{algorithm}{Algoritmo}
 
+
+\textsubscript{Fonte:
+\href{https://GustavoGarone.github.io/Estimador-de-Passeio/Estimando_Passeios_Aleatorios_Garone_2025.qmd.html}{Caderno
+de Artigo}}
 
 \section{Introdução}\label{introduuxe7uxe3o}
 
 Neste artigo, estudaremos a duração de passeios aleatórios e suas
 aproximações. Temos como objetivo descrever modelos de passeios como a
-``Ruína do Jogador'' de Pascal, discutido em EDWARDS (1983),
-generalizando-o para múltiplas dimensões. Abordaremos técnicas
-analíticas, computacionais e de estimativas para a duração esperada
-destes passeios.
+``Ruína do Jogador'' de Pascal, discutido em EDWARDS
+(\citeproc{ref-edwards_pascals_1983}{1983}), generalizando-o para
+múltiplas dimensões. Abordaremos técnicas analíticas, computacionais e
+de estimativas para a duração esperada destes passeios.
 
 Começaremos por definir o modelo que será utilizado para descrever os
 passeios aleatórios, acompanhado de exemplo. Então, apresentaremos o
-estimador descrito por ISHIHARA (2025), e partiremos para sua avaliação.
-Primeiramente, compará-lo-emos com resultados probabilísticos
-estabelecidos na área. Quando avançarmos para passeios em que resultados
-analíticos não são factíveis, iniciaremos a comparação do estimador com
-simulações de Monte Carlo.
+estimador descrito por ISHIHARA (\citeproc{ref-ishihara_um_2025}{2025}),
+e partiremos para sua avaliação. Primeiramente, compará-lo-emos com
+resultados probabilísticos estabelecidos na área. Quando avançarmos para
+passeios em que resultados analíticos não são factíveis, iniciaremos a
+comparação do estimador com simulações de Monte Carlo.
 
 Descrevemos e justificamos pela literatura a adoção da linguagem de
 programação \emph{Julia}, essencial para possibilitar a execução
@@ -288,8 +311,8 @@ de computação paralela, que serão brevemente discutidas.
 
 Este artigo priorizará a descrição do aspecto computacional dessa
 pesquisa. Leitores são encorajados a consultar a referência ISHIHARA
-(2025) para uma descrição mais detalhada da construção matemática do
-estimador e do modelo utilizado.
+(\citeproc{ref-ishihara_um_2025}{2025}) para uma descrição mais
+detalhada da construção matemática do estimador e do modelo utilizado.
 
 \section{Modelando passeios
 aleatórios}\label{modelando-passeios-aleatuxf3rios}
@@ -387,29 +410,28 @@ mesmo inviável.
 Estamos interessados na duração esperada do jogo, ou seja, queremos
 encontrar \(\mathbb{E}(\tau_{X, a, N})\). Para jogos unitários, podemos
 calcular essa esperança por simples condicionamento, como descrito em
-STERN (1975).
+STERN (\citeproc{ref-stern_conditional_1975}{1975}).
 
 Com o uso de equações de diferenças finitas, podemos obter esses mesmos
 resultados de forma mais elegante, como feito por ANDĚL; HUDECOVÁ
-(2012). Desses métodos, obtemos a seguinte expressão para a duração
-esperada desses jogos:
+(\citeproc{ref-andel_variance_2012}{2012}). Desses métodos, obtemos a
+seguinte expressão para a duração esperada desses jogos:
 
-\protect\phantomsection\label{eq-tempoteorico}
-\[
+\begin{equation}\protect\phantomsection\label{eq-tempoteorico}{
 \mathbb{E}(\tau_{X, a, N}) = \begin{cases}
 a(N - a), & \mathbb{E}(X) = 0, \\
 \frac{a}{q-p}-\frac{N}{q-p} \left( \frac{1- \left( \frac{q}{p} \right)^a}
         {1- \left( \frac{q}{p} \right)^N}\right), & \mathbb{E}(X) \neq 0.
 \end{cases}.
-\]
+}\end{equation}
 
 em que \(p = \mathbb{P}(X = +1)\) e \(q = \mathbb{P}(X = -1) = 1 - p\).
 
 Com esse mesmo método, é possível determinar o tempo esperado para
-alguns outros jogos. Contudo, como descrito por ISHIHARA (2025), a
-complexidade de resolução do sistema de EDFs cresce exponencialmente.
-Essa limitação motivou a criação de um estimador para
-\(\mathbb{E}(\tau_{X, a, N})\).
+alguns outros jogos. Contudo, como descrito por ISHIHARA
+(\citeproc{ref-ishihara_um_2025}{2025}), a complexidade de resolução do
+sistema de EDFs cresce exponencialmente. Essa limitação motivou a
+criação de um estimador para \(\mathbb{E}(\tau_{X, a, N})\).
 
 \section{Aproximando durações de passeios
 aleatórios}\label{aproximando-durauxe7uxf5es-de-passeios-aleatuxf3rios}
@@ -423,19 +445,21 @@ Nos cenários em que não é prático o desenvolvimento analítico, soluções
 computacionais são buscadas. Estas soluções podem fornecer resultados
 teóricos corretos, como na solução de sistemas lineares extensos que
 abordaremos na {[}SESSÃO AQUI{]}, ou aproximações pelo método de Monte
-Carlo, como descreve HARRISON (2010).
+Carlo, como descreve HARRISON
+(\citeproc{ref-harrison_introduction_2010}{2010}).
 
 Ainda assim, a simulação também traz desvantagens para além da perda de
 precisão e de interpretabilidade. Por exemplo, como abordado em RITTER
-et al. (2011), um número considerável de simulações é necessário para
-garantir acurácia dos dados e estabilidade. Diante disso, vê-se
-justificável a busca de estimadores eficientes para a duração esperada
-de passeios aleatórios diversos.
+et al. (\citeproc{ref-ritter_determining_2011}{2011}), um número
+considerável de simulações é necessário para garantir acurácia dos dados
+e estabilidade. Diante disso, vê-se justificável a busca de estimadores
+eficientes para a duração esperada de passeios aleatórios diversos.
 
 \subsection{Um estimador heurístico}\label{um-estimador-heuruxedstico}
 
-Baseando-se na mecânica clássica, ISHIHARA (2025) propôs um estimador
-para passeios não unitários em meio homogêneo:
+Baseando-se na mecânica clássica, ISHIHARA
+(\citeproc{ref-ishihara_um_2025}{2025}) propôs um estimador para
+passeios não unitários em meio homogêneo:
 
 \begin{definition}[]\protect\hypertarget{def-estimadorsimples}{}\label{def-estimadorsimples}
 
@@ -454,7 +478,7 @@ por:
 \end{definition}
 
 Primeiramente, o estimador da Definição~\ref{def-estimadorsimples} foi
-comparado com o resultado da \textbf{?@eq-tempoteorico} para jogos
+comparado com o resultado da Equação~\ref{eq-tempoteorico} para jogos
 unitários. Retomando o Exemplo~\ref{exm-modelodiscreto}, temos, como
 \(\mathbb{E}(X) = 0.2\):
 
@@ -467,39 +491,84 @@ unitários. Retomando o Exemplo~\ref{exm-modelodiscreto}, temos, como
 \end{aligned}
 \]
 
-Validado o estimador para o caso mais simples, partimos para análise em
-jogos não unitários. Para isso, utilizamos simulações de Monte Carlo
-para obter valores aproximados de \(\mathbb{E}(\tau_{X, a, N})\).
-Apresentamos no Algoritmo~\ref{alg-montecarlosimples} uma implementação
-simples desse processo:
+Partimos para testá-lo em outros casos unitários. Dos nossos resultados,
+obtemos, fixada a fortuna inicial \(a=50\) e total \(N\), e variando a
+probabilidade de ganho \(p\):
+
+\begin{figure}[H]
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{Estimando_Passeios_Aleatorios_Garone_2025_files/mediabag/Estimando_Passeios_Aleatorios_Garone_2025_files/figure-pdf/fig-comparacaoestimadorxteorico-output-1.pdf}}
+
+}
+
+\caption{\label{fig-comparacaoestimadorxteorico}Comparação entre
+estimador simples e duração esperado em jogos unitários para \(a = 50\)
+e \(N = 100\) em função de \(p\).}
+
+\end{figure}%
+
+\textsubscript{Fonte:
+\href{https://GustavoGarone.github.io/Estimador-de-Passeio/Estimando_Passeios_Aleatorios_Garone_2025.qmd.html}{Caderno
+de Artigo}}
+
+Notamos que o estimador apresenta bom corpotamento nessa classe de
+jogos. Uma inadequação de seu uso existe para casos em que
+\(\mathbb{E}(X)\) se aproxima de \(0\), como indica o gráfico da
+Figura~\ref{fig-comparacaoestimadorxteorico} no intervalo
+\([0.48, 0.52]\)
+
+Validado o estimador para grande parte dos casos mais simples, partimos
+para análise em jogos não unitários. Para isso, utilizamos simulações de
+Monte Carlo para obter valores aproximados de
+\(\mathbb{E}(\tau_{X, a, N})\). Apresentamos no
+Algoritmo~\ref{algo-montecarlosimples} uma implementação simples desse
+processo:
 
 \floatstyle{ruled}
 \restylefloat{algorithm}
 \begin{algorithm}[htb!]
-\caption{\label{alg-montecarlosimples}Quicksort}
+\caption{\label{algo-montecarlosimples}Monte Carlo Simples}
 \begin{algorithmic}[1]
-\Procedure{Quicksort}{$A, p, r$}
-  \If{$p < r$}
-    \State $q = $ \Call{Partition}{$A, p, r$}
-    \State \Call{Quicksort}{$A, p, q - 1$}
-    \State \Call{Quicksort}{$A, q + 1, r$}
-  \EndIf
-\EndProcedure
-\Procedure{Partition}{$A, p, r$}
-  \State $x = A[r]$
-  \State $i = p - 1$
-  \For{$j = p$ \To $r - 1$}
-    \If{$A[j] < x$}
-      \State $i = i + 1$
-      \State exchange
-      $A[i]$ with     $A[j]$
-    \EndIf
-    \State exchange $A[i]$ with $A[r]$
-  \EndFor
+\Procedure{MonteCarlo}{$MC, p, g, l, a, N$}
+    \State $total\_tempo \gets 0$
+    \For{$i =1$ to $MC$}
+        \State $pos$ \gets $a$
+        \While{$pos > 0$ and $pos < N$}
+            \State $u \gets \Call{Sortear}{U(0,1)}$
+            \If{$u < p$}
+                \State $pos$ \gets $pos + g$
+            \Else
+                \State $pos$ \gets $pos - l$
+            \EndIf
+            \State $total\_tempo \gets total\_tempo + 1$
+        \EndWhile
+    \EndFor
+    \State \Return $total\_tempo / MC$
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
 \floatstyle{plain}
+
+\begin{figure}[H]
+
+\centering{
+
+\pandocbounded{\includegraphics[keepaspectratio]{Estimando_Passeios_Aleatorios_Garone_2025_files/mediabag/Estimando_Passeios_Aleatorios_Garone_2025_files/figure-pdf/fig-comparacaoestimadorxsimulado-output-1.pdf}}
+
+}
+
+\caption{\label{fig-comparacaoestimadorxsimulado}Comparação entre
+estimador simples e duração simulada para \(a = 50\), \(N = 100\), valor
+de perda \$1 e de ganho \$2, em função de \(p\). Simulados com
+\(10.000\) iterações de Monte Carlo.}
+
+\end{figure}%
+
+\textsubscript{Fonte:
+\href{https://GustavoGarone.github.io/Estimador-de-Passeio/Estimando_Passeios_Aleatorios_Garone_2025.qmd.html}{Caderno
+de Artigo}}
 
 \subsection{Ruína do Jogador e
 variações}\label{ruuxedna-do-jogador-e-variauxe7uxf5es}

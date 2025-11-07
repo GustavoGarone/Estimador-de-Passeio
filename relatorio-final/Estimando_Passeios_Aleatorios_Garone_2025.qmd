@@ -41,21 +41,25 @@ format:
         \usepackage{authblk}
   html:
     theme: cosmo
-  docx: default
-
 engine: julia
+julia:
+  env: ["QT_STYLE_OVERRIDE=windows"]
 execute:
+  echo: false
   keep-ipynb: true
   # eval: false
-fig-cap-location: top
-filters:
-    - pseudocode
-pseudocode:
-  caption-prefix: "Algoritmo"
-  reference-prefix: "Algoritmo"
-  caption-number: true
-  caption-align: "left"
+fig-cap-location: bottom 
 ---
+
+```{julia}
+#| output: false
+# Pacotes utilizados no artigo e suas versões
+using Pkg
+Pkg.add(["Plots", "Distributions", "Statistics", "Random", "LaTeXStrings"])
+versioninfo()
+Pkg.status()
+```
+
 
 # Introdução
 
@@ -176,17 +180,15 @@ Com o uso de equações de diferenças finitas, podemos obter esses mesmos
 resultados de forma mais elegante, como feito por @andel_variance_2012. Desses
 métodos, obtemos a seguinte expressão para a duração esperada desses jogos:
 
-:::{#eq-tempoteorico}
 $$
 \mathbb{E}(\tau_{X, a, N}) = \begin{cases}
 a(N - a), & \mathbb{E}(X) = 0, \\
 \frac{a}{q-p}-\frac{N}{q-p} \left( \frac{1- \left( \frac{q}{p} \right)^a}
         {1- \left( \frac{q}{p} \right)^N}\right), & \mathbb{E}(X) \neq 0.
 \end{cases}.
-$$
+$$ {#eq-tempoteorico}
 
 em que $p = \mathbb{P}(X = +1)$ e $q = \mathbb{P}(X = -1) = 1 - p$.
-:::
 
 Com esse mesmo método, é possível determinar o tempo esperado para alguns outros
 jogos. Contudo, como descrito por @ishihara_um_2025, a complexidade de resolução
@@ -242,13 +244,76 @@ $$
 \end{aligned}
 $$
 
-Validado o estimador para o caso mais simples, partimos para análise em jogos
-não unitários. Para isso, utilizamos simulações de Monte Carlo para obter
-valores aproximados de $\mathbb{E}(\tau_{X, a, N})$. Apresentamos no
-@alg-montecarlosimples uma implementação simples desse processo:
+Partimos para testá-lo em outros casos unitários. Dos nossos resultados,
+obtemos, fixada a fortuna inicial $a=50$ e total $N$, e variando a probabilidade de
+ganho $p$:
+
+```{julia}
+#| label: fig-comparacaoestimadorxteorico
+#| fig-cap: "Comparação entre estimador simples e duração esperado em jogos unitários para $a = 50$ e $N = 100$ em função de $p$."
+using Plots, LaTeXStrings
+
+function estimador_simples(E_X, a, N)
+    if E_X > 0
+        return (N - a) / E_X
+    elseif E_X < 0
+        return - a / E_X
+    else
+        return NaN
+    end
+end
+
+function tempo_teorico_unitario(a, N, p)
+    q = 1 - p
+    if p == q
+        return a * (N - a)
+    else
+        return (a / (q - p)) - (N / (q - p)) * ((1 - (q / p)^a) / (1 - (q / p)^N))
+    end
+end
+
+function comparar_estimador_unitario(a, N)
+    ps = 0:0.01:1
+    m = length(ps)
+    estimados = Float64[]
+    teoricos = Float64[]
+    for p in ps
+        E_X = (1 * p) + (-1 * (1 - p))
+        push!(estimados, estimador_simples(E_X, a, N))
+        push!(teoricos, tempo_teorico_unitario(a, N, p))
+    end
+    plt = plot(
+        ps, estimados, label = "Duração estimada",
+        xlabel = "Probabilidade de vitória (p)", ylabel = "Duração",
+        legend = :topright,
+    )
+    plot!(ps, teoricos, label = "Duração esperada", linestyle = :dash)
+    vline!(
+        [0.48], label = L"p = 0.48 \Rightarrow \mathbb{E}(X) = -0.04",
+        linestyle = :dot
+    )
+    vline!(
+        [0.52], label = L"p = 0.52 \Rightarrow \mathbb{E}(X) = +0.04",
+        linestyle = :dot
+    )
+    return plt
+end
+
+display(comparar_estimador_unitario(50, 100))
+```
+
+Notamos que o estimador apresenta bom corpotamento nessa classe de jogos. Uma
+inadequação de seu uso existe para casos em que $\mathbb{E}(X)$ se aproxima de
+$0$, como indica o gráfico da @fig-comparacaoestimadorxteorico no intervalo
+$[0.48, 0.52]$
+
+Validado o estimador para grande parte dos casos mais simples, partimos para
+análise em jogos não unitários. Para isso, utilizamos simulações de Monte Carlo
+para obter valores aproximados de $\mathbb{E}(\tau_{X, a, N})$. Apresentamos no
+@algo-montecarlosimples uma implementação simples desse processo:
 
 ```pseudocode
-#| label: alg-montecarlosimples
+#| label: algo-montecarlosimples
 #| html-indent-size: "1.2em"
 #| html-comment-delimiter: "//"
 #| html-line-number: true
@@ -258,29 +323,76 @@ valores aproximados de $\mathbb{E}(\tau_{X, a, N})$. Apresentamos no
 #| pdf-line-number: true
 
 \begin{algorithm}
-\caption{Quicksort}
+\caption{Monte Carlo Simples}
 \begin{algorithmic}
-\Procedure{Quicksort}{$A, p, r$}
-  \If{$p < r$}
-    \State $q = $ \Call{Partition}{$A, p, r$}
-    \State \Call{Quicksort}{$A, p, q - 1$}
-    \State \Call{Quicksort}{$A, q + 1, r$}
-  \EndIf
-\EndProcedure
-\Procedure{Partition}{$A, p, r$}
-  \State $x = A[r]$
-  \State $i = p - 1$
-  \For{$j = p$ \To $r - 1$}
-    \If{$A[j] < x$}
-      \State $i = i + 1$
-      \State exchange
-      $A[i]$ with     $A[j]$
-    \EndIf
-    \State exchange $A[i]$ with $A[r]$
-  \EndFor
+\Procedure{MonteCarlo}{$MC, p, g, l, a, N$}
+    \State $total\_tempo \gets 0$
+    \For{$i =1$ to $MC$}
+        \State $pos$ \gets $a$
+        \While{$pos > 0$ and $pos < N$}
+            \State $u \gets \Call{Sortear}{U(0,1)}$
+            \If{$u < p$}
+                \State $pos$ \gets $pos + g$
+            \Else
+                \State $pos$ \gets $pos - l$
+            \EndIf
+            \State $total\_tempo \gets total\_tempo + 1$
+        \EndWhile
+    \EndFor
+    \State \Return $total\_tempo / MC$
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
+```
+
+```{julia}
+#| label: fig-comparacaoestimadorxsimulado
+#| fig-cap: "Comparação entre estimador simples e duração simulada para $a = 50$, $N = 100$, valor de perda $1 e de ganho $2, em função de $p$. Simulados com $10.000$ iterações de Monte Carlo."
+function monte_carlo_simples(MC, p, g, l, a, N)
+    total_tempo = 0
+    for i in 1:MC
+        pos = a
+        while pos > 0 && pos < N
+            u = rand()
+            if u < p
+                pos += g
+            else
+                pos -= l
+            end
+            total_tempo += 1
+        end
+    end
+    return total_tempo / MC
+end
+
+function comparar_estimador_montecarlo(MC, p, g, l, a, N)
+    ps = 0:0.01:1
+    m = length(ps)
+    estimados = Float64[]
+    simulados = Float64[]
+    for p in ps
+        E_X = (g * p) + (-l * (1 - p))
+        push!(estimados, estimador_simples(E_X, a, N))
+        push!(simulados, monte_carlo_simples(MC, p, g, l, a, N))
+    end
+    plt = plot(
+        ps, estimados, label = "Duração estimada",
+        xlabel = "Probabilidade de vitória (p)", ylabel = "Duração",
+        legend = :topright, ylims = (0, 2500)
+    )
+    plot!(ps, simulados, label = "Duração simulada", linestyle = :dash)
+    vline!(
+        [0.31], label = L"p = 0.31 \Rightarrow \mathbb{E}(X) = -0.04",
+        linestyle = :dot
+    )
+    vline!(
+        [0.35], label = L"p = 0.35 \Rightarrow \mathbb{E}(X) = +0.04",
+        linestyle = :dot
+    )
+    return plt
+end
+
+display(comparar_estimador_montecarlo(10_000, 0.5, 2, 1, 50, 100))
 ```
 
 
