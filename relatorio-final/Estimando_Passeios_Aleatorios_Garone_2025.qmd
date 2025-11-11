@@ -199,7 +199,7 @@ um estimador para $\mathbb{E}(\tau_{X, a, N})$.
 
 Uma pergunta natural quando se discute aproximações é quanto a sua utilidade. Se
 possível, é mais desejável utilizar resultados obtidos analiticamente, como, no
-exemplo da Ruína do Jogador clássica, os apresentados na @sec-anali.
+exemplo da "Ruína do Jogador" clássica, os apresentados na @sec-anali.
 
 Nos cenários em que não é prático o desenvolvimento analítico, soluções
 computacionais são buscadas. Estas soluções podem fornecer resultados teóricos
@@ -290,7 +290,7 @@ function comparar_estimador_unitario(a, N)
     plot!(ps, teoricos, label = "Duração esperada", linestyle = :dash)
     vline!(
         [0.48], label = L"p = 0.48 \Rightarrow \mathbb{E}(X) = -0.04",
-        linestyle = :dot
+        linestyle = :dashdot
     )
     vline!(
         [0.52], label = L"p = 0.52 \Rightarrow \mathbb{E}(X) = +0.04",
@@ -310,7 +310,8 @@ $[0.48, 0.52]$
 Validado o estimador para grande parte dos casos mais simples, partimos para
 análise em jogos não unitários. Para isso, utilizamos simulações de Monte Carlo
 para obter valores aproximados de $\mathbb{E}(\tau_{X, a, N})$. Apresentamos no
-@algo-montecarlosimples uma implementação simples desse processo:
+@algo-montecarlosimples uma implementação simples desse processo
+@harrison_introduction_2010, @ritter_determining_2011.
 
 ```pseudocode
 #| label: algo-montecarlosimples
@@ -381,24 +382,28 @@ function comparar_estimador_montecarlo(MC, p, g, l, a, N)
         legend = :topright, ylims = (0, 2500)
     )
     plot!(ps, simulados, label = "Duração simulada", linestyle = :dash)
-    vline!(
-        [0.31], label = L"p = 0.31 \Rightarrow \mathbb{E}(X) = -0.04",
-        linestyle = :dot
-    )
-    vline!(
-        [0.35], label = L"p = 0.35 \Rightarrow \mathbb{E}(X) = +0.04",
-        linestyle = :dot
-    )
     return plt
 end
 
 display(comparar_estimador_montecarlo(10_000, 0.5, 2, 1, 50, 100))
 ```
 
+Para jogos não unitários, o estimador também apresenta bom desempenho, como
+mostrado na @fig-comparacaoestimadorxsimulado. Novamente, observa-se uma
+queda na precisão do estimador à medida que $\mathbb{E}(X)$ se aproxima de
+$0$.
 
-## Ruína do Jogador e variações
+Com esses resultados, validamos o estimador proposto na @def-estimadorsimples
+para passeios aleatórios em meio homogêneo, tanto unitários quanto não
+unitários. Dessa forma, partimos para a análise de passeios mais complexos.
 
-Na Ruína do Jogador,
+## Meio não-homogêneo
+
+Ao tratarmos de passeios em meio não-homogêneo, precisamos descrever o
+comportamento deste ambiente. No geral, podemos modelar um meio aleatório ou
+deterinístico. Em ambos casos, a variável regra $X$ dependerá da posição atual
+do passeio, ou seja, $X = X_{S_n}$. Entretanto, enquanto no meio aleatório pode
+ser modelado 
 
 
 {{< pagebreak >}}
