@@ -5,8 +5,9 @@ csl: associacao-brasileira-de-normas-tecnicas.csl
 lang: pt-BR
 
 authors:
-  - name: "Orientando: Gustavo Silva Garone"
-  - name: "Orientadora: Elisabeti Kira"
+  - name: "Eduardo Yukio Garrafa Ishihara"
+  - name: "Gustavo Silva Garone"
+  - name: "Elisabeti Kira"
 
 abstract: > 
             Inspirados na física, propusemos aproximações para a duração de
@@ -20,8 +21,8 @@ abstract: >
             algoritmos utilizados.
 
 keywords:
-    - Monte Carlo
     - Passeio Aleatório
+    - Monte Carlo
     - Estimação
 date: last-modified
 date-format: long
@@ -48,6 +49,7 @@ execute:
   echo: false
   keep-ipynb: true
   # eval: false
+  cache: true
 fig-cap-location: bottom 
 ---
 

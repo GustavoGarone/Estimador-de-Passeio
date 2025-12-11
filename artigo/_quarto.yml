@@ -2,7 +2,7 @@ project:
   type: manuscript
 
 manuscript:
-  article: ./Estimando_Passeios_Aleatorios_Garone_2025.qmd
+  article: ./Estimando_Passeios_Aleatorios.qmd
 
 execute:
   freeze: auto
