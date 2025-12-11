@@ -71,8 +71,8 @@ dimensões. Abordaremos técnicas analíticas, computacionais e de estimativas p
 a duração esperada destes passeios. 
 
 Começaremos por definir o modelo que será utilizado para descrever os passeios
-aleatórios, acompanhado de exemplo. Então, apresentaremos o estimador descrito
-por @ishihara_um_2025, e partiremos para sua avaliação. Primeiramente,
+aleatórios, acompanhado de exemplo. Então, apresentamos um estimador para a
+duração desses passeios e partiremos para sua avaliação. Primeiramente,
 compará-lo-emos com resultados probabilísticos estabelecidos na área. Quando
 avançarmos para passeios em que resultados analíticos não são factíveis,
 iniciaremos a comparação do estimador com simulações de Monte Carlo.
@@ -83,14 +83,17 @@ computacionalmente intensivas em passeios mais complexos.
 
 Em dimensões maiores, forneceremos, até onde é computacionalmente possível,
 resultados exatos para a duração esperada de passeios aleatórios. Para obter
-esses resultados, utilizaremos métodos para solução de sistemas lineares extensos
-simbólicos e empregaremos técnicas de computação paralela, que serão brevemente
+esses resultados, utilizaremos métodos para solução de sistemas lineares
+extensos e empregaremos técnicas de computação paralela, que serão brevemente
 discutidas.
 
-Este artigo priorizará a descrição do aspecto computacional dessa pesquisa.
-Leitores são encorajados a consultar a referência @ishihara_um_2025 para uma
-descrição mais detalhada da construção matemática do estimador e do modelo
-utilizado.
+Este artigo cobrirá tanto o desenvolvimento teórico matemático do estimador e
+modelos, quanto a descrição do aspecto computacional desta pesquisa, incluindo
+os algoritmos utilizados. Os códigos completos estão disponíveis para consulta e
+*Download* na versão digital desta publicação.
+
+# A Ruína do Jogador e outros passeios aleatórios
+
 
 # Modelando passeios aleatórios
 
