@@ -71,9 +71,10 @@ dimensões. Abordaremos técnicas analíticas, computacionais e de estimativas p
 a duração esperada destes passeios. 
 
 Começaremos por definir o modelo que será utilizado para descrever os passeios
-aleatórios, acompanhado de exemplo. Então, apresentamos um estimador para a
-duração desses passeios e partiremos para sua avaliação. Primeiramente,
-compará-lo-emos com resultados probabilísticos estabelecidos na área. Quando
+aleatórios, acompanhado de exemplo. Em seguida, descreveremos resultados
+anteriores do cálculo de probabilidades envolvendo esses passeios. Então,
+apresentaremos um estimador para a duração desses e partiremos para sua
+avaliação. Compará-lo-emos com os resultados probabilísticos obtidos. Quando
 avançarmos para passeios em que resultados analíticos não são factíveis,
 iniciaremos a comparação do estimador com simulações de Monte Carlo.
 
@@ -94,6 +95,37 @@ os algoritmos utilizados. Os códigos completos estão disponíveis para consult
 
 # A Ruína do Jogador e outros passeios aleatórios
 
+Postulado por Blaise Pascal para Fermat no século XVII @edwards_pascal_1983, o
+problema que originaria a Ruína do Jogador consistia em determinar a
+probabilidade de vitória de um jogador em um jogo de apostas, como o lançamento
+de dados ou moedas, contra um adversário. A característica principal deste jogo
+é que os jogadores transferem seus pontos, ou fortunas, entre si. Portanto, o
+jogo termina quando um dos jogadores perde toda a sua fortuna, ou seja, vai à
+ruína.
+
+Podemos descrever a fortuna do jogador nesses jogos como um passeio aleatório
+unidimensional em $\mathbb{Z}$, usualmente considerando apenas o espaço de
+estados $\mathbb{N}$, com as probabilidades envolvidas nas jogadas controlando o
+comportamento do passeio. Por exemplo, na aposta sobre o resultado do lançamento
+de uma moeda honesta, temos um passeio simétrico:
+
+$$
+\begin{aligned}
+\mathbb{P}(X = +1) &= 0.5, \\
+\mathbb{P}(X = -1) &= 0.5.
+\end{aligned}
+$$
+
+A "Ruína do Jogador" é o nome do resultado que, num jogo contra uma "casa de
+apostas" com fortuna infinita ou muito maior que a sua, o jogador
+inevitavelmente irá à ruína quando o jogo for justo (quando o passeio configurar
+um martingal) em tempo finito.
+
+Podemos estender esse passeio para jogos mais complexos, desde alterações
+simples, como probabilidades desiguais, até jogos com mais jogadores, fortunas
+distintas (múltiplas dimensões) e regras variáveis ao longo do tempo (jogada) ou
+espaço (fortuna). Assim, conseguimos modelar uma grande variedade de passeios
+aleatórios com base no princípio da troca de fortuna.
 
 # Modelando passeios aleatórios
 
@@ -176,11 +208,12 @@ complexa, ou até mesmo inviável.
 
 ## Abordagem analítica para determinar $\mathbb{E}(\tau_{X, a, N})$ {#sec-anali}
 
+<!-- TODO: Yukio: Ampliar essa seção com desenvolvimento teórico -->
 Estamos interessados na duração esperada do jogo, ou seja, queremos encontrar
 $\mathbb{E}(\tau_{X, a, N})$. Para jogos unitários, podemos calcular essa
 esperança por simples condicionamento, como descrito em @stern_conditional_1975.
 
-Com o uso de equações de diferenças finitas, podemos obter esses mesmos
+Com o uso de equações de diferenças finitas (EDFs), obtemos esses mesmos
 resultados de forma mais elegante, como feito por @andel_variance_2012. Desses
 métodos, obtemos a seguinte expressão para a duração esperada desses jogos:
 
@@ -219,8 +252,9 @@ eficientes para a duração esperada de passeios aleatórios diversos.
 
 ## Um estimador heurístico
 
-Baseando-se na mecânica clássica, @ishihara_um_2025 propôs um estimador para
-passeios não unitários em meio homogêneo:
+<!-- TODO: YUKIO: Criar seção com formulação do estimador -->
+<!-- Baseando-se na mecânica clássica, @ishihara_um_2025 propôs um estimador para -->
+<!-- passeios não unitários em meio homogêneo: -->
 
 :::{#def-estimadorsimples}
 Seja um jogo definido conforme a @def-modelodiscreto, com variável regra $X$ tal
@@ -306,7 +340,7 @@ end
 display(comparar_estimador_unitario(50, 100))
 ```
 
-Notamos que o estimador apresenta bom corpotamento nessa classe de jogos. Uma
+Notamos que o estimador apresenta bom comportamento nessa classe de jogos. Uma
 inadequação de seu uso existe para casos em que $\mathbb{E}(X)$ se aproxima de
 $0$, como indica o gráfico da @fig-comparacaoestimadorxteorico no intervalo
 $[0.48, 0.52]$
@@ -392,10 +426,9 @@ end
 display(comparar_estimador_montecarlo(10_000, 0.5, 2, 1, 50, 100))
 ```
 
-Para jogos não unitários, o estimador também apresenta bom desempenho, como
-mostrado na @fig-comparacaoestimadorxsimulado. Novamente, observa-se uma
-queda na precisão do estimador à medida que $\mathbb{E}(X)$ se aproxima de
-$0$.
+O estimador também apresenta bom desempenho para jogos não unitários, como
+mostra a @fig-comparacaoestimadorxsimulado. Novamente, observa-se uma queda na
+precisão do estimador à medida que $\mathbb{E}(X)$ se aproxima de $0$.
 
 Com esses resultados, validamos o estimador proposto na @def-estimadorsimples
 para passeios aleatórios em meio homogêneo, tanto unitários quanto não
@@ -405,7 +438,7 @@ unitários. Dessa forma, partimos para a análise de passeios mais complexos.
 
 Ao tratarmos de passeios em meio não-homogêneo, precisamos descrever o
 comportamento deste ambiente. No geral, podemos modelar um meio aleatório ou
-deterinístico. Em ambos casos, a variável regra $X$ dependerá da posição atual
+determinístico. Em ambos casos, a variável regra $X$ dependerá da posição atual
 do passeio, ou seja, $X = X_{S_n}$. Entretanto, enquanto no meio aleatório pode
 ser modelado 
 
