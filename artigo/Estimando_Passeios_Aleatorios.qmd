@@ -147,8 +147,8 @@ $$
 A **duração do jogo** é o primeiro tempo $n$ tal que $S_n \leq 0$ (ruína) ou
 $S_n \geq N$ (vitória). É denotada por $\tau_{X, a, N}$, a regra de parada.
 
-Ao indexarmos $X$ na posição atual do passeio, $X_{n} := X_{S_n}$, podemos
-estender esse modelo para passeios em meio não homogêneo: definimos $\pmb{R} =
+Podemos também relacionar $X$ com a posição atual do passeio, $X_{n} := X_{S_n}$
+estendendo esse modelo para passeios em meio não homogêneo: definimos $\pmb{R} =
 \{X_1, \dots, X_N\}$ e $\tau_{\pmb{R}, a, N}$.
 :::
 
@@ -203,34 +203,133 @@ jogo é unitário.
 Essa distinção faz-se importante, uma vez que, como apresentaremos na próxima
 seção, a abordagem analítica para determinar a duração esperada do jogo difere
 entre jogos unitários e não unitários. De fato, em jogos não unitários, a
-determinação analítica de $\mathbb{E}(\tau_{X, a, N})$ pode ser muito mais
+determinação analítica de $\mathbb{E}[\tau_{X, a, N}]$ pode ser muito mais
 complexa, ou até mesmo inviável.
 
-## Abordagem analítica para determinar $\mathbb{E}(\tau_{X, a, N})$ {#sec-anali}
+## Abordagem analítica para determinar $\mathbb{E}[\tau_{X, a, N}]$ {#sec-anali}
 
-<!-- TODO: Yukio: Ampliar essa seção com desenvolvimento teórico -->
-Estamos interessados na duração esperada do jogo, ou seja, queremos encontrar
-$\mathbb{E}(\tau_{X, a, N})$. Para jogos unitários, podemos calcular essa
-esperança por simples condicionamento, como descrito em @stern_conditional_1975.
-
-Com o uso de equações de diferenças finitas (EDFs), obtemos esses mesmos
-resultados de forma mais elegante, como feito por @andel_variance_2012. Desses
-métodos, obtemos a seguinte expressão para a duração esperada desses jogos:
+Retomamos a variável aleatória de regra $X_i, i \in \mathbb{Z}^+$,
+para descrever a quantia ganha pelo jogador $A$ na $i$-ésima rodada,
+Podemos considerar $X_i, i \in \mathbb{Z}^+$,
+independentes e com mesma distribuição de $X$ dada por
 
 $$
-\mathbb{E}(\tau_{X, a, N}) = \begin{cases}
-a(N - a), & \mathbb{E}(X) = 0, \\
-\frac{a}{q-p}-\frac{N}{q-p} \left( \frac{1- \left( \frac{q}{p} \right)^a}
-        {1- \left( \frac{q}{p} \right)^N}\right), & \mathbb{E}(X) \neq 0.
-\end{cases}.
-$$ {#eq-tempoteorico}
+X = \begin{cases}
+    +1, & \mathbb{P}(X=+1)=p \\
+    -1, & \mathbb{P}(X=-1)=q
+\end{cases}
+$$
 
-em que $p = \mathbb{P}(X = +1)$ e $q = \mathbb{P}(X = -1) = 1 - p$.
+Adicionalmente, definimos $\tau_{X,a,N}$,
+como o número de rodadas até o fim do jogo
+em que o resultado de cada rodada é representado pela variável aleatória $X$,
+o jogador $A$ começa com $a$ reais e o jogo termina quando $A$ chega a $0$ ou $N$ reais.
+Definimos $\mu_{a} = \mathbb{E}[\tau_{X,a,N}]$,
+ou seja, é o número esperado de rodadas que durará o jogo
+em que que o resultado de cada rodada é representado pela variável aleatória $X$,
+o jogador $A$ começa com $a$ reais e o jogo termina quando $A$ chega a $0$ ou $N$ reais.
 
-Com esse mesmo método, é possível determinar o tempo esperado para alguns outros
-jogos. Contudo, como descrito por @ishihara_um_2025, a complexidade de resolução
-do sistema de EDFs cresce exponencialmente. Essa limitação motivou a criação de
-um estimador para $\mathbb{E}(\tau_{X, a, N})$.
+$$
+\begin{aligned}
+\mathbb{E}[\tau_{X, a, N}]
+&= \mathbb{E}[\tau_{X, a, N}|X_1=1] \mathbb{P}(X_1=1)+\mathbb{E}[\tau_{X, a, N}|X_1=-1] \mathbb{P}(X_1=-1) \\
+&= \mathbb{E}[\tau_{X, a, N}|X_1=1] \: p + \mathbb{E}[\tau_{X, a, N}|X_1=-1] \: q \\
+&= (\mathbb{E}[\tau_{X, a+1,N}]+1) \: p + (\mathbb{E}[\tau_{X, a-1,N}]+1) \: q \\
+&= p \: \mathbb{E}[\tau_{X, a+1,N}] + q \: \mathbb{E}[\tau_{X, a-1,N}] + 1 \\
+\mu_{a} &= p \mu_{a+1} + q \mu_{a-1} + 1  
+\end{aligned}
+$$
+Trata-se, portanto, de uma equação de diferenças finitas não homogênea,
+cuja solução é a esperança desejada.
+
+Tomemos $\mu_{a} = \lambda ^a$ e, temporariamente, desconsideraremos a constante $1$
+na equação de diferenças finitas.
+$$
+\begin{aligned}
+& \phantom{\Rightarrow;;}\lambda ^a = p \:  \lambda ^{a+1} + q \: \lambda ^{a-1} \\
+& \Rightarrow p \:  \lambda ^ 2 -\lambda + q = 0 \\
+& \Rightarrow \lambda_1 = \frac{q}{p}; \:  \lambda_2 = 1
+\end{aligned}
+$$
+
+Para $\frac{p}{q} = 1$:
+$$
+\lambda_1 = \lambda_2 = 1
+$$
+Temos a seguinte equação característica:
+$$
+\mu_{a} = \alpha + \beta a + \gamma a^2
+$$
+
+Tomemos $\mu_{a} = \gamma a^2$. Juntando as equações:
+$$
+\begin{aligned}
+& \phantom{\Rightarrow;;}
+\gamma a^2 = \frac{1}{2} \gamma (a-1)^2 + \frac{1}{2} \gamma (a+1)^2 + 1 \\
+& \Rightarrow 2 \gamma a^2 = \gamma a^2 - 2 \gamma a + \gamma + \gamma a^2 + 2\gamma a + \gamma + 2\\
+& \Rightarrow \gamma = -1
+\end{aligned}
+$$
+
+Aplicando as seguintes condições de fronteira:
+$$
+\begin{aligned}
+& \phantom{\Rightarrow \,\,}\begin{cases} \mu_{0} = 0 \\ \mu_{N} = 0 \end{cases} \\
+&\Rightarrow
+\begin{cases} \mu_{0} = 0 = \alpha + \beta 0 + \gamma 0^2 \\ 
+              \mu_{N} = 0 = \alpha + \beta N + \gamma N^2   \end{cases}\\
+& \Rightarrow 
+\begin{cases} \alpha = 0 \\ 
+              \beta  = N  \end{cases} \\
+\mu_{a} &=  Na-a^2 = a(N-a)
+\end{aligned}
+$$
+Nota-se que, neste modelo, a esperança da duração do jogo é máxima
+quando os dois jogadores começam com a mesma fortuna.
+
+Para jogos não simétricos, isto é, jogos em que $\mathbb{E}[X] \neq 0$, temos a
+seguinte equação característica:
+$$
+\mu_{a} = \alpha \lambda_1^a + \beta \lambda_2^a + \gamma a
+$$
+
+Tomemos $\mu_{a} = \gamma a$:
+
+$$
+\begin{aligned}
+& \phantom{\Rightarrow;;}\gamma a = p \:  \gamma ({a+1}) + q \: \gamma ({a-1}) +1 \\
+& \Rightarrow \gamma = \frac{1}{q-p}
+\end{aligned}
+$$
+
+Substituindo e usando as fronteiras:
+$$
+\begin{aligned}
+& \phantom{\Rightarrow;;} \mu_{a} = \alpha \left( \frac{q}{p} \right) ^a + \beta + \frac{a}{q-p} \\
+& \Rightarrow \begin{cases} \mu_{0} = 0 \\ \mu_{N} = 0 \end{cases}\\
+& \Rightarrow
+\begin{cases} \mu_{0} = 0 = \alpha \left( \frac{q}{p} \right) ^0 + \beta + \frac{0}{q-p} \\ 
+              \mu_{N} = 0 = \alpha \left( \frac{q}{p} \right) ^N + \beta + \frac{N}{q-p}   \end{cases}\\
+& \Rightarrow 
+\begin{cases} \alpha = \frac{N}{p-q}\frac{1}{\left( \frac{q}{p} \right)^N-1} \\ 
+              \beta  = -\frac{N}{p-q}\frac{1}{\left( \frac{q}{p} \right)^N-1} \end{cases} \\ \\ \\
+\mu_{a} &= \frac{N}{p-q}\frac{1}{\left( \frac{q}{p} \right)^N-1} \left( \frac{q}{p} \right)^a - \frac{N}{p-q}\frac{1}{\left( \frac{q}{p} \right)^N-1} + \frac{a}{q-p} \\
+\mu_{a} & = \frac{a}{q-p}-\frac{N}{q-p} \left( \frac{1- \left( \frac{q}{p} \right)^a}
+        {1- \left( \frac{q}{p} \right)^N}\right)
+\end{aligned}
+$$
+
+Finalmente,
+$$
+\mathbb{E}[\tau_{x, a, N}] = 
+\begin{cases}
+a(N-a), & \mathbb{E}[X] = 0 \\
+\frac{a}{q-p}-\frac{N}{q-p} \left( \frac{1- \left( \frac{q}{p} \right)^a} {1- \left( \frac{q}{p} \right)^N}\right), &
+\mathbb{E}[X] \neq 0.
+\end{cases}
+$$
+
+O resultado final é o mesmo que o obtido por outros métodos @stern_conditional_1975.
 
 # Aproximando durações de passeios aleatórios
 
@@ -262,7 +361,7 @@ que $\mathbb{E}(X) \neq 0$, valores $a$ e $N$. O estimador proposto para a
 duração esperada desse jogo é dado por:
 
 $$
-\hat{\mathbb{E}}(\tau_{X, a N}) = \begin{cases}
+\hat{\mathbb{E}}(\tau_{X, a, N}) = \begin{cases}
 \frac{N-a}{\mathbb{E}(X)},  & \mathbb{E}(X) > 0, \\
 \left \lvert \frac{a}{\mathbb{E}(X)} \right \rvert,  & \mathbb{E}(X) < 0.
 \end{cases}
@@ -287,8 +386,7 @@ obtemos, fixada a fortuna inicial $a=50$ e total $N$, e variando a probabilidade
 ganho $p$:
 
 ```{julia}
-#| label: fig-comparacaoestimadorxteorico
-#| fig-cap: "Comparação entre estimador simples e duração esperado em jogos unitários para $a = 50$ e $N = 100$ em função de $p$."
+#| output: false
 using Plots, LaTeXStrings
 
 function estimador_simples(E_X, a, N)
@@ -336,7 +434,11 @@ function comparar_estimador_unitario(a, N)
     )
     return plt
 end
+```
 
+```{julia}
+#| label: fig-comparacaoestimadorxteorico
+#| fig-cap: "Comparação entre estimador simples e duração esperado em jogos unitários para $a = 50$ e $N = 100$ em função de $p$."
 display(comparar_estimador_unitario(50, 100))
 ```
 

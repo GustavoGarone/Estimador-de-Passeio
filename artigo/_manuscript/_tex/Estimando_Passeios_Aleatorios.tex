@@ -247,7 +247,7 @@
 \title{Aproximações para a duração média de passeios aleatórios}
 \author{Eduardo Yukio Garrafa Ishihara \and Gustavo Silva
 Garone \and Elisabeti Kira}
-\date{11 de dezembro de 2025}
+\date{10 de fevereiro de 2026}
 \begin{document}
 \maketitle
 \begin{abstract}
@@ -291,12 +291,13 @@ múltiplas dimensões. Abordaremos técnicas analíticas, computacionais e
 de estimativas para a duração esperada destes passeios.
 
 Começaremos por definir o modelo que será utilizado para descrever os
-passeios aleatórios, acompanhado de exemplo. Então, apresentaremos o
-estimador descrito por ISHIHARA (\citeproc{ref-ishihara_um_2025}{2025}),
-e partiremos para sua avaliação. Primeiramente, compará-lo-emos com
-resultados probabilísticos estabelecidos na área. Quando avançarmos para
-passeios em que resultados analíticos não são factíveis, iniciaremos a
-comparação do estimador com simulações de Monte Carlo.
+passeios aleatórios, acompanhado de exemplo. Em seguida, descreveremos
+resultados anteriores do cálculo de probabilidades envolvendo esses
+passeios. Então, apresentaremos um estimador para a duração desses e
+partiremos para sua avaliação. Compará-lo-emos com os resultados
+probabilísticos obtidos. Quando avançarmos para passeios em que
+resultados analíticos não são factíveis, iniciaremos a comparação do
+estimador com simulações de Monte Carlo.
 
 Descrevemos e justificamos pela literatura a adoção da linguagem de
 programação \emph{Julia}, essencial para possibilitar a execução
@@ -306,13 +307,52 @@ complexos.
 Em dimensões maiores, forneceremos, até onde é computacionalmente
 possível, resultados exatos para a duração esperada de passeios
 aleatórios. Para obter esses resultados, utilizaremos métodos para
-solução de sistemas lineares extensos simbólicos e empregaremos técnicas
-de computação paralela, que serão brevemente discutidas.
+solução de sistemas lineares extensos e empregaremos técnicas de
+computação paralela, que serão brevemente discutidas.
 
-Este artigo priorizará a descrição do aspecto computacional dessa
-pesquisa. Leitores são encorajados a consultar a referência ISHIHARA
-(\citeproc{ref-ishihara_um_2025}{2025}) para uma descrição mais
-detalhada da construção matemática do estimador e do modelo utilizado.
+Este artigo cobrirá tanto o desenvolvimento teórico matemático do
+estimador e modelos, quanto a descrição do aspecto computacional desta
+pesquisa, incluindo os algoritmos utilizados. Os códigos completos estão
+disponíveis para consulta e \emph{Download} na versão digital desta
+publicação.
+
+\section{A Ruína do Jogador e outros passeios
+aleatórios}\label{a-ruuxedna-do-jogador-e-outros-passeios-aleatuxf3rios}
+
+Postulado por Blaise Pascal para Fermat no século XVII
+(\citeproc{ref-edwards_pascal_1983}{\textbf{edwards\_pascal\_1983?}}), o
+problema que originaria a Ruína do Jogador consistia em determinar a
+probabilidade de vitória de um jogador em um jogo de apostas, como o
+lançamento de dados ou moedas, contra um adversário. A característica
+principal deste jogo é que os jogadores transferem seus pontos, ou
+fortunas, entre si. Portanto, o jogo termina quando um dos jogadores
+perde toda a sua fortuna, ou seja, vai à ruína.
+
+Podemos descrever a fortuna do jogador nesses jogos como um passeio
+aleatório unidimensional em \(\mathbb{Z}\), usualmente considerando
+apenas o espaço de estados \(\mathbb{N}\), com as probabilidades
+envolvidas nas jogadas controlando o comportamento do passeio. Por
+exemplo, na aposta sobre o resultado do lançamento de uma moeda honesta,
+temos um passeio simétrico:
+
+\[
+\begin{aligned}
+\mathbb{P}(X = +1) &= 0.5, \\
+\mathbb{P}(X = -1) &= 0.5.
+\end{aligned}
+\]
+
+A ``Ruína do Jogador'' é o nome do resultado que, num jogo contra uma
+``casa de apostas'' com fortuna infinita ou muito maior que a sua, o
+jogador inevitavelmente irá à ruína quando o jogo for justo (quando o
+passeio configurar um martingal) em tempo finito.
+
+Podemos estender esse passeio para jogos mais complexos, desde
+alterações simples, como probabilidades desiguais, até jogos com mais
+jogadores, fortunas distintas (múltiplas dimensões) e regras variáveis
+ao longo do tempo (jogada) ou espaço (fortuna). Assim, conseguimos
+modelar uma grande variedade de passeios aleatórios com base no
+princípio da troca de fortuna.
 
 \section{Modelando passeios
 aleatórios}\label{modelando-passeios-aleatuxf3rios}
@@ -337,9 +377,9 @@ A \textbf{duração do jogo} é o primeiro tempo \(n\) tal que
 \(S_n \leq 0\) (ruína) ou \(S_n \geq N\) (vitória). É denotada por
 \(\tau_{X, a, N}\), a regra de parada.
 
-Ao indexarmos \(X\) na posição atual do passeio, \(X_{n} := X_{S_n}\),
-podemos estender esse modelo para passeios em meio não homogêneo:
-definimos \(\pmb{R} =
+Podemos também relacionar \(X\) com a posição atual do passeio,
+\(X_{n} := X_{S_n}\) estendendo esse modelo para passeios em meio não
+homogêneo: definimos \(\pmb{R} =
 \{X_1, \dots, X_N\}\) e \(\tau_{\pmb{R}, a, N}\).
 
 \end{definition}
@@ -401,37 +441,124 @@ Essa distinção faz-se importante, uma vez que, como apresentaremos na
 próxima seção, a abordagem analítica para determinar a duração esperada
 do jogo difere entre jogos unitários e não unitários. De fato, em jogos
 não unitários, a determinação analítica de
-\(\mathbb{E}(\tau_{X, a, N})\) pode ser muito mais complexa, ou até
+\(\mathbb{E}[\tau_{X, a, N}]\) pode ser muito mais complexa, ou até
 mesmo inviável.
 
 \subsection{\texorpdfstring{Abordagem analítica para determinar
-\(\mathbb{E}(\tau_{X, a, N})\)}{Abordagem analítica para determinar \textbackslash mathbb\{E\}(\textbackslash tau\_\{X, a, N\})}}\label{sec-anali}
+\(\mathbb{E}[\tau_{X, a, N}]\)}{Abordagem analítica para determinar \textbackslash mathbb\{E\}{[}\textbackslash tau\_\{X, a, N\}{]}}}\label{sec-anali}
 
-Estamos interessados na duração esperada do jogo, ou seja, queremos
-encontrar \(\mathbb{E}(\tau_{X, a, N})\). Para jogos unitários, podemos
-calcular essa esperança por simples condicionamento, como descrito em
-STERN (\citeproc{ref-stern_conditional_1975}{1975}).
+Retomamos a variável aleatória de regra \(X_i, i \in \mathbb{Z}^+\),
+para descrever a quantia ganha pelo jogador \(A\) na \(i\)-ésima rodada,
+Podemos considerar \(X_i, i \in \mathbb{Z}^+\), independentes e com
+mesma distribuição de \(X\) dada por
 
-Com o uso de equações de diferenças finitas, podemos obter esses mesmos
-resultados de forma mais elegante, como feito por ANDĚL; HUDECOVÁ
-(\citeproc{ref-andel_variance_2012}{2012}). Desses métodos, obtemos a
-seguinte expressão para a duração esperada desses jogos:
+\[
+X = \begin{cases}
+    +1, & \mathbb{P}(X=+1)=p \\
+    -1, & \mathbb{P}(X=-1)=q
+\end{cases}
+\]
 
-\begin{equation}\protect\phantomsection\label{eq-tempoteorico}{
-\mathbb{E}(\tau_{X, a, N}) = \begin{cases}
-a(N - a), & \mathbb{E}(X) = 0, \\
-\frac{a}{q-p}-\frac{N}{q-p} \left( \frac{1- \left( \frac{q}{p} \right)^a}
-        {1- \left( \frac{q}{p} \right)^N}\right), & \mathbb{E}(X) \neq 0.
-\end{cases}.
-}\end{equation}
+Adicionalmente, definimos \(\tau_{X,a,N}\), como o número de rodadas até
+o fim do jogo em que o resultado de cada rodada é representado pela
+variável aleatória \(X\), o jogador \(A\) começa com \(a\) reais e o
+jogo termina quando \(A\) chega a \(0\) ou \(N\) reais. Definimos
+\(\mu_{a} = \mathbb{E}[\tau_{X,a,N}]\), ou seja, é o número esperado de
+rodadas que durará o jogo em que que o resultado de cada rodada é
+representado pela variável aleatória \(X\), o jogador \(A\) começa com
+\(a\) reais e o jogo termina quando \(A\) chega a \(0\) ou \(N\) reais.
 
-em que \(p = \mathbb{P}(X = +1)\) e \(q = \mathbb{P}(X = -1) = 1 - p\).
+\[
+\begin{aligned}
+\mathbb{E}[\tau_{X, a, N}]
+&= \mathbb{E}[\tau_{X, a, N}|X_1=1] \mathbb{P}(X_1=1)+\mathbb{E}[\tau_{X, a, N}|X_1=-1] \mathbb{P}(X_1=-1) \\
+&= \mathbb{E}[\tau_{X, a, N}|X_1=1] \: p + \mathbb{E}[\tau_{X, a, N}|X_1=-1] \: q \\
+&= (\mathbb{E}[\tau_{X, a+1,N}]+1) \: p + (\mathbb{E}[\tau_{X, a-1,N}]+1) \: q \\
+&= p \: \mathbb{E}[\tau_{X, a+1,N}] + q \: \mathbb{E}[\tau_{X, a-1,N}] + 1 \\
+\mu_{a} &= p \mu_{a+1} + q \mu_{a-1} + 1  
+\end{aligned}
+\] Trata-se, portanto, de uma equação de diferenças finitas não
+homogênea, cuja solução é a esperança desejada.
 
-Com esse mesmo método, é possível determinar o tempo esperado para
-alguns outros jogos. Contudo, como descrito por ISHIHARA
-(\citeproc{ref-ishihara_um_2025}{2025}), a complexidade de resolução do
-sistema de EDFs cresce exponencialmente. Essa limitação motivou a
-criação de um estimador para \(\mathbb{E}(\tau_{X, a, N})\).
+Tomemos \(\mu_{a} = \lambda ^a\) e, temporariamente, desconsideraremos a
+constante \(1\) na equação de diferenças finitas. \[
+\begin{aligned}
+& \phantom{\Rightarrow;;}\lambda ^a = p \:  \lambda ^{a+1} + q \: \lambda ^{a-1} \\
+& \Rightarrow p \:  \lambda ^ 2 -\lambda + q = 0 \\
+& \Rightarrow \lambda_1 = \frac{q}{p}; \:  \lambda_2 = 1
+\end{aligned}
+\]
+
+Para \(\frac{p}{q} = 1\): \[
+\lambda_1 = \lambda_2 = 1
+\] Temos a seguinte equação característica: \[
+\mu_{a} = \alpha + \beta a + \gamma a^2
+\]
+
+Tomemos \(\mu_{a} = \gamma a^2\). Juntando as equações: \[
+\begin{aligned}
+& \phantom{\Rightarrow;;}
+\gamma a^2 = \frac{1}{2} \gamma (a-1)^2 + \frac{1}{2} \gamma (a+1)^2 + 1 \\
+& \Rightarrow 2 \gamma a^2 = \gamma a^2 - 2 \gamma a + \gamma + \gamma a^2 + 2\gamma a + \gamma + 2\\
+& \Rightarrow \gamma = -1
+\end{aligned}
+\]
+
+Aplicando as seguintes condições de fronteira: \[
+\begin{aligned}
+& \phantom{\Rightarrow \,\,}\begin{cases} \mu_{0} = 0 \\ \mu_{N} = 0 \end{cases} \\
+&\Rightarrow
+\begin{cases} \mu_{0} = 0 = \alpha + \beta 0 + \gamma 0^2 \\ 
+              \mu_{N} = 0 = \alpha + \beta N + \gamma N^2   \end{cases}\\
+& \Rightarrow 
+\begin{cases} \alpha = 0 \\ 
+              \beta  = N  \end{cases} \\
+\mu_{a} &=  Na-a^2 = a(N-a)
+\end{aligned}
+\] Nota-se que, neste modelo, a esperança da duração do jogo é máxima
+quando os dois jogadores começam com a mesma fortuna.
+
+Para jogos não simétricos, isto é, jogos em que
+\(\mathbb{E}[X] \neq 0\), temos a seguinte equação característica: \[
+\mu_{a} = \alpha \lambda_1^a + \beta \lambda_2^a + \gamma a
+\]
+
+Tomemos \(\mu_{a} = \gamma a\):
+
+\[
+\begin{aligned}
+& \phantom{\Rightarrow;;}\gamma a = p \:  \gamma ({a+1}) + q \: \gamma ({a-1}) +1 \\
+& \Rightarrow \gamma = \frac{1}{q-p}
+\end{aligned}
+\]
+
+Substituindo e usando as fronteiras: \[
+\begin{aligned}
+& \phantom{\Rightarrow;;} \mu_{a} = \alpha \left( \frac{q}{p} \right) ^a + \beta + \frac{a}{q-p} \\
+& \Rightarrow \begin{cases} \mu_{0} = 0 \\ \mu_{N} = 0 \end{cases}\\
+& \Rightarrow
+\begin{cases} \mu_{0} = 0 = \alpha \left( \frac{q}{p} \right) ^0 + \beta + \frac{0}{q-p} \\ 
+              \mu_{N} = 0 = \alpha \left( \frac{q}{p} \right) ^N + \beta + \frac{N}{q-p}   \end{cases}\\
+& \Rightarrow 
+\begin{cases} \alpha = \frac{N}{p-q}\frac{1}{\left( \frac{q}{p} \right)^N-1} \\ 
+              \beta  = -\frac{N}{p-q}\frac{1}{\left( \frac{q}{p} \right)^N-1} \end{cases} \\ \\ \\
+\mu_{a} &= \frac{N}{p-q}\frac{1}{\left( \frac{q}{p} \right)^N-1} \left( \frac{q}{p} \right)^a - \frac{N}{p-q}\frac{1}{\left( \frac{q}{p} \right)^N-1} + \frac{a}{q-p} \\
+\mu_{a} & = \frac{a}{q-p}-\frac{N}{q-p} \left( \frac{1- \left( \frac{q}{p} \right)^a}
+        {1- \left( \frac{q}{p} \right)^N}\right)
+\end{aligned}
+\]
+
+Finalmente, \[
+\mathbb{E}[\tau_{x, a, N}] = 
+\begin{cases}
+a(N-a), & \mathbb{E}[X] = 0 \\
+\frac{a}{q-p}-\frac{N}{q-p} \left( \frac{1- \left( \frac{q}{p} \right)^a} {1- \left( \frac{q}{p} \right)^N}\right), &
+\mathbb{E}[X] \neq 0.
+\end{cases}
+\]
+
+O resultado final é o mesmo que o obtido por outros métodos STERN
+(\citeproc{ref-stern_conditional_1975}{1975}).
 
 \section{Aproximando durações de passeios
 aleatórios}\label{aproximando-durauxe7uxf5es-de-passeios-aleatuxf3rios}
@@ -457,10 +584,6 @@ eficientes para a duração esperada de passeios aleatórios diversos.
 
 \subsection{Um estimador heurístico}\label{um-estimador-heuruxedstico}
 
-Baseando-se na mecânica clássica, ISHIHARA
-(\citeproc{ref-ishihara_um_2025}{2025}) propôs um estimador para
-passeios não unitários em meio homogêneo:
-
 \begin{definition}[]\protect\hypertarget{def-estimadorsimples}{}\label{def-estimadorsimples}
 
 Seja um jogo definido conforme a Definição~\ref{def-modelodiscreto}, com
@@ -469,7 +592,7 @@ variável regra \(X\) tal que \(\mathbb{E}(X) \neq 0\), valores \(a\) e
 por:
 
 \[
-\hat{\mathbb{E}}(\tau_{X, a N}) = \begin{cases}
+\hat{\mathbb{E}}(\tau_{X, a, N}) = \begin{cases}
 \frac{N-a}{\mathbb{E}(X)},  & \mathbb{E}(X) > 0, \\
 \left \lvert \frac{a}{\mathbb{E}(X)} \right \rvert,  & \mathbb{E}(X) < 0.
 \end{cases}
@@ -478,7 +601,7 @@ por:
 \end{definition}
 
 Primeiramente, o estimador da Definição~\ref{def-estimadorsimples} foi
-comparado com o resultado da Equação~\ref{eq-tempoteorico} para jogos
+comparado com o resultado da \textbf{?@eq-tempoteorico} para jogos
 unitários. Retomando o Exemplo~\ref{exm-modelodiscreto}, temos, como
 \(\mathbb{E}(X) = 0.2\):
 
@@ -494,6 +617,10 @@ unitários. Retomando o Exemplo~\ref{exm-modelodiscreto}, temos, como
 Partimos para testá-lo em outros casos unitários. Dos nossos resultados,
 obtemos, fixada a fortuna inicial \(a=50\) e total \(N\), e variando a
 probabilidade de ganho \(p\):
+
+\textsubscript{Fonte:
+\href{https://GustavoGarone.github.io/Estimador-de-Passeio/Estimando_Passeios_Aleatorios.qmd.html}{Caderno
+de Artigo}}
 
 \begin{figure}[H]
 
@@ -513,7 +640,7 @@ e \(N = 100\) em função de \(p\).}
 \href{https://GustavoGarone.github.io/Estimador-de-Passeio/Estimando_Passeios_Aleatorios.qmd.html}{Caderno
 de Artigo}}
 
-Notamos que o estimador apresenta bom corpotamento nessa classe de
+Notamos que o estimador apresenta bom comportamento nessa classe de
 jogos. Uma inadequação de seu uso existe para casos em que
 \(\mathbb{E}(X)\) se aproxima de \(0\), como indica o gráfico da
 Figura~\ref{fig-comparacaoestimadorxteorico} no intervalo
@@ -571,9 +698,9 @@ de perda \$1 e de ganho \$2, em função de \(p\). Simulados com
 \href{https://GustavoGarone.github.io/Estimador-de-Passeio/Estimando_Passeios_Aleatorios.qmd.html}{Caderno
 de Artigo}}
 
-Para jogos não unitários, o estimador também apresenta bom desempenho,
-como mostrado na Figura~\ref{fig-comparacaoestimadorxsimulado}.
-Novamente, observa-se uma queda na precisão do estimador à medida que
+O estimador também apresenta bom desempenho para jogos não unitários,
+como mostra a Figura~\ref{fig-comparacaoestimadorxsimulado}. Novamente,
+observa-se uma queda na precisão do estimador à medida que
 \(\mathbb{E}(X)\) se aproxima de \(0\).
 
 Com esses resultados, validamos o estimador proposto na
@@ -585,7 +712,7 @@ para a análise de passeios mais complexos.
 
 Ao tratarmos de passeios em meio não-homogêneo, precisamos descrever o
 comportamento deste ambiente. No geral, podemos modelar um meio
-aleatório ou deterinístico. Em ambos casos, a variável regra \(X\)
+aleatório ou determinístico. Em ambos casos, a variável regra \(X\)
 dependerá da posição atual do passeio, ou seja, \(X = X_{S_n}\).
 Entretanto, enquanto no meio aleatório pode ser modelado
 
@@ -595,12 +722,6 @@ Entretanto, enquanto no meio aleatório pode ser modelado
 
 \protect\phantomsection\label{refs}
 \begin{CSLReferences}{0}{1}
-\bibitem[\citeproctext]{ref-andel_variance_2012}
-ANDĚL, J.; HUDECOVÁ, Š.
-\href{https://doi.org/10.1016/j.spl.2012.05.023}{Variance of the game
-duration in the gambler's ruin problem}. \textbf{Statistics \&
-Probability Letters}, v. 82, n. 9, p. 1750--1754, 2012.
-
 \bibitem[\citeproctext]{ref-edwards_pascals_1983}
 EDWARDS, A. W. F. \href{https://doi.org/10.2307/1402732}{Pascal's
 Problem: The 'Gambler's Ruin'}. \textbf{International Statistical Review
@@ -610,10 +731,6 @@ Problem: The 'Gambler's Ruin'}. \textbf{International Statistical Review
 HARRISON, R. L. \href{https://doi.org/10.1063/1.3295638}{Introduction To
 Monte Carlo Simulation}. \textbf{{AIP} conference proceedings}, v. 1204,
 p. 17--21, 5 jan. 2010.
-
-\bibitem[\citeproctext]{ref-ishihara_um_2025}
-ISHIHARA, E. \textbf{Um Estimador para a Duração do Jogo da Ruína do
-Jogador}. São Paulo: Universidade de São Paulo, 2025.
 
 \bibitem[\citeproctext]{ref-ritter_determining_2011}
 RITTER, F. E. et al.
