@@ -1,1 +1,6 @@
-/.quarto/
+.quarto/
+artigo/_manuscript
+artigo/_freeze
+artigo/.direnv
+artigo/.cache
+
