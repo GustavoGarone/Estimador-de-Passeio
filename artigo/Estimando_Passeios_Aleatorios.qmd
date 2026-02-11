@@ -351,9 +351,30 @@ eficientes para a duração esperada de passeios aleatórios diversos.
 
 ## Um estimador heurístico
 
-<!-- TODO: YUKIO: Criar seção com formulação do estimador -->
-<!-- Baseando-se na mecânica clássica, @ishihara_um_2025 propôs um estimador para -->
-<!-- passeios não unitários em meio homogêneo: -->
+Ainda que a esperança da duração do jogo simples possa ser descrita
+por uma expressão analítica, buscamos uma primeira intuição de um estimador
+para a duração do passeio simples exclusivamente para dar os passos iniciais
+em direção ao estudo de jogos com regras distintas.
+Retome que $X_i$ descreve o resultado da $i$-ésima rodada,
+mas também pode ser interpretado como a movimentação de um ponto sobre a reta dos inteiros.
+$\mathbb{E}[X]$ descreve, portanto, "o movimento médio" do ponto, é a tendência de movimento.
+Quando $\mathbb{E}[X]>0$, a partícula tende à direita, ou o jogador $A$ tende à riqueza.
+Quando $\mathbb{E}[X]<0$, a partícula tende à esquerda, ou o jogador $A$ tende à ruína.
+
+Em cada rodada, interpretando-se $\mathbb{E}[X]$ como o deslocamento médio do ponto
+num intervalo de tempo, tem-se que se trata de um paralelo com o conceito físico de "velocidade".
+Ainda sob tal analogia, $\mathbb{E}[\tau_{X,a,N}]$ pode ser interpretado
+como o "tempo médio" que a partícula leva para chegar a $0$ ou a $N$.
+Ademais, $a$ ou $N-a$ são a "distância" a ser percorrida,
+é o espaço entre o ponto inicial da partícula e as fronteiras.
+Por fim, da física, emprestamos a seguinte equação da velocidade média.
+
+$$
+   \Delta t=\frac{\Delta s}{\overrightarrow{v}} 
+$$
+
+Substituindo os termos pelos "paralelos" construídos com os elementos do problema da Ruína do Jogador,
+propomos o seguinte estimador.
 
 :::{#def-estimadorsimples}
 Seja um jogo definido conforme a @def-modelodiscreto, com variável regra $X$ tal
