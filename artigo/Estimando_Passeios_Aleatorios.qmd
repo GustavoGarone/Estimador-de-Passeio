@@ -29,8 +29,11 @@ date-format: long
 format:
   pdf:
     documentclass: article
+    notebook-links: false
     fontsize: 12pt
     monofont: "Consolas"
+    toc: true
+    toc-depth: 3
     geometry:
       - top=20mm
       - left=20mm
@@ -41,6 +44,8 @@ format:
       text: |
         \usepackage{authblk}
   html:
+    toc: true
+    toc-expand: 3
     theme: cosmo
 engine: julia
 julia:
@@ -93,7 +98,7 @@ modelos, quanto a descrição do aspecto computacional desta pesquisa, incluindo
 os algoritmos utilizados. Os códigos completos estão disponíveis para consulta e
 *Download* na versão digital desta publicação.
 
-# A Ruína do Jogador e outros passeios aleatórios
+# Passeios aleatórios em $\mathbb{Z}$ e a Ruína do Jogador
 
 Postulado por Blaise Pascal para Fermat no século XVII @edwards_pascal_1983, o
 problema que originaria a Ruína do Jogador consistia em determinar a
@@ -125,11 +130,20 @@ Podemos estender esse passeio para jogos mais complexos, desde alterações
 simples, como probabilidades desiguais, até jogos com mais jogadores, fortunas
 distintas (múltiplas dimensões) e regras variáveis ao longo do tempo (jogada) ou
 espaço (fortuna). Assim, conseguimos modelar uma grande variedade de passeios
-aleatórios com base no princípio da troca de fortuna.
+aleatórios com base no princípio da troca de fortuna. Nesta seção, modelaremos
+passeios em $\mathbb{Z}$ em meios homogêneos, não homogêneos e aleatórios.
 
-# Modelando passeios aleatórios
+## Modelando passeios aleatórios 
 
-## Modelo 
+Para estudarmos passeios aleatórios, é necessário formalizá-los com um modelo
+estocástico. Iniciaremos com um modelo simples que será generalizado conforme
+exploramos passeios mais complexos.
+
+Gostaríamos de ressaltar que existem diversas maneiras de modelar passeios deste
+tipo, com suas vantagens e desvantagens de uso. Optamos pela abordagem deste artigo
+por dar destaque à "variável de regra", que será amplamente explorada.
+
+Trataremos primeiramente do nosso modelo mais simples, em meio homogêneo.
 
 :::{#def-modelodiscreto}
 
@@ -149,7 +163,8 @@ $S_n \geq N$ (vitória). É denotada por $\tau_{X, a, N}$, a regra de parada.
 
 Podemos também relacionar $X$ com a posição atual do passeio, $X_{n} := X_{S_n}$
 estendendo esse modelo para passeios em meio não homogêneo: definimos $\pmb{R} =
-\{X_1, \dots, X_N\}$ e $\tau_{\pmb{R}, a, N}$.
+\{X_1, \dots, X_N\}$ e $\tau_{\pmb{R}, a, N}$. Discutiremos isso mais a fundo
+na @sec-nao-homo.
 :::
 
 ::: {#rem-tempo}
@@ -193,8 +208,7 @@ S_5 = 50 + (1 - 1 + 1 + 1 -1) = 51.
 $$
 :::
 
-## Jogos unitários e não unitários
-
+:::{#def-unitario}
 Definimos um jogo como **unitário** se a variável regra $X$ assume apenas
 valores inteiros unitários, ou seja, $X: \Omega \rightarrow \{-1, +1\}$. Caso
 contrário, o jogo é dito **não unitário**. No @exm-modelodiscreto, o
@@ -205,8 +219,9 @@ seção, a abordagem analítica para determinar a duração esperada do jogo dif
 entre jogos unitários e não unitários. De fato, em jogos não unitários, a
 determinação analítica de $\mathbb{E}[\tau_{X, a, N}]$ pode ser muito mais
 complexa, ou até mesmo inviável.
+:::
 
-## Abordagem analítica para determinar $\mathbb{E}[\tau_{X, a, N}]$ {#sec-anali}
+### Abordagem analítica para determinar $\mathbb{E}[\tau_{X, a, N}]$ {#sec-anali}
 
 Retomamos a variável aleatória de regra $X_i, i \in \mathbb{Z}^+$,
 para descrever a quantia ganha pelo jogador $A$ na $i$-ésima rodada,
@@ -220,8 +235,7 @@ X = \begin{cases}
 \end{cases}
 $$
 
-Adicionalmente, definimos $\tau_{X,a,N}$,
-como o número de rodadas até o fim do jogo
+Adicionalmente, definimos $\tau_{X,a,N}$, como o número de rodadas até o fim do jogo
 em que o resultado de cada rodada é representado pela variável aleatória $X$,
 o jogador $A$ começa com $a$ reais e o jogo termina quando $A$ chega a $0$ ou $N$ reais.
 Definimos $\mu_{a} = \mathbb{E}[\tau_{X,a,N}]$,
@@ -324,14 +338,92 @@ $$
 \mathbb{E}[\tau_{x, a, N}] = 
 \begin{cases}
 a(N-a), & \mathbb{E}[X] = 0 \\
-\frac{a}{q-p}-\frac{N}{q-p} \left( \frac{1- \left( \frac{q}{p} \right)^a} {1- \left( \frac{q}{p} \right)^N}\right), &
+\frac{a}{q-p}-\frac{N}{q-p} \left( \frac{1- \left( \frac{q}{p} \right)^a} {1-\left(\frac{q}{p} \right)^N}\right), &
 \mathbb{E}[X] \neq 0.
 \end{cases}
-$$
+$$ {#eq-tempo-teorico}
 
 O resultado final é o mesmo que o obtido por outros métodos @stern_conditional_1975.
 
-# Aproximando durações de passeios aleatórios
+### Meio não-homogêneo {#sec-nao-homo}
+O problema da Ruína do Jogador em meio não-homogêneo trata-se do caso em que,
+para cada posição (fortuna) $j \in \{0,1,\dots,N\}$,
+associamos uma variável de regra local $(X_{i,j})$ com distribuição de probabilidade própria,
+a qual indica a quantia ganha pelo jogador $A$ na $i$-ésima rodada quando está na posição $j$.
+Diferentemente do caso clássico, em que as probabilidades de vitória e derrota são constantes
+ao longo do jogo, aqui estas variam com a posição atual da fortuna do jogador $A$.
+
+Particularmente, um meio determinístico trata do caso em que o meio não homogêneo é fixado de forma determinística.
+Ressaltamos que o meio é determinístico, pois está determinado pelas regras de cada posição.
+
+:::{#def-jogodetnaohomo}
+Jogador $A$ começa com fortuna inicial $a$, enquanto há $N$ em aposta.
+Cada rodada produz um resultado aleatório e independente
+$X_{i,j}$, $i=1,2,\dots$ e $j=0,1,\dots, N$
+tal que $X_{i,j} \stackrel{d}{=}R_j, \text{ para todo } j = 0,1,\dots, N$.
+Após $n$ rodadas, a fortuna $S_n$ do jogador $A$ é dada por
+
+$$
+S_n = a + \sum_{i=1}^n X_{i,j}
+$$
+
+A duração do jogo é o primeiro instante $n$ tal que $S_n \geq N$ (fortuna) ou $S_n \leq 0$
+(ruína) e é denotado por $\tau_{\mathbf{R}, a, N}$.
+
+Por simplicidade, denotamos o meio aleatório por $\mathbf{R}=(R_{0}, R_{1}, \dots , R_{N})$
+:::
+
+Fornecemos o seguinte exemplo para compreender o jogo em meio determinístico não homogêneo.
+
+\textbf{Exemplo 2.4} Considere um jogo com $a=50$, $N=100$ e 
+$$
+X_{i,j} = \begin{cases}
+    +1, & \mathbb{P}(X_{i,j}=+1)=\frac{j}{100} \\
+    -1, & \mathbb{P}(X_{i,j}=-1)=1-\frac{j}{100}
+\end{cases}
+$$
+
+No exemplo, note que, conforme o jogador aproxima-se da vitória,
+isso é, conforme $j$ aproxima-se de $100$,
+a probabilidade de ganhar a rodada é cada vez maior,
+então há uma tendência de vencer o jogo.
+Perceba, também, que $\mathbb{E}[X_{i,j}] = \frac{j}{50}-1$.
+Então, a tendência do jogador vencer ou perder o jogo varia para cada posição $j$ ocupada por ele.
+
+#### Jogo Unitário em Meio Determinístico {#sec-teorico-unit-nao-det}
+Em particular, quando a variável de regra do jogo assume valores $+1$ e $-1$, é
+possível obter uma solução analítica para a duração média do jogo em função do meio,
+da fortuna inicial e da fortuna em jogo, como feito em @sec-anali. Seja $X_{i,j}$ tal que
+$$
+X_{i,j} =
+\begin{cases}
+    +1, & \mathbb{P}(X_{i,j}=+1)=p_i \\
+    -1, & \mathbb{P}(X_{i,j}=-1)=1-p_i = q_i
+\end{cases}
+$$
+
+Logo,
+
+$$
+\begin{aligned}
+\mathbb{E}[\tau_{X, a, N}]
+&= \mathbb{E}[\tau_{X, a, N}|X_{a,1}=1] \mathbb{P}(X_{a,1}=1)+\mathbb{E}[\tau_{X, a, N}|X_{a,1}=-1] \mathbb{P}(X_{a,1}=-1) \\
+&= \mathbb{E}[\tau_{X, a, N}|X_{a,1}=1] \: p_a + \mathbb{E}[\tau_{X, a, N}|X_{a,1}=-1] \: q_a \\
+&= (\mathbb{E}[\tau_{X, a+1,N}]+1) \: p_a + (\mathbb{E}[\tau_{X, a-1,N}]+1) \: q_a \\
+&= p_a \: \mathbb{E}[\tau_{X, a+1,N}] + q_a \: \mathbb{E}[\tau_{X, a-1,N}] + 1 \\
+\mu_{a} &= p_a \: (\mu_{a+1}) + q_a \: (\mu_{a-1}) + 1 
+\end{aligned}
+$$
+
+O tempo esperado de duração de jogo é obtido a partir da resolução
+da equação de diferenças finitas descrita com as condições de fronteira
+$\mu_{0} = \mu_{100} = 0$.
+Para fins ilustrativos, incluímos a solução do caso $N=6$ no apêndice (@sec-apendice).
+Isso ressalta a dificuldade em obter-se soluções analíticas,
+mesmo computacionalmente, conforme $N$ cresce.
+
+
+## Aproximando durações de passeios aleatórios em $\mathbb{Z}$
 
 Uma pergunta natural quando se discute aproximações é quanto a sua utilidade. Se
 possível, é mais desejável utilizar resultados obtidos analiticamente, como, no
@@ -339,8 +431,8 @@ exemplo da "Ruína do Jogador" clássica, os apresentados na @sec-anali.
 
 Nos cenários em que não é prático o desenvolvimento analítico, soluções
 computacionais são buscadas. Estas soluções podem fornecer resultados teóricos
-corretos, como na solução de sistemas lineares extensos que abordaremos na
-[SESSÃO AQUI], ou aproximações pelo método de Monte Carlo, como descreve
+corretos, como na solução de sistemas lineares extensos que abordamos brevemente
+na @sec-teorico-unit-nao-det, ou aproximações pelo método de Monte Carlo, como descreve
 @harrison_introduction_2010.
 
 Ainda assim, a simulação também traz desvantagens para além da perda de precisão
@@ -349,7 +441,7 @@ um número considerável de simulações é necessário para garantir acurácia 
 dados e estabilidade. Diante disso, vê-se justificável a busca de estimadores
 eficientes para a duração esperada de passeios aleatórios diversos.
 
-## Um estimador heurístico
+### Um estimador heurístico
 
 Ainda que a esperança da duração do jogo simples possa ser descrita
 por uma expressão analítica, buscamos uma primeira intuição de um estimador
@@ -373,38 +465,38 @@ $$
    \Delta t=\frac{\Delta s}{\overrightarrow{v}} 
 $$
 
-Substituindo os termos pelos "paralelos" construídos com os elementos do problema da Ruína do Jogador,
-propomos o seguinte estimador.
+Substituindo os termos pelos "paralelos" construídos com os elementos do
+problema da Ruína do Jogador, propomos o seguinte estimador.
 
 :::{#def-estimadorsimples}
 Seja um jogo definido conforme a @def-modelodiscreto, com variável regra $X$ tal
-que $\mathbb{E}(X) \neq 0$, valores $a$ e $N$. O estimador proposto para a
+que $\mathbb{E}[X] \neq 0$, valores $a$ e $N$. O estimador proposto para a
 duração esperada desse jogo é dado por:
 
 $$
-\hat{\mathbb{E}}(\tau_{X, a, N}) = \begin{cases}
-\frac{N-a}{\mathbb{E}(X)},  & \mathbb{E}(X) > 0, \\
-\left \lvert \frac{a}{\mathbb{E}(X)} \right \rvert,  & \mathbb{E}(X) < 0.
+\hat{\mathbb{E}}[\tau_{X, a, N}] = \begin{cases}
+\frac{N-a}{\mathbb{E}[X]},  & \mathbb{E}[X] > 0, \\
+\left \lvert \frac{a}{\mathbb{E}[X]} \right \rvert,  & \mathbb{E}[X] < 0.
 \end{cases}
 $$
 :::
 
 Primeiramente, o estimador da @def-estimadorsimples foi comparado com o
-resultado da @eq-tempoteorico para jogos unitários. Retomando o 
-@exm-modelodiscreto, temos, como $\mathbb{E}(X) = 0.2$:
+resultado da @eq-tempo-teorico para jogos unitários. Retomando o 
+@exm-modelodiscreto, temos, como $\mathbb{E}[X] = 0.2$:
 
 $$
 \begin{aligned}
-\hat{\mathbb{E}}(\tau_{X, 50, 100}) = \frac{100}{0.2} = 250 \\
-\mathbb{E}(\tau_{X, 50, 100}) = \frac{50}{0.6 - 0.4} - \frac{100}{0.6 - 0.4}
+\hat{\mathbb{E}}[\tau_{X, 50, 100}] = \frac{100}{0.2} = 250 \\
+\mathbb{E}[\tau_{X, 50, 100}] = \frac{50}{0.6 - 0.4} - \frac{100}{0.6 - 0.4}
 \left( \frac{1 - \left( \frac{0.4}{0.6} \right)^{50}}{1 - \left( \frac{0.4}{0.6}
 \right)^{100}} \right) = 250
 \end{aligned}
 $$
 
 Partimos para testá-lo em outros casos unitários. Dos nossos resultados,
-obtemos, fixada a fortuna inicial $a=50$ e total $N$, e variando a probabilidade de
-ganho $p$:
+obtemos, fixada a fortuna inicial $a=50$ e total $N$, e variando a probabilidade
+de ganho $p$:
 
 ```{julia}
 #| output: false
@@ -464,14 +556,14 @@ display(comparar_estimador_unitario(50, 100))
 ```
 
 Notamos que o estimador apresenta bom comportamento nessa classe de jogos. Uma
-inadequação de seu uso existe para casos em que $\mathbb{E}(X)$ se aproxima de
+inadequação de seu uso existe para casos em que $\mathbb{E}[X]$ se aproxima de
 $0$, como indica o gráfico da @fig-comparacaoestimadorxteorico no intervalo
 $[0.48, 0.52]$
 
 Validado o estimador para grande parte dos casos mais simples, partimos para
 análise em jogos não unitários. Para isso, utilizamos simulações de Monte Carlo
-para obter valores aproximados de $\mathbb{E}(\tau_{X, a, N})$. Apresentamos no
-@algo-montecarlosimples uma implementação simples desse processo
+para obter valores aproximados de $\mathbb{E}[\tau_{X, a, N}]$. Apresentamos no
+@algo-montecarlosimples uma implementação simples desse processo conforme
 @harrison_introduction_2010, @ritter_determining_2011.
 
 ```pseudocode
@@ -507,8 +599,12 @@ para obter valores aproximados de $\mathbb{E}(\tau_{X, a, N})$. Apresentamos no
 \end{algorithm}
 ```
 
+A partir do @algo-montecarlosimples, conseguimos comparar o estimador
+com as simulações pelo método de Monte Carlo. Os resultados encontram-se na
+@fig-comparacao-estimador-simples-nao-unit.
+
 ```{julia}
-#| label: fig-comparacaoestimadorxsimulado
+#| label: fig-comparacao-estimador-simples-nao-unit
 #| fig-cap: "Comparação entre estimador simples e duração simulada para $a = 50$, $N = 100$, valor de perda $1 e de ganho $2, em função de $p$. Simulados com $10.000$ iterações de Monte Carlo."
 function monte_carlo_simples(MC, p, g, l, a, N)
     total_tempo = 0
@@ -549,22 +645,133 @@ end
 display(comparar_estimador_montecarlo(10_000, 0.5, 2, 1, 50, 100))
 ```
 
-O estimador também apresenta bom desempenho para jogos não unitários, como
-mostra a @fig-comparacaoestimadorxsimulado. Novamente, observa-se uma queda na
-precisão do estimador à medida que $\mathbb{E}(X)$ se aproxima de $0$.
+O estimador também apresenta bom desempenho para jogos não unitários.
+Novamente, observa-se uma queda na precisão do estimador à medida que $\mathbb{E}[X]$ se aproxima de $0$.
 
-Com esses resultados, validamos o estimador proposto na @def-estimadorsimples
+Analisamos com estes resultados o estimador proposto na @def-estimadorsimples
 para passeios aleatórios em meio homogêneo, tanto unitários quanto não
-unitários. Dessa forma, partimos para a análise de passeios mais complexos.
+unitários.
 
-## Meio não-homogêneo
+### Estimador em meio não-homogêneo determinístico
+Nota-se que o estimador da @def-estimadorsimples
+não se aplica ao modelo não-homogêneo, pois não podemos mais levar uma única variável de regra
+para medir a tendência geral do passeio:
+é necessário avaliar todas as variáveis que compõem o meio.
 
-Ao tratarmos de passeios em meio não-homogêneo, precisamos descrever o
-comportamento deste ambiente. No geral, podemos modelar um meio aleatório ou
-determinístico. Em ambos casos, a variável regra $X$ dependerá da posição atual
-do passeio, ou seja, $X = X_{S_n}$. Entretanto, enquanto no meio aleatório pode
-ser modelado 
+:::{#def-estimador-avancado}
+Considere o problema da Ruína do Jogador em meio determinístico não homogêneo com
+meio $\mathbf{R} = (R_{0}, R_{1}, \dots , R_{N})$,
+início em $a$ reais e $N$ reais em aposta.
+Definimos o estimador para a duração média de tal jogo como:
+$$
+\widehat{\mathbb{E}}[\tau_{\mathbf{X},a,N}] =
+\begin{cases}
+    \sum\limits_{k=0}^{a}\frac{1}{|\mathbb{E}[R_k]|} & \text{se } \mathbb{E}[R_a]<0 \\
+    \sum\limits_{k=a}^{N}\frac{1}{|\mathbb{E}[R_k]|} & \text{se } \mathbb{E}[R_a]>0
+\end{cases}
+$$
+Denota-se $\mathcal{E}_\mathbf{R} = (\mathbb{E}[R_0],\mathbb{E}[R_1], \dots, \mathbb{E}[R_{N}])$
+:::
 
+Para a definição do estimador, mantivemos a interpretação de $\mathbf{E}[X_j]$
+como o movimento médio de uma partícula quando sobre o espaço $j$, ou seja, o "movimento médio".
+Consequentemente, o tempo médio até ele deslocar-se uma unidade,
+isto é, sair daquele espaço é dado por
+$$
+   \Delta t=\frac{1}{|\mathbb{E}[R_j]|}
+$$
+Para decidir se o estimador utilizará a soma de $0$ a $a$ ou de $a$ até $N$,
+avalia-se o movimento médio do espaço inicial $(\mathbb{E}[X_a])$.
+Note que, se $X_k=X_l$ para todo $k = 0,1,\dots, N,$ e para todo $l = 0,1,\dots, N$,
+o primeiro estimador nada mais é do que um caso particular do estimador agora proposto.
+
+Imediatamente, percebe-se que o estimador não é definido para $\mathbb{E}[R_a]=0$,
+pois, sem tendência no início do passeio, não é possível prever a tendência geral deste.
+Outrossim, caso exista um $R_j \in \mathbf{R}$ tal que $\mathbb{E}[R_j] = 0$,
+ou próximo de $0$, o estimador produzirá estimativas que desviam consideravelmente do valor esperado.
+Por fim, caso o vetor
+$\mathcal{E}_\mathbf{R} = (\mathbb{E}[R_0],\mathbb{E}[R_1], \dots, \mathbb{E}[R_N])$ seja "pouco suave",
+isso é, valores consecutivos do vetor sejam muito diferentes uns dos outros,
+o estimador também produzirá estimativas que divergem do valor simulado.
+
+
+Estendemos o @algo-montecarlosimples para tratar desses casos:
+
+<!-- TODO Aaqui oiiiiiiiiiiiiii -->
+```pseudocode
+#| label: algo-montecarlonohomo
+#| html-indent-size: "1.2em"
+#| html-comment-delimiter: "//"
+#| html-line-number: true
+#| html-line-number-punc: ":"
+#| html-no-end: false
+#| pdf-placement: "htb!"
+#| pdf-line-number: true
+
+\begin{algorithm}
+\caption{Monte Carlo para meios não-homogêneos}
+\begin{algorithmic}
+\Procedure{MonteCarlo}{$MC, p, g, l, a, N$}
+    \State $total\_tempo \gets 0$
+    \For{$i =1$ to $MC$}
+        \State $pos$ \gets $a$
+        \While{$pos > 0$ and $pos < N$}
+            \State $u \gets \Call{Sortear}{U(0,1)}$
+            \If{$u < p$}
+                \State $pos$ \gets $pos + g$
+            \Else
+                \State $pos$ \gets $pos - l$
+            \EndIf
+            \State $total\_tempo \gets total\_tempo + 1$
+        \EndWhile
+    \EndFor
+    \State \Return $total\_tempo / MC$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+```
+
+:::{#exm-poucosuave}
+Considere $N=10$, $\mathbf{R} = (R_{0}, R_{1}, \dots , R_{10})$
+tal que $\mathcal{E}_\mathbf{R} = (\mathbb{E}[R_0],\mathbb{E}[R_1], \dots, \mathbb{E}[R_{10}]) = (1,2,1,8,-2,0,1,3,4,6,5)$.
+Este é um ambiente pouco suave.
+
+
+Perceba que a diferença entre dois elementos adjacentes do vetor varia entre $1$ e $2$ na maioria dos casos,
+mas há um grande salto de $1$ para $8$ e de $8$ para $-2$.
+Portanto, o estimador provavelmente produzirá estimativas pouco precisas para o jogo exemplificado.
+:::
+
+:::{exm-suave}
+Considere $N=100$, $\mathbf{R} = (R_{0}, R_{1}, \dots , R_{N})$ tal que
+$$
+    R_j = \begin{cases}
+    +1, & \mathbb{P}(R_j=+1)=\frac{j^{0.5}}{100^{0.5}}, \\
+    -1, & \mathbb{P}(R_j=-1)=1-\frac{j^{0.5}}{100^{0.5}}.
+\end{cases} \quad j=0,1,\dots,N
+$$
+:::
+
+
+
+{{< pagebreak >}}
+
+# Apêndice {.appendix #sec-apendice}
+
+Computacionalmente, podemos resolver o sistema linear descrito na
+@sec-teorico-unit-nao-det:
+
+$$
+\begin{aligned}
+&\mu_0 = 0\\
+&\mu_1 =\frac{1.0 + p_1 + p_1 p_2 - p_2 q_3 - p_3 q_4 - p_4 q_5 + p_1 p_2 p_3 - p_1 p_3 q_4 - p_1 p_4 q_5 + p_1 p_2 p_3 p_4 - p_1 p_2 p_4 q_5 + p_2 p_4 q_3 q_5}{1.0 - p_1 q_2 - p_2 q_3 - p_3 q_4 - p_4 q_5 + p_1 p_3 q_2 q_4 + p_1 p_4 q_2 q_5 + p_2 p_4 q_3 q_5}\\
+&\mu_2 =\frac{1.0 + p_2 + q_2 + p_2 p_3 - p_3 q_4 - p_4 q_5 + p_2 p_3 p_4 - p_2 p_4 q_5 - p_3 q_2 q_4 - p_4 q_2 q_5}{1.0 - p_1 q_2 - p_2 q_3 - p_3 q_4 - p_4 q_5 + p_1 p_3 q_2 q_4 + p_1 p_4 q_2 q_5 + p_2 p_4 q_3 q_5}\\
+&\mu_3 =\frac{1.0 + p_3 + q_3 - p_1 q_2 + p_3 p_4 - p_4 q_5 + q_2 q_3 - p_1 p_3 q_2 - p_4 q_3 q_5 - p_1 p_3 p_4 q_2 + p_1 p_4 q_2 q_5 - p_4 q_2 q_3 q_5}{1.0 - p_1 q_2 - p_2 q_3 - p_3 q_4 - p_4 q_5 + p_1 p_3 q_2 q_4 + p_1 p_4 q_2 q_5 + p_2 p_4 q_3 q_5}\\
+&\mu_4 =\frac{1.0 + p_4 + q_4 - p_1 q_2 - p_2 q_3 + q_3 q_4 - p_1 p_4 q_2 - p_1 q_2 q_4 - p_2 p_4 q_3 + q_2 q_3 q_4}{1.0 - p_1 q_2 - p_2 q_3 - p_3 q_4 - p_4 q_5 + p_1 p_3 q_2 q_4 + p_1 p_4 q_2 q_5 + p_2 p_4 q_3 q_5}\\
+&\mu_5 =\frac{1.0 + q_5 - p_1 q_2 - p_2 q_3 - p_3 q_4 + q_4 q_5 - p_1 q_2 q_5 - p_2 q_3 q_5 + q_3 q_4 q_5 + p_1 p_3 q_2 q_4 - p_1 q_2 q_4 q_5 + q_2 q_3 q_4 q_5}{1.0 - p_1 q_2 - p_2 q_3 - p_3 q_4 - p_4 q_5 + p_1 p_3 q_2 q_4 + p_1 p_4 q_2 q_5 + p_2 p_4 q_3 q_5}\\
+&\mu_6 =0
+\end{aligned}
+$$
 
 {{< pagebreak >}}
 
@@ -572,3 +779,4 @@ ser modelado
 
 :::{.refs}
 ::::
+
