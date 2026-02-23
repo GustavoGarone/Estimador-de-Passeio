@@ -580,7 +580,7 @@ para obter valores aproximados de $\mathbb{E}[\tau_{X, a, N}]$. Apresentamos no
 \caption{Monte Carlo Simples}
 \begin{algorithmic}
 \Procedure{MonteCarlo}{$MC, p, g, l, a, N$}
-    \State $total\_tempo \gets 0$
+    \State $tempo\_total \gets 0$
     \For{$i =1$ to $MC$}
         \State $pos$ \gets $a$
         \While{$pos > 0$ and $pos < N$}
@@ -590,10 +590,10 @@ para obter valores aproximados de $\mathbb{E}[\tau_{X, a, N}]$. Apresentamos no
             \Else
                 \State $pos$ \gets $pos - l$
             \EndIf
-            \State $total\_tempo \gets total\_tempo + 1$
+            \State $tempo\_total \gets tempo\_total + 1$
         \EndWhile
     \EndFor
-    \State \Return $total\_tempo / MC$
+    \State \Return $tempo\_total / MC$
 \EndProcedure
 \end{algorithmic}
 \end{algorithm}
@@ -607,7 +607,7 @@ com as simulações pelo método de Monte Carlo. Os resultados encontram-se na
 #| label: fig-comparacao-estimador-simples-nao-unit
 #| fig-cap: "Comparação entre estimador simples e duração simulada para $a = 50$, $N = 100$, valor de perda $1 e de ganho $2, em função de $p$. Simulados com $10.000$ iterações de Monte Carlo."
 function monte_carlo_simples(MC, p, g, l, a, N)
-    total_tempo = 0
+    tempo_total = 0
     for i in 1:MC
         pos = a
         while pos > 0 && pos < N
@@ -617,10 +617,10 @@ function monte_carlo_simples(MC, p, g, l, a, N)
             else
                 pos -= l
             end
-            total_tempo += 1
+            tempo_total += 1
         end
     end
-    return total_tempo / MC
+    return tempo_total / MC
 end
 
 function comparar_estimador_montecarlo(MC, p, g, l, a, N)
@@ -694,10 +694,18 @@ $\mathcal{E}_\mathbf{R} = (\mathbb{E}[R_0],\mathbb{E}[R_1], \dots, \mathbb{E}[R_
 isso é, valores consecutivos do vetor sejam muito diferentes uns dos outros,
 o estimador também produzirá estimativas que divergem do valor simulado.
 
+:::{#exm-nao-homo-mc}
+Considere $N=100$, $\mathbf{R} = (R_{0}, R_{1}, \dots , R_{N})$ tal que
+$$
+    R_j = \begin{cases}
+    +2, & \mathbb{P}(R_j=+1)=\frac{j^{0.5}}{100^{0.5}}, \\
+    -1, & \mathbb{P}(R_j=-1)=1-\frac{j^{0.5}}{100^{0.5}}.
+\end{cases} \qquad  ,j=0,1,\dots,N
+$$
+:::
 
 Estendemos o @algo-montecarlosimples para tratar desses casos:
 
-<!-- TODO Aaqui oiiiiiiiiiiiiii -->
 ```pseudocode
 #| label: algo-montecarlonohomo
 #| html-indent-size: "1.2em"
@@ -709,26 +717,77 @@ Estendemos o @algo-montecarlosimples para tratar desses casos:
 #| pdf-line-number: true
 
 \begin{algorithm}
-\caption{Monte Carlo para meios não-homogêneos}
+\caption{Exemplo de simulação de Monte Carlo para meios não-homogêneos}
 \begin{algorithmic}
-\Procedure{MonteCarlo}{$MC, p, g, l, a, N$}
-    \State $total\_tempo \gets 0$
+
+\Procedure{R}{i, g, l}
+    \State $u$ \gets $\Call{Sortear}{U(0,1)}$
+    \State $p$ \gets $i^{0.5} / 100^{0.5}$
+    \If{$u < p$}
+        \State \Return $g$
+    \Else
+        \State \Return $-l$
+    \EndIf
+\EndProcedure
+\\
+
+\Procedure{MonteCarlo}{$MC, R, g, l, a, N$}
+    \State $tempo\_total \gets 0$
     \For{$i =1$ to $MC$}
         \State $pos$ \gets $a$
         \While{$pos > 0$ and $pos < N$}
-            \State $u \gets \Call{Sortear}{U(0,1)}$
-            \If{$u < p$}
-                \State $pos$ \gets $pos + g$
-            \Else
-                \State $pos$ \gets $pos - l$
-            \EndIf
+            \State $pos \gets pos + \Call{Sortear}{R(pos, g, l)}$
             \State $total\_tempo \gets total\_tempo + 1$
         \EndWhile
     \EndFor
     \State \Return $total\_tempo / MC$
 \EndProcedure
+
 \end{algorithmic}
 \end{algorithm}
+```
+
+
+```{julia}
+#| label: fig-comparacao-estimador-simples-nao-unit
+#| fig-cap: "Comparação entre estimador simples e duração simulada para $a = 50$, $N = 100$, valor de perda $1 e de ganho $2, em função de $p$. Simulados com $10.000$ iterações de Monte Carlo."
+function monte_carlo_simples(MC, p, g, l, a, N)
+    tempo_total = 0
+    for i in 1:MC
+        pos = a
+        while pos > 0 && pos < N
+            u = rand()
+            if u < p
+                pos += g
+            else
+                pos -= l
+            end
+            tempo_total += 1
+        end
+    end
+    return tempo_total / MC
+end
+
+function comparar_estimador_montecarlo(MC, p, g, l, a, N)
+    ps = 0:0.01:1
+    m = length(ps)
+    estimados = Float64[]
+    simulados = Float64[]
+    for p in ps
+        E_X = (g * p) + (-l * (1 - p))
+        push!(estimados, estimador_simples(E_X, a, N))
+        push!(simulados, monte_carlo_simples(MC, p, g, l, a, N))
+    end
+    plt = plot(
+        ps, estimados, label = "Duração estimada",
+        xlabel = "Probabilidade de vitória (p)", ylabel = "Duração",
+        legend = :topright, ylims = (0, 2500)
+    )
+    plot!(ps, simulados, label = "Duração simulada", linestyle = :dash)
+    return plt
+end
+
+display(comparar_estimador_montecarlo(10_000, 0.5, 2, 1, 50, 100))
 ```
 
 :::{#exm-poucosuave}
