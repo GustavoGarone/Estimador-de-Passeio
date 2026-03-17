@@ -1,5 +1,5 @@
 {
-  description = "Flake for summer course on spatial statistics";
+  description = "Flake for Random Walk estimation article";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
